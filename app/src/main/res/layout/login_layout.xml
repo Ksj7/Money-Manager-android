@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center"
+              android:orientation="vertical"
+              android:background="@drawable/side_nav_bar">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        <EditText
+                android:id="@+id/idEdit"
+                android:hint="아이디"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:padding="@dimen/edit_text_margin"
+                android:textSize="15sp"
+                android:textIsSelectable="false"
+                android:maxLength="20"
+                android:background="#fff"/>
+
+        <EditText
+                android:id="@+id/passwordEdit"
+                android:inputType="textPassword"
+                android:hint="비밀번호"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="10dp"
+                android:padding="@dimen/edit_text_margin"
+                android:textSize="15sp"
+                android:textIsSelectable="false"
+                android:maxLength="20"
+                android:background="#fff"/>
+
+    </LinearLayout>
+
+    <android.support.v7.widget.AppCompatCheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="30dp"
+            android:text="아이디 저장"
+            android:textColor="#fff"
+            android:id="@+id/idSavedCheckbox"/>
+
+    <Button
+            android:id="@+id/loginBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:text="로그인"
+            android:onClick="login"
+            android:textColor="#fff"
+            android:background="@color/colorAccent"
+            android:layout_gravity="center"/>
+
+
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:id="@+id/joinBtn"
+            android:onClick="join"
+            android:text="회원가입"
+            android:textColor="#fff"/>
+
+</LinearLayout>

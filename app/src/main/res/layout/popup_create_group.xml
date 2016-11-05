@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="@dimen/popup_create_group_width"
+        android:layout_height="@dimen/popup_create_group_height"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:background="#EDEDED"
+>
+
+    <RelativeLayout
+            android:id="@+id/titleRelativeLayout"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="23dp" android:layout_marginLeft="30dp"
+            android:gravity="center"
+    >
+        <TextView
+                android:id="@+id/titleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="그룹 개설하기"
+                android:textSize="20sp" android:textStyle="bold"
+                android:textColor="#000"
+        />
+
+        <ImageButton
+                android:id="@+id/cancelBtn"
+                android:layout_width="16dp" android:layout_height="16dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="15dp"
+                android:background="@android:drawable/ic_delete"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+            android:id="@+id/contentLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/titleRelativeLayout"
+    >
+
+        <TextView
+                android:id="@+id/roomCodeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:textColor="#000"
+                android:text="그룹 이름 :"/>
+
+        <EditText
+                android:id="@+id/roomCodeEdit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:text="Input Text Here"
+                android:layout_marginLeft="15dp"
+                android:textSize="12sp" android:textStyle="bold"
+                android:textColor="#FF5ACA"
+        />
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/content2LinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_below="@+id/contentLinearLayout"
+    >
+
+        <TextView
+                android:id="@+id/accountText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:textColor="#000"
+                android:text="그룹 계좌 :"/>
+
+        <EditText
+                android:id="@+id/accountEdit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:text="Input Text Here"
+                android:layout_marginLeft="15dp"
+                android:textSize="12sp" android:textStyle="bold"
+                android:textColor="#FF5ACA"
+        />
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/content3LinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_below="@+id/content2LinearLayout"
+    >
+
+        <TextView
+                android:id="@+id/bankNameText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:textColor="#000"
+                android:text="계좌 은행 :"/>
+
+        <EditText
+                android:id="@+id/bankNameEdit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:text="Input Text Here"
+                android:layout_marginLeft="15dp"
+                android:textSize="12sp" android:textStyle="bold"
+                android:textColor="#FF5ACA"
+        />
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/content4LinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_below="@+id/content3LinearLayout"
+    >
+
+        <TextView
+                android:id="@+id/balanceText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:textColor="#000"
+                android:text="초기 잔고 :"/>
+
+        <EditText
+                android:id="@+id/balanceEdit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:text="Input Text Here"
+                android:layout_marginLeft="15dp"
+                android:textSize="12sp" android:textStyle="bold"
+                android:textColor="#FF5ACA"
+        />
+
+    </LinearLayout>
+    <Button
+            android:id="@+id/confirmBtn"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:text="OK" android:textColor="#fff" android:textStyle="bold"
+            android:background="@color/colorPrimary"
+            android:layout_marginTop="10dp" android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp" android:layout_below="@+id/content4LinearLayout"
+            android:layout_centerHorizontal="true"/>
+
+
+</RelativeLayout>
+
+
