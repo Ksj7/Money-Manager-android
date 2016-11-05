@@ -53,16 +53,16 @@ public class GroupListActivity extends AppCompatActivity
         mCreateGroupFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CustomEntrancePopup entrancePopup = CustomEntrancePopup.newInstance();
-                entrancePopup.show(getSupportFragmentManager(),"entrance_group");
+                CustomCreateGroupPopup createGroupPopup = CustomCreateGroupPopup.newInstance();
+                createGroupPopup.show(getSupportFragmentManager(),"create_group");
 
             }
         });
         mEnterGrouopFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CustomCreateGroupPopup createGroupPopup = CustomCreateGroupPopup.newInstance();
-                createGroupPopup.show(getSupportFragmentManager(),"create_group");
+                CustomEntrancePopup entrancePopup = CustomEntrancePopup.newInstance();
+                entrancePopup.show(getSupportFragmentManager(),"entrance_group");
             }
         });
 
@@ -169,7 +169,7 @@ public class GroupListActivity extends AppCompatActivity
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-            return new ViewHolder(mLayoutInflater.inflate(R.layout.main_list_item, parent, false));
+            return new ViewHolder(mLayoutInflater.inflate(R.layout.group_list_item, parent, false));
         }
 
         @Override
