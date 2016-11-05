@@ -35,7 +35,7 @@
             android:layout_gravity="right|bottom"
             fab:menu_fab_size="normal"
             fab:menu_colorNormal="@color/colorAccent"
-            fab:menu_colorPressed="#E45E22"
+            fab:menu_colorPressed="@color/colorPrimary"
             fab:menu_colorRipple="#99FFFFFF"
             fab:menu_animationDelayPerItem="50"
             fab:menu_icon="@drawable/fab_add"
@@ -52,6 +52,7 @@
                 android:src="@drawable/ic_menu_manage"
                 fab:fab_size="mini"
                 fab:fab_colorNormal="@color/colorPrimary"
+                fab:fab_colorPressed="@color/colorAccent"
                 fab:fab_colorRipple="#99FFFFFF"
                 fab:fab_label="그룹 개설하기" />
 
@@ -61,6 +62,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_menu_slideshow"
                 fab:fab_colorNormal="@color/colorPrimary"
+                fab:fab_colorPressed="@color/colorAccent"
                 fab:fab_colorRipple="#99FFFFFF"
                 fab:fab_size="mini"
                 fab:fab_label="그룹 들어가기" />

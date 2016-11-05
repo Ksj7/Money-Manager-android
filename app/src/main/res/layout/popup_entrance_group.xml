@@ -5,7 +5,7 @@
         android:layout_height="@dimen/popup_entrance_group_height"
         android:layout_gravity="center"
         android:orientation="vertical"
-        android:background="@drawable/side_nav_bar"
+        android:background="@color/colorBackground"
 >
 
     <RelativeLayout
@@ -20,7 +20,7 @@
                 android:layout_height="wrap_content"
                 android:text="그룹 입장하기"
                 android:textSize="20sp" android:textStyle="bold"
-                android:textColor="#fff"
+                android:textColor="#000"
         />
 
         <ImageButton
@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:text="방코드 :" android:textStyle="bold"
                 android:textSize="15sp"
-                android:textColor="#fff"
+                android:textColor="#000"
         />
 
         <EditText
@@ -69,12 +69,12 @@
     <Button
             android:id="@+id/confirmBtn"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_margin="16dp"
             android:gravity="center"
             android:text="OK" android:textColor="#fff" android:textStyle="bold"
             android:layout_below="@+id/contentLinearLayout"
-            android:background="@drawable/while_line_selector"
+            android:background="@drawable/btn_selector"
     />
 
 

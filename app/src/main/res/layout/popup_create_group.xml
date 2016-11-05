@@ -5,7 +5,7 @@
         android:layout_height="@dimen/popup_create_group_height"
         android:layout_gravity="center"
         android:orientation="vertical"
-        android:background="#EDEDED"
+        android:background="@color/colorBackground"
 >
 
     <RelativeLayout
@@ -166,7 +166,7 @@
             android:layout_height="40dp"
             android:gravity="center"
             android:text="OK" android:textColor="#fff" android:textStyle="bold"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/btn_selector"
             android:layout_marginTop="10dp" android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp" android:layout_below="@+id/content4LinearLayout"
             android:layout_centerHorizontal="true"/>
