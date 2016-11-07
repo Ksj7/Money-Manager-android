@@ -24,12 +24,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login(View v){
-        startActivity(new Intent(this, GroupListActivity.class));
+        startActivity(new Intent(this, InvitationActivity.class));
         finish();
     }
 
     public void join(View v){
-        startActivity(new Intent(this, JoinActivity.class));
+        startActivity(new Intent(this, MemberListActivity.class));
     }
 
 
