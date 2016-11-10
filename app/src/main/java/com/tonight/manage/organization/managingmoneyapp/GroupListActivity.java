@@ -7,6 +7,7 @@ import com.tonight.manage.organization.managingmoneyapp.Object.GroupList;
 import com.tonight.manage.organization.managingmoneyapp.Object.GroupListItem;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -178,7 +179,14 @@ public class GroupListActivity extends AppCompatActivity
             //test
             holder.groupName.setText("test text");
             holder.groupNumber.setText("88K");
+            holder.view.setOnClickListener(new View.OnClickListener(){
 
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(GroupListActivity.this,EventListActivity.class);
+                    startActivity(i);
+                }
+            });
             //이게 정상
             //holder.groupName.setText(groupDatas.get(position).groupName);
             //holder.groupNumber.setText(groupDatas.get(position).groupNumber+"명");
@@ -197,9 +205,10 @@ public class GroupListActivity extends AppCompatActivity
             TextView groupName;
             TextView groupNumber ;
             RecyclerView recyclerView;
-
+            View view;
             public ViewHolder(View v) {
                 super(v);
+                view = v;
                 groupName = (TextView) v.findViewById(R.id.groupName);
                 groupNumber = (TextView) v.findViewById(R.id.groupNumber);
                 recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
