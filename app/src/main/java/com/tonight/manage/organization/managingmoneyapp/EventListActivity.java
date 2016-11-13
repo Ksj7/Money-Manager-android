@@ -1,5 +1,7 @@
 package com.tonight.manage.organization.managingmoneyapp;
 
+import com.tonight.manage.organization.managingmoneyapp.Object.EventListItem;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,12 +17,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.tonight.manage.organization.managingmoneyapp.Object.EventListItem;
 
 import java.util.ArrayList;
 
@@ -56,14 +55,6 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
             }
         });
 
-        mEventListRecyclerView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                Intent intent = new Intent(EventListActivity.this, EventInfoActivity.class);
-                startActivity(intent);
-                return false;
-            }
-        });
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -164,6 +155,13 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
             holder.eventName.setText("1학기 회비");
             holder.eventNumber.setText("82명");
             holder.eventpercent.setText("50%");
+            holder.view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(EventListActivity.this, EventInfoActivity.class);
+                    startActivity(intent);
+                }
+            });
 
             //이게 정상
             //holder.groupName.setText(groupDatas.get(position).groupName);
@@ -185,10 +183,12 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
             TextView eventName;
             TextView eventNumber ;
             TextView eventpercent;
+            View view;
             //RecyclerView recyclerView;
 
             public ViewHolder(View v) {
                 super(v);
+                view = v;
                 eventName = (TextView) v.findViewById(R.id.eventlist_title_textview);
                 eventNumber = (TextView) v.findViewById(R.id.eventlist_number_textview);
                 eventpercent = (TextView) v.findViewById(R.id.eventlist_percent_textview) ;
