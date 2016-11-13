@@ -1,6 +1,7 @@
 package com.tonight.manage.organization.managingmoneyapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -51,6 +53,15 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
             @Override
             public void onRefresh() {
                 mEventListSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+        mEventListRecyclerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Intent intent = new Intent(EventListActivity.this, EventInfoActivity.class);
+                startActivity(intent);
+                return false;
             }
         });
 
@@ -157,6 +168,8 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
             //이게 정상
             //holder.groupName.setText(groupDatas.get(position).groupName);
             //holder.groupNumber.setText(groupDatas.get(position).groupNumber+"명");
+
+
         }
 
         @Override
