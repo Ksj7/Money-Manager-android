@@ -20,11 +20,11 @@ public class Pager extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position){
             case 0:
-                UserFragment userFragment = new UserFragment();
-                return userFragment;
-            case 1:
                 PaymentFragment paymentFragment = new PaymentFragment();
                 return paymentFragment;
+            case 1:
+                UserFragment userFragment = new UserFragment();
+                return userFragment;
             default:
                 return null;
         }

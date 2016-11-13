@@ -168,6 +168,8 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
             //이게 정상
             //holder.groupName.setText(groupDatas.get(position).groupName);
             //holder.groupNumber.setText(groupDatas.get(position).groupNumber+"명");
+
+
         }
 
         @Override
