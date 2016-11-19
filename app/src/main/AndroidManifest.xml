@@ -25,7 +25,10 @@
         <activity android:name=".InvitationActivity"/>
         <activity android:name=".MemberListActivity"/>
         <activity android:name=".EventInfoActivity"/>
+        <activity android:name=".Toss.WebViewActivity"/>
+        <activity android:name=".Toss.TossActivity"/>
 
     </application>
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

@@ -1,11 +1,5 @@
 package com.tonight.manage.organization.managingmoneyapp;
 
-import com.github.clans.fab.FloatingActionButton;
-import com.tonight.manage.organization.managingmoneyapp.Custom.CustomCreateGroupPopup;
-import com.tonight.manage.organization.managingmoneyapp.Custom.CustomEntrancePopup;
-import com.tonight.manage.organization.managingmoneyapp.Object.GroupList;
-import com.tonight.manage.organization.managingmoneyapp.Object.GroupListItem;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -25,6 +19,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.github.clans.fab.FloatingActionButton;
+import com.tonight.manage.organization.managingmoneyapp.Custom.CustomAddMoneyPopup;
+import com.tonight.manage.organization.managingmoneyapp.Custom.CustomCreateGroupPopup;
+import com.tonight.manage.organization.managingmoneyapp.Custom.CustomEntrancePopup;
+import com.tonight.manage.organization.managingmoneyapp.Object.GroupList;
+import com.tonight.manage.organization.managingmoneyapp.Object.GroupListItem;
 
 import java.util.ArrayList;
 
@@ -122,7 +123,8 @@ public class GroupListActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            CustomAddMoneyPopup customAddMoneyPopup = CustomAddMoneyPopup.newInstance();
+            customAddMoneyPopup.show(getSupportFragmentManager(), "add_money");
         }
 
         return super.onOptionsItemSelected(item);
