@@ -1,14 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="사용내역"/>
+        android:layout_height="30dp"
+        android:text="UPLOAD"
+        android:layout_margin="10dp"
+        android:background="@drawable/btn_circle"
+        android:layout_gravity="center"
+        android:id="@+id/eventinfo_user_btn_upload"/>
 
 
-</RelativeLayout>
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/eventInfo_user_swipeRefreshLayout"
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/eventInfo_user_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical"/>
+
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
+</LinearLayout>
