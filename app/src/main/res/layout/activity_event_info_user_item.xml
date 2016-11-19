@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp">
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="2"
+        android:text="16.11.04"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:id="@+id/eventInfo_usage_date"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="3"
+        android:text="회식"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/eventInfo_usage_Location"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="2"
+        android:layout_height="wrap_content"
+        android:text="20000원"
+        android:gravity="center"
+        android:id="@+id/eventInfo_usage_usedMoney"/>
+
+
+</LinearLayout>

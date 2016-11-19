@@ -1,21 +1,23 @@
 package com.tonight.manage.organization.managingmoneyapp;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoMemberPaymentListItem;
+
+import java.util.ArrayList;
 
 /**
  * Created by 3 on 2016-11-14.
@@ -25,6 +27,10 @@ public class EventInfoActivity extends AppCompatActivity implements TabLayout.On
 
     private TabLayout tabLayout;
     private ViewPager mViewPager;
+
+    private RecyclerView mPaymentListRecyclerView;
+    //    private EventInfoPaymentAdapter mPaymentListAdapter;
+    private SwipeRefreshLayout mPaymentListSwipeRefreshLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,4 +87,5 @@ public class EventInfoActivity extends AppCompatActivity implements TabLayout.On
     public void onPageScrollStateChanged(int state) {
 
     }
+
 }
