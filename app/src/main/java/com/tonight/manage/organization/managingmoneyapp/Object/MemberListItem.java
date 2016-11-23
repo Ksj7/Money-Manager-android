@@ -6,5 +6,6 @@ package com.tonight.manage.organization.managingmoneyapp.Object;
 
 public class MemberListItem {
     String name;
+    String phone;
     String imgurl;
 }

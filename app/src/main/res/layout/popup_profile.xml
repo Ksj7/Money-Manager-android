@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scrollView"
-    android:layout_width="@dimen/popup_width"
+    android:layout_width="@dimen/popup_profile_width"
     android:layout_height="@dimen/popup_profile_height"
     android:background="@color/colorBackground"
     android:clipToPadding="false"
@@ -42,19 +42,24 @@
         <Button
             android:id="@+id/phoneNumberBtn"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="30dp"
             android:layout_marginBottom="10dp"
             android:layout_gravity="center"
-            android:textSize="17sp"
+            android:textSize="15sp"
             android:text="010-1234-5678"
-            android:textColor="#fff" />
+            android:textColor="#000"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/gray_round_line_selector" />
         <Button
             android:id="@+id/confirmBtn"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="30dp"
             android:layout_gravity="center"
-            android:textSize="17sp"
+            android:textSize="13sp"
             android:text="확인"
-            android:textColor="#fff" />
+            android:textStyle="bold"
+            android:textColor="#000"
+            android:background="@drawable/gray_round_line_selector"  />
     </LinearLayout>
 </ScrollView>

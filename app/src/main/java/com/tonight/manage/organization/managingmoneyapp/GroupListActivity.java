@@ -122,7 +122,8 @@ public class GroupListActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_member_list) {
+            /*TEST*/
             CustomAddMoneyPopup customAddMoneyPopup = CustomAddMoneyPopup.newInstance();
             customAddMoneyPopup.show(getSupportFragmentManager(), "add_money");
         }

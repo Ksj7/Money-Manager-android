@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.tonight.manage.organization.managingmoneyapp.R;
 
+import java.util.ArrayList;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -21,28 +23,46 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CustomProfilePopup extends DialogFragment {
 
+
+    private static final String ARG_PARAM1 = "profile" ;
+    private String name;
+    private String imgUrl;
+    private ArrayList profileDatas;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NO_TITLE, R.style.CustomDialogTheme);
+        if (getArguments() != null) {
+            profileDatas = getArguments().getStringArrayList(ARG_PARAM1);
+        }
     }
 
-    public static CustomProfilePopup newInstance() {
+    public static CustomProfilePopup newInstance(ArrayList datas) {
         CustomProfilePopup profilePopup = new CustomProfilePopup();
+        Bundle args = new Bundle();
+        args.putStringArrayList(ARG_PARAM1, datas);
+        profilePopup.setArguments(args);
         return profilePopup;
     }
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.popup_profile,container,false);
-        Button Ybtn = (Button) view.findViewById(R.id.confirmBtn);
-        final Button phoneNumberButton = (Button) view.findViewById(R.id.phoneNumberBtn);
-        CircleImageView profileImageView = (CircleImageView) view.findViewById(R.id.profileImage);
+        final Button Ybtn = (Button) view.findViewById(R.id.confirmBtn);
         TextView nameText = (TextView) view.findViewById(R.id.nameText);
+        final Button phoneNumberButton = (Button) view.findViewById(R.id.phoneNumberBtn);
+        final CircleImageView profileImageView = (CircleImageView) view.findViewById(R.id.profileImage);
+
+        //nameText.setText(profileDatas.get(0).toString());
+        //phoneNumberButton.setText(profileDatas.get(1).toString());
+        //IMPORTANT! profileDatas.get(2)는 imgURl에 대한 정보여야 함.
 
 
-        //profileImageView와 nameText는 asynctask로 받아와야함.
+        //TODO profileImageView와 nameText는 asynctask로 받아와야함.
+
 
         Ybtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,12 +81,6 @@ public class CustomProfilePopup extends DialogFragment {
 
         return view;
 
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        dismiss();
     }
 
     @Override

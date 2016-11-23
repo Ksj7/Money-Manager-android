@@ -94,7 +94,9 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_member_list) {
+            Intent i = new Intent(this,MemberListActivity.class);
+            startActivity(i);
             return true;
         }
 
