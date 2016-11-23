@@ -189,23 +189,21 @@
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/eventInfo_payment_swipeRefreshLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="@dimen/recycler_height">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/eventInfo_recyclerView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/recycler_height"
                     android:scrollbars="vertical" />
-
-
             </android.support.v4.widget.SwipeRefreshLayout>
 
         </LinearLayout>
 
         <Button
-            android:layout_below="@id/mylinearLayout"
             android:layout_width="wrap_content"
             android:layout_height="60dp"
+            android:layout_below="@id/mylinearLayout"
             android:layout_margin="10dp"
             android:background="#014880"
             android:text="내보내기" />
