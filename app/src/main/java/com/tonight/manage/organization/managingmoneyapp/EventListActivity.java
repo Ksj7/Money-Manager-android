@@ -1,7 +1,5 @@
 package com.tonight.manage.organization.managingmoneyapp;
 
-import com.tonight.manage.organization.managingmoneyapp.Object.EventListItem;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.tonight.manage.organization.managingmoneyapp.Object.EventListItem;
 
 import java.util.ArrayList;
 
@@ -134,7 +134,7 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
         public EventListAdapter(Context context) {
             mContext = context;
             mLayoutInflater = LayoutInflater.from(context);
-            groupDatas = new ArrayList<EventListItem>();
+            groupDatas = new ArrayList<>();
         }
 
         public void addItem(ArrayList<EventListItem> datas) {

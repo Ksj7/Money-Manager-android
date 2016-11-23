@@ -1,7 +1,6 @@
 package com.tonight.manage.organization.managingmoneyapp;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -38,21 +38,22 @@ public class InvitationActivity extends AppCompatActivity implements NavigationV
 
     private RecyclerView mInvitationListRecyclerView;
     private InvitationAdapter mInvitationAdapter;
-
+    private HorizontalScrollView invitationPersonScroll;
+    private LinearLayout invitationPerSonLinear;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.invitation_main);
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         mInvitationListRecyclerView = (RecyclerView) findViewById(R.id.invitationRecyclerView);
@@ -60,6 +61,8 @@ public class InvitationActivity extends AppCompatActivity implements NavigationV
         mInvitationListRecyclerView.setHasFixedSize(true);
         mInvitationAdapter = new InvitationAdapter(this);
         mInvitationListRecyclerView.setAdapter(mInvitationAdapter);
+        invitationPersonScroll = (HorizontalScrollView) findViewById(R.id.invitationPersonScroll);
+        invitationPerSonLinear = (LinearLayout) findViewById(R.id.invitationPersonList);
     }
 
     @Override
@@ -125,7 +128,7 @@ public class InvitationActivity extends AppCompatActivity implements NavigationV
         public InvitationAdapter(Context context) {
             mContext = context;
             mLayoutInflater = LayoutInflater.from(context);
-            invitationDatas = new ArrayList<InvitationListItem>();
+            invitationDatas = new ArrayList<>();
         }
 
         public void addItem(ArrayList<InvitationListItem> datas) {
@@ -142,25 +145,19 @@ public class InvitationActivity extends AppCompatActivity implements NavigationV
         @Override
         public void onBindViewHolder(final InvitationActivity.InvitationAdapter.ViewHolder holder, int position) {
             //test
-            holder.personName.setText("test text");
+            holder.personName.setText("test");
             holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked){
-                        Button personBtn = new Button(getApplicationContext());
-                        LinearLayout invitationPersonListLinearLayout = (LinearLayout) findViewById(R.id.invitationPersonList);
-                        personBtn.setText("test");
-                        personBtn.setBackgroundColor(Color.parseColor("#3498db"));
-                        personBtn.setTextColor(Color.WHITE);
-                        invitationPersonListLinearLayout.addView(personBtn, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    }
-                    else {
-
-                    }
+                if (isChecked) {
+                    Button personBtn = new ProductButton.ProductBuilder(holder.personName.getText().toString()).build();
+                    LinearLayout.LayoutParams plControl = new LinearLayout.LayoutParams(150,100);
+                    plControl.setMargins(8,5,8,5);
+                    invitationPerSonLinear.addView(personBtn,plControl);
+                    invitationPersonScroll.computeScroll();
+                } else { }
                 }
             });
-
-
         }
 
         @Override
@@ -202,5 +199,5 @@ public class InvitationActivity extends AppCompatActivity implements NavigationV
             }
         }
     }
-
 }
+

@@ -13,13 +13,13 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <CheckBox
+        <android.support.v7.widget.AppCompatCheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_gravity="center"
-            android:id="@+id/invitationCheckBox"
-            android:buttonTint="#000000"/>
+            android:theme="@style/MyCheckBox"
+            android:id="@+id/invitationCheckBox"/>
 
         <ImageView
             android:layout_width="wrap_content"

@@ -11,7 +11,7 @@
     <RelativeLayout
             android:id="@+id/titleRelativeLayout"
             android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginTop="23dp" android:layout_marginLeft="30dp"
+            android:layout_marginTop="23dp"
             android:gravity="center"
     >
         <TextView
@@ -22,13 +22,6 @@
                 android:textSize="20sp" android:textStyle="bold"
                 android:textColor="#000"
         />
-
-        <ImageButton
-                android:id="@+id/cancelBtn"
-                android:layout_width="16dp" android:layout_height="16dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="15dp"
-                android:background="@android:drawable/ic_delete"/>
 
     </RelativeLayout>
 

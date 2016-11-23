@@ -1,23 +1,15 @@
 package com.tonight.manage.organization.managingmoneyapp;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-
-import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoMemberPaymentListItem;
-
-import java.util.ArrayList;
+import android.widget.ImageButton;
 
 /**
  * Created by 3 on 2016-11-14.
@@ -27,6 +19,7 @@ public class EventInfoActivity extends AppCompatActivity implements TabLayout.On
 
     private TabLayout tabLayout;
     private ViewPager mViewPager;
+    private ImageButton mInvitationButton;
 
     private RecyclerView mPaymentListRecyclerView;
     //    private EventInfoPaymentAdapter mPaymentListAdapter;
@@ -52,7 +45,14 @@ public class EventInfoActivity extends AppCompatActivity implements TabLayout.On
         tabLayout.setOnTabSelectedListener(this);//Tab 선택 시 화면 이동하는 리스너
         mViewPager.addOnPageChangeListener(this);//Tab swiping시 화면 이동하는 리스너
 
-
+        mInvitationButton = (ImageButton) findViewById(R.id.invitationBtn);
+        mInvitationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(EventInfoActivity.this,InvitationActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
 

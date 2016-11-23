@@ -15,6 +15,12 @@
     <dimen name="popup_create_group_width">302dp</dimen>
     <dimen name="popup_create_group_height">279dp</dimen>
 
+    <dimen name="popup_profile_width">302dp</dimen>
+    <dimen name="popup_profile_height">359dp</dimen>
+
+    <dimen name="profile_image_wrap_size">200dp</dimen>
+    <dimen name="profile_image_size">110dp</dimen>
+
 
     <dimen name="popup_width">300dp</dimen>
     <dimen name="popup_height">260dp</dimen>

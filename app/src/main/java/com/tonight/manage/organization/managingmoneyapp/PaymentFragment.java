@@ -73,7 +73,7 @@ public class PaymentFragment extends Fragment {
         public EventInfoPaymentAdapter(Context context) {
             mContext = context;
             mLayoutInflater = LayoutInflater.from(context);
-            paymentArrayList = new ArrayList<EventInfoMemberPaymentListItem>();
+            paymentArrayList = new ArrayList<>();
         }
 
         public void addItem(ArrayList<EventInfoMemberPaymentListItem> datas) {
@@ -98,8 +98,8 @@ public class PaymentFragment extends Fragment {
 
                 @Override
                 public void onClick(View v) {
-                    //Intent i = new Intent(EventInfoActivity.this,EventListActivity.class);
-                    //startActivity(i);
+
+                    // TODO 지불 내역 변경 팝업창 생성 코드 추가
                 }
             });
             //이게 정상
