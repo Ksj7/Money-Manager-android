@@ -76,7 +76,7 @@ public class GroupListActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        navigationView.setItemBackgroundResource(R.color.white);
 
 
         mGroupListRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -94,7 +94,6 @@ public class GroupListActivity extends AppCompatActivity
                 mGroupListSwipeRefreshLayout.setRefreshing(false);
             }
         });
-
     }
 
     @Override
@@ -140,10 +139,6 @@ public class GroupListActivity extends AppCompatActivity
         if (id == R.id.nav_setting) {
             // Handle the camera action
         } else if (id == R.id.nav_alarm_list) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
 
         }
 

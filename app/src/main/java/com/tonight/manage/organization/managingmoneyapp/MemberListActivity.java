@@ -48,6 +48,7 @@ public class MemberListActivity extends AppCompatActivity implements NavigationV
 
         NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setItemBackgroundResource(R.color.white);
 
         mMemeberListRecyclerView = (RecyclerView) findViewById(R.id.memberListRecyclerView);
         mMemeberListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -76,10 +77,6 @@ public class MemberListActivity extends AppCompatActivity implements NavigationV
         if (id == R.id.nav_setting) {
             // Handle the camera action
         } else if (id == R.id.nav_alarm_list) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
 
         }
 

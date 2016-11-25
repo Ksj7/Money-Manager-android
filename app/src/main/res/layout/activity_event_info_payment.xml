@@ -99,14 +99,13 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <android.support.design.widget.FloatingActionButton
+                    <com.github.clans.fab.FloatingActionButton
                         android:id="@+id/eventInfo_addmoney_btn"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="top"
-                        android:scaleType="center"
                         android:src="@drawable/fab_add"
-                        app:fab_size="mini" />
+                        app:fabSize="mini"/>
 
                 </LinearLayout>
 

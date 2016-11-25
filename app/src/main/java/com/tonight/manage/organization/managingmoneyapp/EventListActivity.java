@@ -113,14 +113,11 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
             // Handle the camera action
         } else if (id == R.id.nav_alarm_list) {
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+        drawer.setBackgroundResource(R.color.white);
         return true;
     }
 
