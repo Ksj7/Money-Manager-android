@@ -206,6 +206,8 @@
             android:layout_below="@id/mylinearLayout"
             android:layout_margin="10dp"
             android:background="#014880"
+            android:layout_alignParentRight="true"
+            android:textColor="#FFFFFF"
             android:text="내보내기" />
 
     </RelativeLayout>
