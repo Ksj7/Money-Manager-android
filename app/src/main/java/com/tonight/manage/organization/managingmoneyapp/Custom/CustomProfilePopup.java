@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.tonight.manage.organization.managingmoneyapp.ProfileImageActivity;
 import com.tonight.manage.organization.managingmoneyapp.R;
 
 import java.util.ArrayList;
@@ -59,7 +60,12 @@ public class CustomProfilePopup extends DialogFragment {
         //nameText.setText(profileDatas.get(0).toString());
         //phoneNumberButton.setText(profileDatas.get(1).toString());
         //IMPORTANT! profileDatas.get(2)는 imgURl에 대한 정보여야 함.
-
+        profileImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), ProfileImageActivity.class));
+            }
+        });
 
         //TODO profileImageView와 nameText는 asynctask로 받아와야함.
 

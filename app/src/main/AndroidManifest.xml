@@ -29,6 +29,7 @@
         <activity android:name=".EventInfoActivity"/>
         <activity android:name=".Toss.WebViewActivity"/>
         <activity android:name=".Toss.TossActivity"/>
+        <activity android:name=".ProfileImageActivity"/>
 
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
