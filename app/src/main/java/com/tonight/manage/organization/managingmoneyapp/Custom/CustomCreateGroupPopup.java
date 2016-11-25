@@ -1,7 +1,5 @@
 package com.tonight.manage.organization.managingmoneyapp.Custom;
 
-import com.tonight.manage.organization.managingmoneyapp.R;
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -9,8 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.Toast;
+
+import com.tonight.manage.organization.managingmoneyapp.R;
 
 /**
  * Created by sujinKim on 2016-11-04.
@@ -34,7 +33,7 @@ public class CustomCreateGroupPopup extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.popup_create_group,container,false);
         Button Ybtn = (Button) view.findViewById(R.id.confirmBtn);
-        ImageButton NBtn = (ImageButton) view.findViewById(R.id.cancelBtn);
+        Button NBtn = (Button) view.findViewById(R.id.cancelBtn);
         Ybtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
