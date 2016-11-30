@@ -2,7 +2,6 @@ package com.tonight.manage.organization.managingmoneyapp;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,8 +11,10 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.tonight.manage.organization.managingmoneyapp.Custom.CustomAddMoneyPopup;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoMemberPaymentListItem;
 
 import java.util.ArrayList;
@@ -28,10 +29,10 @@ public class PaymentFragment extends Fragment {
     private EventInfoPaymentAdapter mPaymentListAdapter;
     private SwipeRefreshLayout mPaymentListSwipeRefreshLayout;
     // private ScrollView mPaymentListScrollView;
-    private FloatingActionButton mFabButton;
+    private ImageButton mAddButton;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_event_info_payment, container, false);
 
 
@@ -63,17 +64,24 @@ public class PaymentFragment extends Fragment {
         });
 
 
-        mFabButton = (FloatingActionButton) v.findViewById(R.id.eventInfo_addmoney_btn);
-        mFabButton.setOnClickListener(new View.OnClickListener() {
+        mAddButton = (ImageButton) v.findViewById(R.id.eventInfo_addmoney_btn);
+        mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PopupMenu popup = new PopupMenu(getActivity(), mFabButton);
+                PopupMenu popup = new PopupMenu(getActivity(), mAddButton);
                 popup.getMenuInflater().inflate(R.menu.activity_eventinfo_popup, popup.getMenu());
-
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
+                        int id = item.getItemId();
+                        if(id == R.id.setdate){
 
+
+                        }
+                        else {
+                            CustomAddMoneyPopup addMoneyPopup = CustomAddMoneyPopup.newInstance();
+                            addMoneyPopup.show(getFragmentManager(), "addMoney");
+                        }
                         return false;
                     }
                 });
@@ -83,7 +91,6 @@ public class PaymentFragment extends Fragment {
 
         return v;
     }
-
 
 
     class EventInfoPaymentAdapter extends RecyclerView.Adapter<EventInfoPaymentAdapter.ViewHolder> {
@@ -99,7 +106,7 @@ public class PaymentFragment extends Fragment {
         }
 
         public void addItem(ArrayList<EventInfoMemberPaymentListItem> datas) {
-            this. paymentArrayList = datas;
+            this.paymentArrayList = datas;
         }
 
 
@@ -116,7 +123,7 @@ public class PaymentFragment extends Fragment {
             holder.useName.setText("test text");
             holder.paymentMoney.setText("0");
             holder.payStatus.setText("미지출");
-            holder.view.setOnClickListener(new View.OnClickListener(){
+            holder.view.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
@@ -140,10 +147,11 @@ public class PaymentFragment extends Fragment {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             TextView useName;
-            TextView paymentMoney ;
+            TextView paymentMoney;
             TextView payStatus;
             RecyclerView recyclerView;
             View view;
+
             public ViewHolder(View v) {
                 super(v);
                 view = v;
@@ -157,8 +165,7 @@ public class PaymentFragment extends Fragment {
     }
 
 
-    public class WrappingLinearLayoutManager extends LinearLayoutManager
-    {
+    public class WrappingLinearLayoutManager extends LinearLayoutManager {
 
         public WrappingLinearLayoutManager(Context context) {
             super(context);
