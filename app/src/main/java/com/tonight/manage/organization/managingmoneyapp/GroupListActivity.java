@@ -136,9 +136,11 @@ public class GroupListActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_setting) {
-            // Handle the camera action
-        } else if (id == R.id.nav_alarm_list) {
+        if (id == R.id.nav_edit_password) {
+            startActivity(new Intent(this,EditPasswordActivity.class));
+        } else if(id==R.id.nav_edit_phoneNumber){
+            startActivity(new Intent(this,EditPhoneNumberActivity.class));
+        } else if(id == R.id.nav_alarm_list) {
 
         }
 

@@ -1,6 +1,7 @@
 package com.tonight.manage.organization.managingmoneyapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -73,10 +74,11 @@ public class MemberListActivity extends AppCompatActivity implements NavigationV
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        if (id == R.id.nav_setting) {
-            // Handle the camera action
-        } else if (id == R.id.nav_alarm_list) {
+        if (id == R.id.nav_edit_password) {
+            startActivity(new Intent(this,EditPasswordActivity.class));
+        } else if(id==R.id.nav_edit_phoneNumber){
+            startActivity(new Intent(this,EditPhoneNumberActivity.class));
+        } else if(id == R.id.nav_alarm_list) {
 
         }
 
