@@ -28,4 +28,9 @@
         <item name="colorControlActivated">@color/colorAccent</item>
     </style>
 
+    <style name ="ColorSwitchStyle">
+        <item name="colorControlActivated">@color/colorAccent</item>
+
+    </style>
+
 </resources>
