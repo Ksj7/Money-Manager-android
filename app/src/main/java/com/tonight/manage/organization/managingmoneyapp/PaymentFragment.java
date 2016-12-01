@@ -3,8 +3,10 @@ package com.tonight.manage.organization.managingmoneyapp;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +32,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -59,7 +63,12 @@ public class PaymentFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_event_info_payment, container, false);
-
+        Bundle b = getArguments();
+        if(b==null){
+            Toast.makeText(getActivity(),"데이터를 가져오는 중에 오류가 발생했습니다. 다시 실행해 주세요 ◕ˇoˇ◕",Toast.LENGTH_SHORT).show();
+            return v;
+        }
+        final String fileName = b.getString("eventName");
 
         mPaymentListRecyclerView = (RecyclerView) v.findViewById(R.id.eventInfo_recyclerView);
         mPaymentListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -122,13 +131,24 @@ public class PaymentFragment extends Fragment {
                 new TossRequestTask(generatePaymentParams()).execute(TossConstants.PAYMENT_API_URL);
             }
         });
-        /*Button mExportButton = (Button) v.findViewById(R.id.exportBtn);
+
+        Button mExportButton = (Button) v.findViewById(R.id.exportBtn);
         mExportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new SendEmail();
+                final String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/AMM";
+                File excel = new File(filePath + "/" + fileName + ".xls");
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("message/rfc822");
+                i.putExtra(Intent.EXTRA_SUBJECT, "AMM_EXPORT_EXCEL_FILE");
+                i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(excel));
+                try {
+                    startActivity(Intent.createChooser(i, "Send mail..."));
+                } catch (android.content.ActivityNotFoundException ex) {
+                    Toast.makeText(getActivity(), "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+                }
             }
-        });*/
+        });
 
         return v;
     }
@@ -173,7 +193,7 @@ public class PaymentFragment extends Fragment {
                 }
             });
             //이게 정상
-            //holder.groupName.setText(groupDatas.get(position).groupName);
+            //holder.eventName.setText(groupDatas.get(position).eventName);
             //holder.groupNumber.setText(groupDatas.get(position).groupNumber+"명");
         }
 

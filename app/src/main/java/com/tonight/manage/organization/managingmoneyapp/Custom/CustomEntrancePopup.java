@@ -35,7 +35,7 @@ public class CustomEntrancePopup extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.popup_entrance_group,container,false);
         Button Ybtn = (Button) view.findViewById(R.id.confirmBtn);
-        Button NBtn = (Button) view.findViewById(R.id.cancelBtn);
+        Button NBtn = (Button) view.findViewById(R.id.negativeBtn);
         Ybtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

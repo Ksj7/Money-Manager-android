@@ -12,6 +12,7 @@
     <dimen name="popup_entrance_group_width">302dp</dimen>
     <dimen name="popup_entrance_group_height">239dp</dimen>
 
+
     <dimen name="popup_create_group_width">302dp</dimen>
     <dimen name="popup_create_group_height">279dp</dimen>
 
@@ -27,5 +28,7 @@
 
     <dimen name="popup_width">300dp</dimen>
     <dimen name="popup_height">230dp</dimen>
+
+    <dimen name="popup_email_height">250dp</dimen>
 
 </resources>
