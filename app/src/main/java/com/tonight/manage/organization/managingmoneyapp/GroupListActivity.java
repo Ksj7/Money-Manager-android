@@ -21,7 +21,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
-import com.tonight.manage.organization.managingmoneyapp.Custom.CustomAddMoneyPopup;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomCreateGroupPopup;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomEntrancePopup;
 import com.tonight.manage.organization.managingmoneyapp.Object.GroupList;
@@ -122,9 +121,7 @@ public class GroupListActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_member_list) {
-            /*TEST*/
-            CustomAddMoneyPopup customAddMoneyPopup = CustomAddMoneyPopup.newInstance();
-            customAddMoneyPopup.show(getSupportFragmentManager(), "add_money");
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -188,7 +185,7 @@ public class GroupListActivity extends AppCompatActivity
                 }
             });
             //이게 정상
-            //holder.groupName.setText(groupDatas.get(position).groupName);
+            //holder.eventName.setText(groupDatas.get(position).eventName);
             //holder.groupNumber.setText(groupDatas.get(position).groupNumber+"명");
         }
 

@@ -129,17 +129,17 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
 
 
         private LayoutInflater mLayoutInflater;
-        private ArrayList<EventListItem> groupDatas; // group list
+        private ArrayList<EventListItem> eventListItems; // group list
         private Context mContext;
 
         public EventListAdapter(Context context) {
             mContext = context;
             mLayoutInflater = LayoutInflater.from(context);
-            groupDatas = new ArrayList<>();
+            eventListItems = new ArrayList<>();
         }
 
         public void addItem(ArrayList<EventListItem> datas) {
-            this.groupDatas = datas;
+            this.eventListItems = datas;
         }
 
 
@@ -160,13 +160,15 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(EventListActivity.this, EventInfoActivity.class);
+                    //정상 intent.putExtra("eventName",eventListItems.get(position).eventName);
+                    intent.putExtra("eventName","test");
                     startActivity(intent);
                 }
             });
 
             //이게 정상
-            //holder.groupName.setText(groupDatas.get(position).groupName);
-            //holder.groupNumber.setText(groupDatas.get(position).groupNumber+"명");
+            //holder.eventName.setText(eventListItems.get(position).eventName);
+            //holder.groupNumber.setText(eventListItems.get(position).groupNumber+"명");
 
 
         }
@@ -177,7 +179,7 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
             return 3;
 
             //이게 원래 정상
-            // return groupDatas.size();
+            // return eventListItems.size();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {

@@ -91,7 +91,7 @@ public class UserFragment extends Fragment{
                 }
             });
             //이게 정상
-            //holder.groupName.setText(groupDatas.get(position).groupName);
+            //holder.eventName.setText(groupDatas.get(position).eventName);
             //holder.groupNumber.setText(groupDatas.get(position).groupNumber+"명");
         }
 

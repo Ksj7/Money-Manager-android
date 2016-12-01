@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 import com.tonight.manage.organization.managingmoneyapp.Object.InvitationList;
 import com.tonight.manage.organization.managingmoneyapp.Object.InvitationListItem;
+import com.tonight.manage.organization.managingmoneyapp.Builder.ProductButton;
 
 import java.util.ArrayList;
 

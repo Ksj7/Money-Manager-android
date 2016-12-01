@@ -1,5 +1,6 @@
 package com.tonight.manage.organization.managingmoneyapp;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -10,10 +11,12 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 public class Pager extends FragmentStatePagerAdapter {
     int tabCount;
+    String eventName;
 
-    public Pager(FragmentManager fm, int tabCount) {
+    public Pager(FragmentManager fm, int tabCount , String eventName) {
         super(fm);
         this.tabCount = tabCount;
+        this.eventName = eventName;
     }
 
     @Override
@@ -21,6 +24,9 @@ public class Pager extends FragmentStatePagerAdapter {
         switch (position){
             case 0:
                 PaymentFragment paymentFragment = new PaymentFragment();
+                Bundle b = new Bundle();
+                b.putString("eventName", eventName);
+                paymentFragment.setArguments(b);
                 return paymentFragment;
             case 1:
                 UserFragment userFragment = new UserFragment();
