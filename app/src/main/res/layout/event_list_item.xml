@@ -58,14 +58,11 @@
             android:layout_weight="1"
             android:gravity="center">
 
-            <ProgressBar
-                android:id="@+id/progressBar"
+            <com.tonight.manage.organization.managingmoneyapp.Custom.CustomRateTextCircularProgressBar
+                android:id="@+id/rate_progress_bar"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginRight="5dp"
-                android:max="100"
-                android:progress="50"/>
-
+                android:layout_marginRight="5dp"/>
             <TextView
                 android:id="@+id/eventlist_percent_textview"
                 android:layout_width="30dp"

@@ -21,7 +21,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
-import com.tonight.manage.organization.managingmoneyapp.Custom.CustomAddMoneyPopup;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomCreateGroupPopup;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomEntrancePopup;
 import com.tonight.manage.organization.managingmoneyapp.Object.GroupList;
@@ -76,7 +75,7 @@ public class GroupListActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        navigationView.setItemBackgroundResource(R.color.white);
 
 
         mGroupListRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -94,7 +93,6 @@ public class GroupListActivity extends AppCompatActivity
                 mGroupListSwipeRefreshLayout.setRefreshing(false);
             }
         });
-
     }
 
     @Override
@@ -123,9 +121,7 @@ public class GroupListActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_member_list) {
-            /*TEST*/
-            CustomAddMoneyPopup customAddMoneyPopup = CustomAddMoneyPopup.newInstance();
-            customAddMoneyPopup.show(getSupportFragmentManager(), "add_money");
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -137,13 +133,11 @@ public class GroupListActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_setting) {
-            // Handle the camera action
-        } else if (id == R.id.nav_alarm_list) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        if (id == R.id.nav_edit_password) {
+            startActivity(new Intent(this,EditPasswordActivity.class));
+        } else if(id==R.id.nav_edit_phoneNumber){
+            startActivity(new Intent(this,EditPhoneNumberActivity.class));
+        } else if(id == R.id.nav_alarm_list) {
 
         }
 
@@ -191,7 +185,7 @@ public class GroupListActivity extends AppCompatActivity
                 }
             });
             //이게 정상
-            //holder.groupName.setText(groupDatas.get(position).groupName);
+            //holder.eventName.setText(groupDatas.get(position).eventName);
             //holder.groupNumber.setText(groupDatas.get(position).groupNumber+"명");
         }
 

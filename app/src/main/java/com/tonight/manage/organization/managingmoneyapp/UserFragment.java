@@ -59,7 +59,6 @@ public class UserFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-
         return v;
 
     }
@@ -151,7 +150,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 }
             });
             //이게 정상
-            //holder.groupName.setText(groupDatas.get(position).groupName);
+            //holder.eventName.setText(groupDatas.get(position).eventName);
             //holder.groupNumber.setText(groupDatas.get(position).groupNumber+"명");
         }
 

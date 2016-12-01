@@ -99,14 +99,12 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <android.support.design.widget.FloatingActionButton
+                    <ImageButton
                         android:id="@+id/eventInfo_addmoney_btn"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_gravity="top"
-                        android:scaleType="center"
-                        android:src="@drawable/fab_add"
-                        app:fab_size="mini" />
+                        android:background="@drawable/plus_selector"/>
 
                 </LinearLayout>
 
@@ -201,6 +199,7 @@
         </LinearLayout>
 
         <Button
+            android:id="@+id/exportBtn"
             android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:layout_below="@id/mylinearLayout"

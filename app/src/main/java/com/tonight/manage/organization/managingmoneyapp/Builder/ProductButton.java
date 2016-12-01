@@ -1,9 +1,12 @@
-package com.tonight.manage.organization.managingmoneyapp;
+package com.tonight.manage.organization.managingmoneyapp.Builder;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.widget.Button;
+
+import com.tonight.manage.organization.managingmoneyapp.MyApplication;
+import com.tonight.manage.organization.managingmoneyapp.R;
 
 /**
  * Created by 10 on 2016-11-23.

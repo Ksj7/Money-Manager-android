@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scrollView"
     android:layout_width="@dimen/popup_width"
     android:layout_height="@dimen/popup_height"
+    android:paddingBottom="15dp"
     android:background="@color/colorBackground"
     android:clipToPadding="false"
     android:fillViewport="false"
@@ -11,8 +13,9 @@
     tools:ignore="UnusedAttribute">
 
     <RelativeLayout
+        android:id="@+id/wrapLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:id="@+id/titleRelativeLayout"
@@ -71,7 +74,9 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0.5"
                         android:gravity="center"
-                        android:paddingRight="45dp" />
+                        android:paddingRight="20dp"
+                        app:theme="@style/ColorSwitchStyle"
+                        android:paddingLeft="20dp"  />
 
                 </LinearLayout>
 
@@ -84,14 +89,13 @@
 
                     <android.support.v7.widget.AppCompatEditText
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="30dp"
-                        android:layout_marginRight="30dp"
-                        android:layout_weight="0.6"
-                        android:hint="금액 입력"
-                        android:inputType="numberDecimal"
-                        android:textColor="#405B79"
-                        android:textSize="10sp" />
+                        android:layout_height="wrap_content" android:layout_weight="0.6"
+                        android:layout_marginLeft="20dp" android:layout_marginRight="20dp"
+                        android:hint="금액 입력" android:inputType="numberDecimal"
+                        android:textColor="@color/colorEditText"
+                        android:focusable="true" android:focusableInTouchMode="true"
+                        android:windowSoftInputMode="stateAlwaysHidden"
+                        android:textSize="15sp" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -130,7 +134,9 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
                         android:gravity="center"
-                        android:paddingRight="45dp" />
+                        android:paddingRight="20dp"
+                        app:theme="@style/ColorSwitchStyle"
+                        android:paddingLeft="20dp" />
 
                 </LinearLayout>
 
@@ -141,14 +147,13 @@
                     android:visibility="invisible">
 
                     <android.support.v7.widget.AppCompatEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="30dp"
-                        android:layout_marginRight="30dp"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp" android:layout_marginRight="20dp"
                         android:hint="금액 입력"
-                        android:inputType="numberDecimal"
-                        android:textColor="#405B79"
-                        android:textSize="10sp" />
+                        android:inputType="numberDecimal" android:textColor="@color/colorEditText"
+                        android:focusable="true" android:focusableInTouchMode="true"
+                        android:windowSoftInputMode="stateAlwaysHidden"
+                        android:textSize="15sp" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -166,6 +171,7 @@
             android:layout_marginRight="10dp">
 
             <Button
+                android:id="@+id/confirmBtn"
                 android:layout_width="0dp"
                 android:layout_height="35dp"
                 android:layout_marginRight="10dp"
@@ -175,6 +181,7 @@
                 android:textColor="#fff" />
 
             <Button
+                android:id="@+id/negativeBtn"
                 android:layout_width="0dp"
                 android:layout_height="35dp"
                 android:layout_weight="0.5"
