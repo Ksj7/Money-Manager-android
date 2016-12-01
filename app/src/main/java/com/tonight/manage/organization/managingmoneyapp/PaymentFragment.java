@@ -1,6 +1,9 @@
 package com.tonight.manage.organization.managingmoneyapp;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -13,11 +16,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomAddMoneyPopup;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomSetDatePopup;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoMemberPaymentListItem;
+import com.tonight.manage.organization.managingmoneyapp.Toss.TossConstants;
+import com.tonight.manage.organization.managingmoneyapp.Toss.TossUtils;
+import com.tonight.manage.organization.managingmoneyapp.Toss.WebViewActivity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -31,6 +48,13 @@ public class PaymentFragment extends Fragment {
     private SwipeRefreshLayout mPaymentListSwipeRefreshLayout;
     // private ScrollView mPaymentListScrollView;
     private ImageButton mAddButton;
+
+
+    //Toss TEST API Key
+    private static final String API_KEY = "sk_test_apikey1234567890a";
+
+    private ProgressDialog mProgressDialog;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -75,11 +99,10 @@ public class PaymentFragment extends Fragment {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         int id = item.getItemId();
-                        if(id == R.id.setdate){
+                        if (id == R.id.setdate) {
                             CustomSetDatePopup setDatePopup = CustomSetDatePopup.newInstance();
                             setDatePopup.show(getFragmentManager(), "setDate");
-                        }
-                        else {
+                        } else {
                             CustomAddMoneyPopup addMoneyPopup = CustomAddMoneyPopup.newInstance();
                             addMoneyPopup.show(getFragmentManager(), "addMoney");
                         }
@@ -89,6 +112,23 @@ public class PaymentFragment extends Fragment {
                 popup.show();
             }
         });
+
+        v.findViewById(R.id.eventInfo_userPayState).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (API_KEY.contains("API KEY")) {
+                    throw new IllegalStateException("API KEY를 올바르게 입력해주세요");
+                }
+                new TossRequestTask(generatePaymentParams()).execute(TossConstants.PAYMENT_API_URL);
+            }
+        });
+        /*Button mExportButton = (Button) v.findViewById(R.id.exportBtn);
+        mExportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new SendEmail();
+            }
+        });*/
 
         return v;
     }
@@ -165,100 +205,157 @@ public class PaymentFragment extends Fragment {
         }
     }
 
+    /**
+     * 결제 생성 API 요청에 필요한 파라미터들을 설정합니다.
+     * 파라미터에 대한 자세한 정보는 https://toss.im/tosspay/developer/apidoc#charge 에서 확인 할 수 있습니다..
+     *
+     * @return 테스트 결제용으로 10,000원짜리 상품에 대한 파라미터 {@link JSONObject}
+     */
+    private JSONObject generatePaymentParams() {
+        JSONObject params = new JSONObject();
+        try {
+            //필수 항목
+            params.put(TossConstants.PARAM_API_KEY, API_KEY);
+            //필수 항목, 테스트 용도로 매번 다른 주문번호를 생성하도록 함
+            params.put(TossConstants.PARAM_ORDER_NO, System.currentTimeMillis());
+            //필수 항목
+            params.put(TossConstants.PARAM_AMOUNT, 10000);
+            //필수 항목
+            params.put(TossConstants.PARAM_PRODUCT_DESC, "테스트 결제");
 
-    public class WrappingLinearLayoutManager extends LinearLayoutManager {
-
-        public WrappingLinearLayoutManager(Context context) {
-            super(context);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
-        private int[] mMeasuredDimension = new int[2];
+        return params;
+    }
 
-        @Override
-        public boolean canScrollVertically() {
-            return false;
-        }
-
-        @Override
-        public void onMeasure(RecyclerView.Recycler recycler, RecyclerView.State state,
-                              int widthSpec, int heightSpec) {
-            final int widthMode = View.MeasureSpec.getMode(widthSpec);
-            final int heightMode = View.MeasureSpec.getMode(heightSpec);
-
-            final int widthSize = View.MeasureSpec.getSize(widthSpec);
-            final int heightSize = View.MeasureSpec.getSize(heightSpec);
-
-            int width = 0;
-            int height = 0;
-            for (int i = 0; i < getItemCount(); i++) {
-                if (getOrientation() == HORIZONTAL) {
-                    measureScrapChild(recycler, i,
-                            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                            heightSpec,
-                            mMeasuredDimension);
-
-                    width = width + mMeasuredDimension[0];
-                    if (i == 0) {
-                        height = mMeasuredDimension[1];
-                    }
-                } else {
-                    measureScrapChild(recycler, i,
-                            widthSpec,
-                            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                            mMeasuredDimension);
-
-                    height = height + mMeasuredDimension[1];
-                    if (i == 0) {
-                        width = mMeasuredDimension[0];
-                    }
-                }
-            }
-
-            switch (widthMode) {
-                case View.MeasureSpec.EXACTLY:
-                    width = widthSize;
-                case View.MeasureSpec.AT_MOST:
-                case View.MeasureSpec.UNSPECIFIED:
-            }
-
-            switch (heightMode) {
-                case View.MeasureSpec.EXACTLY:
-                    height = heightSize;
-                case View.MeasureSpec.AT_MOST:
-                case View.MeasureSpec.UNSPECIFIED:
-            }
-
-            setMeasuredDimension(width, height);
-        }
-
-        private void measureScrapChild(RecyclerView.Recycler recycler, int position, int widthSpec,
-                                       int heightSpec, int[] measuredDimension) {
-
-            View view = recycler.getViewForPosition(position);
-            if (view.getVisibility() == View.GONE) {
-                measuredDimension[0] = 0;
-                measuredDimension[1] = 0;
-                return;
-            }
-            // For adding Item Decor Insets to view
-            super.measureChildWithMargins(view, 0, 0);
-            RecyclerView.LayoutParams p = (RecyclerView.LayoutParams) view.getLayoutParams();
-            int childWidthSpec = ViewGroup.getChildMeasureSpec(
-                    widthSpec,
-                    getPaddingLeft() + getPaddingRight() + getDecoratedLeft(view) + getDecoratedRight(view),
-                    p.width);
-            int childHeightSpec = ViewGroup.getChildMeasureSpec(
-                    heightSpec,
-                    getPaddingTop() + getPaddingBottom() + getDecoratedTop(view) + getDecoratedBottom(view),
-                    p.height);
-            view.measure(childWidthSpec, childHeightSpec);
-
-            // Get decorated measurements
-            measuredDimension[0] = getDecoratedMeasuredWidth(view) + p.leftMargin + p.rightMargin;
-            measuredDimension[1] = getDecoratedMeasuredHeight(view) + p.bottomMargin + p.topMargin;
-            recycler.recycleView(view);
+    /**
+     * 결제 건이 성공적으로 생성되면 토스 앱을 실행하거나, 사용자 정보를 입력받는 페이지를 통해 주문을 완료합니다.
+     *
+     * @param payToken 결제 시 사용되는 결제 Token
+     */
+    private void payWithToss(String payToken) {
+        if (TossUtils.isTossInstalled(getActivity())) {
+            TossUtils.launchForPayment(getActivity(), payToken);
+        } else {
+            Intent intent = new Intent(getActivity(), WebViewActivity.class);
+            intent.putExtra(TossConstants.INTENT_EXTRA_PAY_TOKEN, payToken);
+            startActivity(intent);
         }
     }
 
+    /**
+     * 결제 API 서버에 결제 생성을 요청하고, 성공 시 결제를 시도합니다.
+     */
+    private class TossRequestTask extends AsyncTask<String, Void, String> {
 
+        private JSONObject params;
+
+        public TossRequestTask(JSONObject params) {
+            this.params = params;
+        }
+
+        public String readSomething(InputStream in) throws IOException {
+            StringBuilder content = new StringBuilder();
+            String line;
+            BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+            while ((line = br.readLine()) != null) {
+                content.append(line);
+            }
+
+            return content.toString();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            if (mProgressDialog == null) {
+                mProgressDialog = new ProgressDialog(getActivity());
+                mProgressDialog.setCancelable(false);
+                mProgressDialog.setMessage("서버와 통신중입니다.");
+            }
+            mProgressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... urls) {
+            InputStream is = null;
+            OutputStream os = null;
+
+            try {
+                URL url = new URL(urls[0]);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.addRequestProperty("Content-Type", "application/json");
+                conn.setReadTimeout(10000 /* milliseconds */);
+                conn.setConnectTimeout(15000 /* milliseconds */);
+                conn.setRequestMethod("POST");
+                conn.setDoOutput(true);
+                conn.setDoInput(true);
+
+                os = conn.getOutputStream();
+                System.out.print(params.toString().getBytes() + "***\n");
+                os.write(params.toString().getBytes());
+                os.flush();
+                int response = conn.getResponseCode();
+                is = conn.getInputStream();
+
+                String contentAsString = readSomething(is);
+                return contentAsString;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "Error : Unable to retrieve web page. URL may be invalid.";
+            } finally {
+                if (is != null) {
+                    try {
+                        is.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (os != null) {
+                    try {
+                        os.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (mProgressDialog.isShowing()) {
+                mProgressDialog.dismiss();
+            }
+
+            //서버에 요청이 실패하였을 때
+            if (result.contains("Error")) {
+                Toast.makeText(getActivity(), result, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            //서버에서 응답이 온 경우
+            try {
+                JSONObject response = new JSONObject(result);
+                int resultCode = response.optInt(TossConstants.PARAM_RESULT_CODE, TossConstants.RESULT_FAILED);
+                switch (resultCode) {
+                    case TossConstants.RESULT_SUCCEED:
+                        //결제 건이 성공적으로 생성된 경우, 결제 요청을 합니다.
+                        payWithToss(response.optString(TossConstants.PARAM_PAY_TOKEN));
+                        break;
+                    case TossConstants.RESULT_FAILED:
+                    case TossConstants.RESULT_FAILED_ORDER_DUPLICATED:
+                    case TossConstants.RESULT_FAILED_EXCEED_LIMIT:
+                        //실패 사유를 Toast로 보여줍니다.
+                        String msg = response.optString(TossConstants.PARAM_MSG);
+                        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
