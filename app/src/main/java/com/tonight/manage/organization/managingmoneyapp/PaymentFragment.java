@@ -51,6 +51,7 @@ public class PaymentFragment extends Fragment {
     private EventInfoPaymentAdapter mPaymentListAdapter;
     private SwipeRefreshLayout mPaymentListSwipeRefreshLayout;
     // private ScrollView mPaymentListScrollView;
+    PopupMenu popup;
     private ImageButton mAddButton;
 
 
@@ -96,7 +97,6 @@ public class PaymentFragment extends Fragment {
                 mPaymentListSwipeRefreshLayout.setRefreshing(false);
             }
         });
-
 
         mAddButton = (ImageButton) v.findViewById(R.id.eventInfo_addmoney_btn);
         mAddButton.setOnClickListener(new View.OnClickListener() {
