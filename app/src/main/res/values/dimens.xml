@@ -25,4 +25,7 @@
     <dimen name="popup_width">300dp</dimen>
     <dimen name="popup_height">230dp</dimen>
 
+    <dimen name="popup_usage_width">302dp</dimen>
+    <dimen name="popup_usage_height">275dp</dimen>
+
 </resources>

@@ -45,7 +45,7 @@ public class EventInfoActivity extends AppCompatActivity implements TabLayout.On
         mViewPager = (ViewPager) findViewById(R.id.pager);
         Pager adapter = new Pager(getSupportFragmentManager(), tabLayout.getTabCount());
         mViewPager.setAdapter(adapter);
-        tabLayout.setOnTabSelectedListener(this);//Tab 선택 시 화면 이동하는 리스너
+        tabLayout.addOnTabSelectedListener(this);//Tab 선택 시 화면 이동하는 리스너
         mViewPager.addOnPageChangeListener(this);//Tab swiping시 화면 이동하는 리스너
 
         mInvitationButton = (ImageButton) findViewById(R.id.invitationBtn);

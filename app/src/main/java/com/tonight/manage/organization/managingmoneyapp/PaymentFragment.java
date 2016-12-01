@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoMemberPaymentListItem;
@@ -29,7 +31,7 @@ public class PaymentFragment extends Fragment {
     private SwipeRefreshLayout mPaymentListSwipeRefreshLayout;
     // private ScrollView mPaymentListScrollView;
     private FloatingActionButton mFabButton;
-
+    PopupMenu popup;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.activity_event_info_payment, container, false);
@@ -67,7 +69,7 @@ public class PaymentFragment extends Fragment {
         mFabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PopupMenu popup = new PopupMenu(getActivity(), mFabButton);
+                popup = new PopupMenu(getActivity(), mFabButton);
                 popup.getMenuInflater().inflate(R.menu.activity_eventinfo_popup, popup.getMenu());
 
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -80,6 +82,7 @@ public class PaymentFragment extends Fragment {
                 popup.show();
             }
         });
+
 
         return v;
     }

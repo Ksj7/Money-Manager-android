@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageButton
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_menu_camera"
+        android:id="@+id/usage_snack_camera"/>
+
+    <ImageButton
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_menu_gallery"
+        android:id="@+id/usage_snack_gallery"/>
+</LinearLayout>
