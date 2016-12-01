@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomAddMoneyPopup;
+import com.tonight.manage.organization.managingmoneyapp.Custom.CustomSetDatePopup;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoMemberPaymentListItem;
 
 import java.util.ArrayList;
@@ -75,8 +76,8 @@ public class PaymentFragment extends Fragment {
                     public boolean onMenuItemClick(MenuItem item) {
                         int id = item.getItemId();
                         if(id == R.id.setdate){
-
-
+                            CustomSetDatePopup setDatePopup = CustomSetDatePopup.newInstance();
+                            setDatePopup.show(getFragmentManager(), "setDate");
                         }
                         else {
                             CustomAddMoneyPopup addMoneyPopup = CustomAddMoneyPopup.newInstance();

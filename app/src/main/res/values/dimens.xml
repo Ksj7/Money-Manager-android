@@ -18,6 +18,9 @@
     <dimen name="popup_profile_width">242dp</dimen>
     <dimen name="popup_profile_height">349dp</dimen>
 
+    <dimen name="popup_calendar_width">242dp</dimen>
+    <dimen name="popup_calendar_height">379dp</dimen>
+
     <dimen name="profile_image_wrap_size">200dp</dimen>
     <dimen name="profile_image_size">110dp</dimen>
 

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/popup_calendar_width"
+    android:layout_height="@dimen/popup_calendar_height"
+    android:background="@color/colorBackground"
+    android:fitsSystemWindows="true"
+    tools:ignore="UnusedAttribute">
+
+    <RelativeLayout
+        android:id="@+id/wrapLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/titleRelativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="13dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="23dp">
+
+            <TextView
+                android:id="@+id/titleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="기한 설정"
+                android:textColor="#000"
+                android:textSize="18sp" />
+        </RelativeLayout>
+
+        <FrameLayout
+            android:id="@+id/layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/titleRelativeLayout"
+            android:layout_centerHorizontal="true">
+
+            <CalendarView
+                android:id="@+id/calendar"
+                android:layout_width="200dp"
+                android:layout_height="250dp"
+                android:showWeekNumber="false"
+                android:theme="@style/Theme.Custom.Calendar" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/buttonPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layout"
+            android:layout_margin="10dp">
+
+            <Button
+                android:id="@+id/confirmBtn"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="0.5"
+                android:background="@drawable/primary_color_round_button"
+                android:text="확인"
+                android:textColor="#fff" />
+
+            <Button
+                android:id="@+id/negativeBtn"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_weight="0.5"
+                android:background="@drawable/primary_color_round_button"
+                android:text="취소"
+                android:textColor="#fff" />
+
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>
