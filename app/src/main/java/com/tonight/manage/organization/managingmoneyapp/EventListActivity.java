@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.tonight.manage.organization.managingmoneyapp.Custom.CustomRateTextCircularProgressBar;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventListItem;
 
 import java.util.ArrayList;
@@ -155,7 +156,18 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
             //test
             holder.eventName.setText("1학기 회비");
             holder.eventNumber.setText("82명");
-            holder.eventpercent.setText("50%");
+
+            // 목표액 / 모인금액으로 퍼센트 계산해서 뿌려주는 부분
+            holder.mRateTextCircularProgressBar.setMax(100);
+            holder.mRateTextCircularProgressBar.clearAnimation();
+            holder.mRateTextCircularProgressBar.getCircularProgressBar().setCircleWidth(20);
+            int summ = 2400;//모인금액 받아와야함.
+            int targetm = 13000;//목표액 받아와야함.
+            int percent = targetm / summ;
+            holder.mRateTextCircularProgressBar.setProgress(percent);//이 percent => 모인금액 / 목표액
+
+
+            holder.eventpercent.setText(holder.mRateTextCircularProgressBar.getCircularProgressBar().getProgress()+"%");
             holder.view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -163,7 +175,6 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
                     startActivity(intent);
                 }
             });
-
             //이게 정상
             //holder.groupName.setText(groupDatas.get(position).groupName);
             //holder.groupNumber.setText(groupDatas.get(position).groupNumber+"명");
@@ -184,6 +195,7 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
             TextView eventName;
             TextView eventNumber ;
             TextView eventpercent;
+            CustomRateTextCircularProgressBar mRateTextCircularProgressBar;
             View view;
             //RecyclerView recyclerView;
 
@@ -193,6 +205,7 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
                 eventName = (TextView) v.findViewById(R.id.eventlist_title_textview);
                 eventNumber = (TextView) v.findViewById(R.id.eventlist_number_textview);
                 eventpercent = (TextView) v.findViewById(R.id.eventlist_percent_textview) ;
+                mRateTextCircularProgressBar = (CustomRateTextCircularProgressBar) v.findViewById(R.id.rate_progress_bar);
                 //recyclerView = (RecyclerView) v.findViewById(R.id.eventlist_recyclerView);
             }
         }
