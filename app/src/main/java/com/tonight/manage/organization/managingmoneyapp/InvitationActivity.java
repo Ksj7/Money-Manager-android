@@ -30,6 +30,7 @@ import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineCons
 import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -47,7 +48,8 @@ public class InvitationActivity extends AppCompatActivity {
     private InvitationAdapter mInvitationAdapter;
     private HorizontalScrollView invitationPersonScroll;
     private LinearLayout invitationPerSonLinear;
-
+    private HashMap<Integer,String> newInvitationMemberList;
+    private HashMap<Integer,Button> buttonBundle;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +61,8 @@ public class InvitationActivity extends AppCompatActivity {
         //String eventName = i.getStringExtra("eventName");
         String eventnum = i.getStringExtra("eventnum");
 
+        newInvitationMemberList = new HashMap<>();
+        buttonBundle = new HashMap<>();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -104,23 +108,32 @@ public class InvitationActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(final InvitationActivity.InvitationAdapter.ViewHolder holder, int position) {
+        public void onBindViewHolder(final InvitationActivity.InvitationAdapter.ViewHolder holder, final int position) {
             //test
-            InvitationListItem listItem = invitationListArrayList.get(position);
+            final InvitationListItem listItem = invitationListArrayList.get(position);
             holder.personName.setText(listItem.getUsername());
             holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
                     if (isChecked) {
+                        newInvitationMemberList.put(position,listItem.getUserid());
                         Button personBtn = new ProductButton.ProductBuilder(holder.personName.getText().toString()).build();
+                        buttonBundle.put(position,personBtn);
                         LinearLayout.LayoutParams plControl = new LinearLayout.LayoutParams(150, 100);
                         plControl.setMargins(8, 5, 8, 5);
                         invitationPerSonLinear.addView(personBtn, plControl);
                         invitationPersonScroll.computeScroll();
                     } else {
+                        Button removeButton = buttonBundle.get(position);
+                        invitationPerSonLinear.removeView(removeButton);
+                        buttonBundle.remove(position);
+                        newInvitationMemberList.remove(position);
                     }
                 }
             });
+
+
             Glide.with(getApplicationContext()).load(listItem.getProfileimg()).into(holder.profileImageView);
         }
 
@@ -134,6 +147,7 @@ public class InvitationActivity extends AppCompatActivity {
             RecyclerView recyclerView;
             CheckBox checkBox;
             ImageView profileImageView;
+            Button invitationButton;
 
             public ViewHolder(View v) {
                 super(v);
@@ -141,6 +155,7 @@ public class InvitationActivity extends AppCompatActivity {
                 personName = (TextView) v.findViewById(R.id.invitationListPersonName);
                 recyclerView = (RecyclerView) v.findViewById(R.id.invitationRecyclerView);
                 profileImageView = (ImageView) v.findViewById(R.id.invitationListProfileImageView);
+                invitationButton = (Button) v.findViewById(R.id.confirmBtn);
             }
         }
     }
