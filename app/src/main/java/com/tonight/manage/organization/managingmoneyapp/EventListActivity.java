@@ -160,6 +160,7 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_member_list) {
             Intent i = new Intent(this, MemberListActivity.class);
+            i.putExtra("groupcode",mGroupCode);
             startActivity(i);
             return true;
         }

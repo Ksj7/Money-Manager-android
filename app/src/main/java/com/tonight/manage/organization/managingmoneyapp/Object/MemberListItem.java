@@ -5,7 +5,32 @@ package com.tonight.manage.organization.managingmoneyapp.Object;
  */
 
 public class MemberListItem {
-    String name;
+
+    String username;
     String phone;
-    String imgurl;
+    String profileimg;
+
+    public MemberListItem setUsername(String username) {
+        this.username = username;
+        return this;
+    }
+    public MemberListItem setPhone(String phone) {
+        this.phone = phone;
+        return this;
+    }
+    public MemberListItem setProfileimg(String profileimg) {
+        this.profileimg = profileimg;
+        return this;
+    }
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getProfileimg() {
+        return profileimg;
+    }
+
+    public String getUsername() {
+        return username;
+    }
 }
