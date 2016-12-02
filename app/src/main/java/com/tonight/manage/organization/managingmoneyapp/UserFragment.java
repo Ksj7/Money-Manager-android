@@ -2,7 +2,9 @@ package com.tonight.manage.organization.managingmoneyapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
@@ -22,6 +24,7 @@ import com.tonight.manage.organization.managingmoneyapp.Custom.CustomUsagePopup;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoUsageListItem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -29,6 +32,7 @@ import java.util.ArrayList;
  */
 
 public class UserFragment extends Fragment implements View.OnClickListener {
+    private int PICK_IMAGE_REQUEST = 1;
 
     private RecyclerView mUsageListRecyclerView;
     private EventInfoUsageAdapter mUsageListAdapter;
@@ -48,7 +52,6 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         mUsageListRecyclerView.setHasFixedSize(true);
         mUsageListAdapter = new EventInfoUsageAdapter(getActivity());
         mUsageListRecyclerView.setAdapter(mUsageListAdapter);
-
 
         mUsageListSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.eventInfo_user_swipeRefreshLayout);
         mUsageListSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -83,7 +86,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(View view) {//카메라로부터 가져오기
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent,1);
+                startActivityForResult(intent,PICK_IMAGE_REQUEST);
             }
         });
         galleryButton.setOnClickListener(new View.OnClickListener() { //앨범으로부터 가져오기
@@ -91,7 +94,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
-                startActivityForResult(intent, 1);
+                startActivityForResult(intent, PICK_IMAGE_REQUEST);
             }
         });
     }
@@ -99,16 +102,19 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     { //이미지를 받으면 서버에 보내줌
-         if(resultCode == getActivity().RESULT_OK) { //무사히 종료되었으면
+        if (requestCode == PICK_IMAGE_REQUEST &&
+                resultCode == getActivity().RESULT_OK && data != null && data.getData() != null) {
+
+            //무사히 종료되었으면
              Uri selectedImageUri = data.getData();
              Toast.makeText(getActivity(), selectedImageUri + " ", Toast.LENGTH_LONG).show();
 
-             CustomUsagePopup usagePopup = CustomUsagePopup.newInstance();
-             usagePopup.show(getActivity().getSupportFragmentManager(),"usage_popup");
+             CustomUsagePopup usagePopup = CustomUsagePopup.newInstance(selectedImageUri);
+             usagePopup.show(getActivity().getSupportFragmentManager(),"usage_popup"); //popup창 띄우고
 
-         }
+
+        }
     }
-
 
 
     class EventInfoUsageAdapter extends RecyclerView.Adapter<EventInfoUsageAdapter.ViewHolder> {
@@ -183,6 +189,8 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
 
 }
+
+
 
 /* public  void SaveBitmapToFileCache(Bitmap bitmap, String strFilePath,
                                        String filename) {
