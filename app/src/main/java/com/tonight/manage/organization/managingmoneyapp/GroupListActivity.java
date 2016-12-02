@@ -21,6 +21,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -197,13 +198,29 @@ public class GroupListActivity extends AppCompatActivity
             startActivity(new Intent(this, EditPhoneNumberActivity.class));
         } else if (id == R.id.nav_alarm_list) {
 
+        } else if( id == R.id.nav_logout){
+            Intent intent = new Intent(GroupListActivity.this,LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
 
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0)
+        {
+
+            this.moveTaskToBack(true);
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
 
     class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> {
 
