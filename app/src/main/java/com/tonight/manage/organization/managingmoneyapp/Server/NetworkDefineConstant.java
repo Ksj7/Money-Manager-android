@@ -20,6 +20,8 @@ public class NetworkDefineConstant {
             "http://"+HOST_URL + "joinActivity.php";
     public static final String SERVER_URL_CHANGES=
             "http://"+HOST_URL + "changeActivity.php";
+    public static final String SERVER_URL_INVITATION =
+            "http://"+HOST_URL + "invitationActivity.php";
 
     private static OkHttpClient okHttpClient;
 

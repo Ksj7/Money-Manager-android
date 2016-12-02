@@ -12,11 +12,13 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 public class Pager extends FragmentStatePagerAdapter {
     int tabCount;
     String eventName;
+    String eventnum;
 
-    public Pager(FragmentManager fm, int tabCount , String eventName) {
+    public Pager(FragmentManager fm, int tabCount , String eventName, String eventnum) {
         super(fm);
         this.tabCount = tabCount;
         this.eventName = eventName;
+        this.eventnum = eventnum;
     }
 
     @Override
@@ -26,6 +28,7 @@ public class Pager extends FragmentStatePagerAdapter {
                 PaymentFragment paymentFragment = new PaymentFragment();
                 Bundle b = new Bundle();
                 b.putString("eventName", eventName);
+                b.putString("eventnum",eventnum);
                 paymentFragment.setArguments(b);
                 return paymentFragment;
             case 1:

@@ -242,6 +242,7 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
                 public void onClick(View v) {
                     Intent intent = new Intent(EventListActivity.this, EventInfoActivity.class);
                     intent.putExtra("eventName", eventListItems.get(position).getEventname());
+                    intent.putExtra("eventnum",eventListItems.get(position).getEventnum());
                     startActivity(intent);
                 }
             });

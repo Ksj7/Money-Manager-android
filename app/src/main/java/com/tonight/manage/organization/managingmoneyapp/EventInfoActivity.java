@@ -2,15 +2,12 @@ package com.tonight.manage.organization.managingmoneyapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -39,7 +36,8 @@ public class EventInfoActivity extends AppCompatActivity implements TabLayout.On
             Toast.makeText(this,"데이터를 가져오는 중에 오류가 발생했습니다. 다시 실행해 주세요 ◕ˇoˇ◕",Toast.LENGTH_SHORT).show();
             return;
         }
-        String eventName = i.getStringExtra("eventName");
+        final String eventName = i.getStringExtra("eventName");
+        final String eventnum = i.getStringExtra("eventnum");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -51,7 +49,7 @@ public class EventInfoActivity extends AppCompatActivity implements TabLayout.On
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
-        Pager adapter = new Pager(getSupportFragmentManager(), tabLayout.getTabCount(),eventName);
+        Pager adapter = new Pager(getSupportFragmentManager(), tabLayout.getTabCount(),eventName , eventnum);
         mViewPager.setAdapter(adapter);
         tabLayout.addOnTabSelectedListener(this);//Tab 선택 시 화면 이동하는 리스너
         mViewPager.addOnPageChangeListener(this);//Tab swiping시 화면 이동하는 리스너
@@ -61,6 +59,8 @@ public class EventInfoActivity extends AppCompatActivity implements TabLayout.On
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(EventInfoActivity.this,InvitationActivity.class);
+                i.putExtra("eventName",eventName);
+                i.putExtra("eventnum",eventnum);
                 startActivity(i);
             }
         });
