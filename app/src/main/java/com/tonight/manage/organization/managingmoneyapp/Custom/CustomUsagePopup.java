@@ -58,6 +58,7 @@ public class CustomUsagePopup extends DialogFragment {
                 //서버에 사용내역 리스트 보내줌
                 try {
                     receivedbitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
+                    receivedbitmap = Bitmap.createScaledBitmap(receivedbitmap, 200, 200, false);
 
                     UploadImage uploadImage = new UploadImage();
                     uploadImage.execute(receivedbitmap);
