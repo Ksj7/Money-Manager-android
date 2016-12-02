@@ -12,6 +12,10 @@ public class NetworkDefineConstant {
     public static final String HOST_URL = "52.79.174.172/MAM/";
     public static final String SERVER_URL_GROUP_LIST=
             "http://"+HOST_URL + "grouplistActivity.php";
+    public static final String SERVER_URL_LOGIN=
+            "http://"+HOST_URL + "loginActivity.php";
+    public static final String SERVER_URL_JOIN=
+            "http://"+HOST_URL + "joinActivity.php";
 
     private static OkHttpClient okHttpClient;
 

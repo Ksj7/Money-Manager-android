@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.tonight.manage.organization.managingmoneyapp.GroupListActivity;
 import com.tonight.manage.organization.managingmoneyapp.R;
 
 /**
@@ -24,8 +25,7 @@ public class CustomCreateGroupPopup extends DialogFragment {
     }
 
     public static CustomCreateGroupPopup newInstance() {
-        CustomCreateGroupPopup EntrancePopup = new CustomCreateGroupPopup();
-        return EntrancePopup;
+        return new CustomCreateGroupPopup();
     }
 
     @Nullable
@@ -37,8 +37,9 @@ public class CustomCreateGroupPopup extends DialogFragment {
         Ybtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "그룹에 개설되었습니다.", Toast.LENGTH_SHORT).show();
-                //여기서 다시 GroupList 로드해야됨!
+                Toast.makeText(getActivity(), "그룹이 개설되었습니다.", Toast.LENGTH_SHORT).show();
+                GroupListActivity activity = (GroupListActivity) getActivity();
+                activity.isSuccessCreateGroup(true);
                 dismiss();
             }
 

@@ -42,4 +42,5 @@ dependencies {
     compile 'com.github.goka.flickableview:flickableview:1.0.0'
     compile 'com.github.developer-shivam:Diagonalify:1.1'
     compile files('libs/jxl.jar')
+    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
 }

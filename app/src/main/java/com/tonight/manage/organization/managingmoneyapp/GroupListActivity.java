@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -47,6 +48,7 @@ public class GroupListActivity extends AppCompatActivity
     private SwipeRefreshLayout mGroupListSwipeRefreshLayout;
     private FloatingActionButton mCreateGroupFab;
     private FloatingActionButton mEnterGrouopFab;
+    private boolean isRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,16 +94,33 @@ public class GroupListActivity extends AppCompatActivity
         mGroupListAdapter = new GroupAdapter(this);
         mGroupListRecyclerView.setAdapter(mGroupListAdapter);
 
-
         mGroupListSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        mGroupListSwipeRefreshLayout.setSize(SwipeRefreshLayout.LARGE);
+        mGroupListSwipeRefreshLayout.setColorSchemeResources(
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_green_light,
+                android.R.color.holo_red_light
+        );
         mGroupListSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 
             @Override
             public void onRefresh() {
-                mGroupListSwipeRefreshLayout.setRefreshing(false);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        new LoadGroupListAsyncTask().execute();
+                        mGroupListSwipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 2500);
+
             }
         });
         new LoadGroupListAsyncTask().execute();
+    }
+
+    public void isSuccessCreateGroup(boolean isRefresh) {
+        if (isRefresh) new LoadGroupListAsyncTask().execute();
     }
 
     @Override
@@ -168,7 +187,7 @@ public class GroupListActivity extends AppCompatActivity
             groupDatas = new ArrayList<>();
         }
 
-        public void addItem(ArrayList<GroupListItem> datas) {
+        public void addAllItem(ArrayList<GroupListItem> datas) {
             this.groupDatas = datas;
         }
 
@@ -228,7 +247,7 @@ public class GroupListActivity extends AppCompatActivity
                 //연결
                 OkHttpClient toServer = NetworkDefineConstant.getOkHttpClient();
                 FormBody.Builder builder = new FormBody.Builder();
-                builder.add("userid","jun1").add("signal", "0");
+                builder.add("userid", "jun1").add("signal", "0");
                 FormBody formBody = builder.build();
                 //요청
                 Request request = new Request.Builder()
@@ -262,7 +281,7 @@ public class GroupListActivity extends AppCompatActivity
             // RecyclerView Adapter Item 값 추가
             if (result != null && result.size() > 0) {
 
-                mGroupListAdapter.addItem(result);
+                mGroupListAdapter.addAllItem(result);
                 mGroupListAdapter.notifyDataSetChanged();
             }
         }
