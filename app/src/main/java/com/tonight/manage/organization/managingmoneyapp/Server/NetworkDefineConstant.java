@@ -1,13 +1,32 @@
 package com.tonight.manage.organization.managingmoneyapp.Server;
 
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
+
 /**
  * Created by sujin on 2016-11-04.
  */
 
 public class NetworkDefineConstant {
-    public static final String HOST_URL = "";
-    public static final int PORT_NUMBER = 8080;
+    public static final String HOST_URL = "52.79.174.172/MAM/";
+    public static final String SERVER_URL_GROUP_LIST=
+            "http://"+HOST_URL + "grouplistActivity.php";
 
-    public static final String SERVER_URL_MAIN_LIST_VIEW=
-            "http://"+HOST_URL+":"+ PORT_NUMBER + "group";
+    private static OkHttpClient okHttpClient;
+
+    private NetworkDefineConstant(){
+        okHttpClient = new OkHttpClient().newBuilder()
+                .connectTimeout(15, TimeUnit.SECONDS)
+                .readTimeout(15, TimeUnit.SECONDS)
+                .build();
+    }
+    public static OkHttpClient getOkHttpClient(){
+        if(okHttpClient != null){
+            return okHttpClient;
+        }else{
+            new NetworkDefineConstant();
+        }
+        return okHttpClient;
+    }
 }

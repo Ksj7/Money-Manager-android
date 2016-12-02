@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,10 +24,17 @@ import android.widget.TextView;
 import com.github.clans.fab.FloatingActionButton;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomCreateGroupPopup;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomEntrancePopup;
-import com.tonight.manage.organization.managingmoneyapp.Object.GroupList;
 import com.tonight.manage.organization.managingmoneyapp.Object.GroupListItem;
+import com.tonight.manage.organization.managingmoneyapp.Server.GroupJSONParsor;
+import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
 
 import java.util.ArrayList;
+
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  * Created by sujinKim on 2016-11-04.
@@ -55,7 +63,7 @@ public class GroupListActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 CustomCreateGroupPopup createGroupPopup = CustomCreateGroupPopup.newInstance();
-                createGroupPopup.show(getSupportFragmentManager(),"create_group");
+                createGroupPopup.show(getSupportFragmentManager(), "create_group");
 
             }
         });
@@ -63,7 +71,7 @@ public class GroupListActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 CustomEntrancePopup entrancePopup = CustomEntrancePopup.newInstance();
-                entrancePopup.show(getSupportFragmentManager(),"entrance_group");
+                entrancePopup.show(getSupportFragmentManager(), "entrance_group");
             }
         });
 
@@ -93,6 +101,7 @@ public class GroupListActivity extends AppCompatActivity
                 mGroupListSwipeRefreshLayout.setRefreshing(false);
             }
         });
+        new LoadGroupListAsyncTask().execute();
     }
 
     @Override
@@ -134,10 +143,10 @@ public class GroupListActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_edit_password) {
-            startActivity(new Intent(this,EditPasswordActivity.class));
-        } else if(id==R.id.nav_edit_phoneNumber){
-            startActivity(new Intent(this,EditPhoneNumberActivity.class));
-        } else if(id == R.id.nav_alarm_list) {
+            startActivity(new Intent(this, EditPasswordActivity.class));
+        } else if (id == R.id.nav_edit_phoneNumber) {
+            startActivity(new Intent(this, EditPhoneNumberActivity.class));
+        } else if (id == R.id.nav_alarm_list) {
 
         }
 
@@ -156,7 +165,7 @@ public class GroupListActivity extends AppCompatActivity
         public GroupAdapter(Context context) {
             mContext = context;
             mLayoutInflater = LayoutInflater.from(context);
-            groupDatas = new ArrayList<GroupListItem>();
+            groupDatas = new ArrayList<>();
         }
 
         public void addItem(ArrayList<GroupListItem> datas) {
@@ -173,40 +182,33 @@ public class GroupListActivity extends AppCompatActivity
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
 
-            //test
-            holder.groupName.setText("test text");
-            holder.groupNumber.setText("88K");
-            holder.view.setOnClickListener(new View.OnClickListener(){
+            holder.groupName.setText(groupDatas.get(position).getGroupname());
+            holder.groupNumber.setText(groupDatas.get(position).getMembernum());
+            holder.view.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(GroupListActivity.this,EventListActivity.class);
+                    Intent i = new Intent(GroupListActivity.this, EventListActivity.class);
                     startActivity(i);
                 }
             });
-            //이게 정상
-            //holder.eventName.setText(groupDatas.get(position).eventName);
-            //holder.groupNumber.setText(groupDatas.get(position).groupNumber+"명");
         }
 
         @Override
         public int getItemCount() {
-            //test
-            return 3;
-
-            //이게 원래 정상
-            // return groupDatas.size();
+            return groupDatas.size();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             TextView groupName;
-            TextView groupNumber ;
+            TextView groupNumber;
             RecyclerView recyclerView;
             View view;
+
             public ViewHolder(View v) {
                 super(v);
                 view = v;
-                groupName = (TextView) v.findViewById(R.id.groupName);
+                groupName = (TextView) v.findViewById(R.id.groupname);
                 groupNumber = (TextView) v.findViewById(R.id.groupNumber);
                 recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
             }
@@ -214,19 +216,53 @@ public class GroupListActivity extends AppCompatActivity
     }
 
     //group list 가져오기 위한 Thread
-    public class LoadGroupListAsyncTask extends AsyncTask<String, Integer, GroupList> {
+    public class LoadGroupListAsyncTask extends AsyncTask<Void, Void, ArrayList<GroupListItem>> {
         @Override
-        protected GroupList doInBackground(String... args) {
+        protected ArrayList<GroupListItem> doInBackground(Void... voids) {
+            String requestURL = "";
+            Response response = null;
+            try {
+
+                requestURL = NetworkDefineConstant.SERVER_URL_GROUP_LIST;
+
+                //연결
+                OkHttpClient toServer = NetworkDefineConstant.getOkHttpClient();
+                FormBody.Builder builder = new FormBody.Builder();
+                builder.add("userid","jun1").add("signal", "0");
+                FormBody formBody = builder.build();
+                //요청
+                Request request = new Request.Builder()
+                        .url(requestURL)
+                        .post(formBody)
+                        .build();
+                //응답
+                response = toServer.newCall(request).execute();
+                boolean flag = response.isSuccessful();
+                ResponseBody resBody = response.body();
+
+                if (flag) { //http req/res 성공
+                    return GroupJSONParsor.parseGroupListItems(resBody.string());
+                } else { //실패시 정의
+                    Log.e("에러", "데이터를 로드하는데 실패하였습니다");
+                }
+            } catch (Exception e) {
+                Log.e("요청중에러", "그룹 리스트", e);
+            } finally {
+                if (response != null) {
+                    response.close();
+                }
+            }
+
             return null;
         }
 
         @Override
-        protected void onPostExecute(GroupList result) {
+        protected void onPostExecute(ArrayList<GroupListItem> result) {
 
             // RecyclerView Adapter Item 값 추가
-            if (result != null && result.data.size() > 0) {
+            if (result != null && result.size() > 0) {
 
-                mGroupListAdapter.addItem(result.data);
+                mGroupListAdapter.addItem(result);
                 mGroupListAdapter.notifyDataSetChanged();
             }
         }
