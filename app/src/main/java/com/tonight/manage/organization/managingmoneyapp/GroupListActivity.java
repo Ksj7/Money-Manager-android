@@ -23,7 +23,6 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,7 +94,7 @@ public class GroupListActivity extends AppCompatActivity
         mEnterGrouopFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CustomEntrancePopup entrancePopup = CustomEntrancePopup.newInstance();
+                CustomEntrancePopup entrancePopup = CustomEntrancePopup.newInstance(userId);
                 entrancePopup.show(getSupportFragmentManager(), "entrance_group");
             }
         });
