@@ -31,7 +31,7 @@ import java.util.HashMap;
  * Created by 3 on 2016-11-14.
  */
 
-public class UserFragment extends Fragment implements View.OnClickListener {
+public class UsageFragment extends Fragment implements View.OnClickListener {
     private int PICK_IMAGE_REQUEST = 1;
 
     private RecyclerView mUsageListRecyclerView;
