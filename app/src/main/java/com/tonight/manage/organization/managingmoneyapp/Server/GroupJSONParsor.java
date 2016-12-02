@@ -36,10 +36,7 @@ public class GroupJSONParsor {
                             .setMembernum(item.getString("membernum"))
                             .setGroupcode(item.getString("groupcode"))
                             .setGroupname(item.getString("groupname"))
-                            .setBank(item.getString("bank"))
-                            .setAccount(item.getString("account"))
-                            .setBalance(item.getString("balance"))
-                            .setManagerid(item.getString("managerid"));
+                            .setBalance(item.getString("balance"));
 
                     groupListItemArrayList.add(valueObject);
                 }
