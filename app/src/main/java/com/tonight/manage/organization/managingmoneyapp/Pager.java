@@ -32,8 +32,8 @@ public class Pager extends FragmentStatePagerAdapter {
                 paymentFragment.setArguments(b);
                 return paymentFragment;
             case 1:
-                UsageFragment usageFragment = new UsageFragment();
-                return usageFragment;
+                UsageFragment userFragment = new UsageFragment();
+                return userFragment;
             default:
                 return null;
         }
