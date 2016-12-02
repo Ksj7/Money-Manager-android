@@ -18,6 +18,8 @@ public class NetworkDefineConstant {
             "http://"+HOST_URL + "loginActivity.php";
     public static final String SERVER_URL_JOIN=
             "http://"+HOST_URL + "joinActivity.php";
+    public static final String SERVER_URL_CHANGES=
+            "http://"+HOST_URL + "changeActivity.php";
 
     private static OkHttpClient okHttpClient;
 
