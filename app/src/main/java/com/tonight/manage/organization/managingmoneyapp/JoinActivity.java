@@ -59,6 +59,8 @@ public class JoinActivity extends AppCompatActivity {
                         new UpdateJoinDataAsyncTask().execute(id, pwd, name, phone);
                     } else {
                         Toast.makeText(JoinActivity.this, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+                        pwdEdit.setText("");
+                        pwdCheckEdit.setText("");
                     }
                 }
             }

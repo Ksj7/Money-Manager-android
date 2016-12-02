@@ -48,7 +48,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login(View v) {
-        new CheckInvalidLoginDataAsyncTask().execute("jun1","taek");
+        String id = idEditText.getText().toString();
+        String pwd = pwdEditText.getText().toString();
+        new CheckInvalidLoginDataAsyncTask().execute(id,pwd);
     }
 
     public void join(View v) {
@@ -125,7 +127,9 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString("id", "");
                     editor.apply();
                 }
-                startActivity(new Intent(LoginActivity.this, GroupListActivity.class));
+                Intent i = new Intent(LoginActivity.this, GroupListActivity.class);
+                i.putExtra("userId",idEditText.getText().toString());
+                startActivity(i);
                 finish();
             }
             else {

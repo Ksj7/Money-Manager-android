@@ -48,12 +48,17 @@ public class GroupListActivity extends AppCompatActivity
     private SwipeRefreshLayout mGroupListSwipeRefreshLayout;
     private FloatingActionButton mCreateGroupFab;
     private FloatingActionButton mEnterGrouopFab;
-    private boolean isRefresh;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent i = getIntent();
+        if(i==null) return;
+        userId = i.getStringExtra("userId");
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -199,7 +204,7 @@ public class GroupListActivity extends AppCompatActivity
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
+        public void onBindViewHolder(ViewHolder holder, final int position) {
 
             holder.groupName.setText(groupDatas.get(position).getGroupname());
             holder.groupNumber.setText(groupDatas.get(position).getMembernum());
@@ -208,6 +213,7 @@ public class GroupListActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(GroupListActivity.this, EventListActivity.class);
+                    i.putExtra("groupcode",groupDatas.get(position).getGroupcode());
                     startActivity(i);
                 }
             });
@@ -247,7 +253,7 @@ public class GroupListActivity extends AppCompatActivity
                 //연결
                 OkHttpClient toServer = NetworkDefineConstant.getOkHttpClient();
                 FormBody.Builder builder = new FormBody.Builder();
-                builder.add("userid", "jun1").add("signal", "0");
+                builder.add("userid", userId).add("signal", "0");
                 FormBody formBody = builder.build();
                 //요청
                 Request request = new Request.Builder()
