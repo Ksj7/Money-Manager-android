@@ -40,13 +40,24 @@
                 android:layout_below="@+id/appbarLayout"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="15dp"
-                    android:text="초대"
-                    android:textColor="#000000"
-                    android:textSize="20sp" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="15dp"
+                        android:text="초대"
+                        android:textColor="#000000"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/confirmBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:text="확인" />
+                </RelativeLayout>
 
                 <HorizontalScrollView
                     android:id="@+id/invitationPersonScroll"
@@ -54,12 +65,12 @@
                     android:layout_height="wrap_content"
                     android:fillViewport="true"
                     android:orientation="horizontal">
+
                     <LinearLayout
                         android:id="@+id/invitationPersonList"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-                    </LinearLayout>
+                        android:orientation="horizontal"></LinearLayout>
                 </HorizontalScrollView>
 
                 <android.support.v7.widget.RecyclerView
