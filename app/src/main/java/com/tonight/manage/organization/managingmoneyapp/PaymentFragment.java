@@ -395,7 +395,7 @@ public class PaymentFragment extends Fragment {
     }
 
 
-    //group list 가져오기 위한 Thread
+    //evnetinfo list 가져오기 위한 Thread
     public class LoadEventInfoAsyncTask extends AsyncTask<String, Void, ArrayList<EventInfoMemberPaymentListItem>> {
         @Override
         protected ArrayList<EventInfoMemberPaymentListItem> doInBackground(String... arg) {
@@ -429,7 +429,7 @@ public class PaymentFragment extends Fragment {
                     Log.e("에러", "데이터를 로드하는데 실패하였습니다");
                 }
             } catch (Exception e) {
-                Log.e("요청중에러", "그룹 리스트", e);
+                Log.e("요청중에러", "payment프레그먼트", e);
             } finally {
                 if (response != null) {
                     response.close();
