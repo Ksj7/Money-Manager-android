@@ -3,6 +3,7 @@ package com.tonight.manage.organization.managingmoneyapp;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +26,10 @@ import android.widget.Toast;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomAddMoneyPopup;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomSetDatePopup;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoMemberPaymentListItem;
+import com.tonight.manage.organization.managingmoneyapp.Object.EventListItem;
+import com.tonight.manage.organization.managingmoneyapp.Server.EventInfoJSONParsor;
+import com.tonight.manage.organization.managingmoneyapp.Server.EventJSONParsor;
+import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
 import com.tonight.manage.organization.managingmoneyapp.Toss.TossConstants;
 import com.tonight.manage.organization.managingmoneyapp.Toss.TossUtils;
 import com.tonight.manage.organization.managingmoneyapp.Toss.WebViewActivity;
@@ -40,6 +46,14 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by 3 on 2016-11-14.
@@ -59,7 +73,7 @@ public class PaymentFragment extends Fragment {
     private static final String API_KEY = "sk_test_apikey1234567890a";
 
     private ProgressDialog mProgressDialog;
-
+    String eventnum;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,6 +84,7 @@ public class PaymentFragment extends Fragment {
             return v;
         }
         final String fileName = b.getString("eventName");
+        eventnum = b.getString("eventNum");
 
         mPaymentListRecyclerView = (RecyclerView) v.findViewById(R.id.eventInfo_recyclerView);
         mPaymentListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -378,4 +393,60 @@ public class PaymentFragment extends Fragment {
             }
         }
     }
+
+
+    //group list 가져오기 위한 Thread
+    public class LoadEventInfoAsyncTask extends AsyncTask<String, Void, ArrayList<EventInfoMemberPaymentListItem>> {
+        @Override
+        protected ArrayList<EventInfoMemberPaymentListItem> doInBackground(String... arg) {
+            String requestURL = "";
+            Response response = null;
+            try {
+
+                requestURL = NetworkDefineConstant.SERVER_URL_EVENT_INFO;
+
+                SharedPreferences pref = getActivity().getSharedPreferences("Login", MODE_PRIVATE);
+                String userid = pref.getString("id","error");
+
+                //연결
+                OkHttpClient toServer = NetworkDefineConstant.getOkHttpClient();
+                FormBody.Builder builder = new FormBody.Builder();
+                builder.add("eventnum", eventnum).add("userid", userid);
+                FormBody formBody = builder.build();
+                //요청
+                Request request = new Request.Builder()
+                        .url(requestURL)
+                        .post(formBody)
+                        .build();
+                //응답
+                response = toServer.newCall(request).execute();
+                boolean flag = response.isSuccessful();
+                ResponseBody resBody = response.body();
+
+                if (flag) { //http req/res 성공
+                    return EventInfoJSONParsor.parseEventInfoMemberItems(resBody.string());
+                } else { //실패시 정의
+                    Log.e("에러", "데이터를 로드하는데 실패하였습니다");
+                }
+            } catch (Exception e) {
+                Log.e("요청중에러", "그룹 리스트", e);
+            } finally {
+                if (response != null) {
+                    response.close();
+                }
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<EventInfoMemberPaymentListItem> result) {
+
+            if (result != null && result.size() > 0) {
+                Log.e("받아온 정보들", result.toString());
+
+            }
+        }
+    }
+
 }
