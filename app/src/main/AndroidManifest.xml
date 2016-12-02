@@ -32,6 +32,7 @@
         <activity android:name=".EditPasswordActivity"/>
         <activity android:name=".EditPhoneNumberActivity"/>
     </application>
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>

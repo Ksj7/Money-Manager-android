@@ -1,10 +1,15 @@
 package com.tonight.manage.organization.managingmoneyapp;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -14,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,8 +35,12 @@ import com.tonight.manage.organization.managingmoneyapp.Object.GroupListItem;
 import com.tonight.manage.organization.managingmoneyapp.Server.GroupJSONParsor;
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -48,6 +58,13 @@ public class GroupListActivity extends AppCompatActivity
     private SwipeRefreshLayout mGroupListSwipeRefreshLayout;
     private FloatingActionButton mCreateGroupFab;
     private FloatingActionButton mEnterGrouopFab;
+    private boolean isRefresh;
+
+    CircleImageView profileImage;
+    private int PICK_IMAGE_REQUEST = 1;
+    private Bitmap receivedbitmap;
+    public static final String UPLOAD_URL = "http://52.79.174.172/MAM/upload.php";
+    public static final String UPLOAD_KEY = "image";
     private String userId;
 
     @Override
@@ -92,6 +109,16 @@ public class GroupListActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemBackgroundResource(R.color.white);
 
+        View headerView = navigationView.getHeaderView(0);
+        profileImage = (CircleImageView) headerView.findViewById(R.id.profile_imageView);//프로필 이미지뷰
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_PICK);//앨범으로 이동
+                intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+                startActivityForResult(intent, PICK_IMAGE_REQUEST);
+            }
+        });
 
         mGroupListRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mGroupListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -100,7 +127,8 @@ public class GroupListActivity extends AppCompatActivity
         mGroupListRecyclerView.setAdapter(mGroupListAdapter);
 
         mGroupListSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
-        mGroupListSwipeRefreshLayout.setSize(SwipeRefreshLayout.LARGE);
+        mGroupListSwipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
+
         mGroupListSwipeRefreshLayout.setColorSchemeResources(
                 android.R.color.holo_blue_bright,
                 android.R.color.holo_orange_light,
@@ -123,6 +151,25 @@ public class GroupListActivity extends AppCompatActivity
         });
         new LoadGroupListAsyncTask().execute();
     }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    { //이미지를 받으면 서버에 보내줌
+        if (requestCode == PICK_IMAGE_REQUEST &&
+                resultCode == RESULT_OK && data != null && data.getData() != null) {
+
+            //무사히 종료되었으면
+            Uri selectedImageUri = data.getData();
+            try {
+                receivedbitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
+                UploadImage uploadImage = new UploadImage();
+                uploadImage.execute(receivedbitmap);
+
+                profileImage.setImageBitmap(receivedbitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     public void isSuccessCreateGroup(boolean isRefresh) {
         if (isRefresh) new LoadGroupListAsyncTask().execute();
@@ -136,28 +183,6 @@ public class GroupListActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_member_list) {
-
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -178,6 +203,7 @@ public class GroupListActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
     class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> {
 
@@ -292,4 +318,49 @@ public class GroupListActivity extends AppCompatActivity
             }
         }
     }
+
+    class UploadImage extends AsyncTask<Bitmap, Void, String> {
+
+        ProgressDialog loading;
+        RequestHandler handler = new RequestHandler();
+        String userid;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loading = ProgressDialog.show(GroupListActivity.this, "Uploading...", null, true, true);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            loading.dismiss();
+        }
+
+        @Override
+        protected String doInBackground(Bitmap... params) {
+            Bitmap bitmap = params[0];//사용자가 업로드할 이미지 비트맵
+            String uploadImage = getStringImage(bitmap);
+
+            SharedPreferences pref = getSharedPreferences("Login", MODE_PRIVATE);
+            userid = pref.getString("id","error");
+
+            HashMap<String, String> data = new HashMap<>();
+
+            data.put(UPLOAD_KEY, uploadImage);
+            data.put("userid", userid);
+            String result = handler.sendPostRequest(UPLOAD_URL, data);
+
+            return result;
+        }
+
+        public String getStringImage(Bitmap bmp) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] imageBytes = baos.toByteArray();
+            String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+            return encodedImage;
+        }
+    }
+
 }

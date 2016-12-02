@@ -35,7 +35,7 @@ import java.util.ArrayList;
  * Created by hooo5 on 2016-11-06.
  */
 
-public class InvitationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class InvitationActivity extends AppCompatActivity {
 
     private RecyclerView mInvitationListRecyclerView;
     private InvitationAdapter mInvitationAdapter;
@@ -49,15 +49,6 @@ public class InvitationActivity extends AppCompatActivity implements NavigationV
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setItemBackgroundResource(R.color.white);
-
         mInvitationListRecyclerView = (RecyclerView) findViewById(R.id.invitationRecyclerView);
         mInvitationListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mInvitationListRecyclerView.setHasFixedSize(true);
@@ -69,32 +60,9 @@ public class InvitationActivity extends AppCompatActivity implements NavigationV
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
             super.onBackPressed();
-        }
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_edit_password) {
-            startActivity(new Intent(this,EditPasswordActivity.class));
-        } else if(id==R.id.nav_edit_phoneNumber){
-            startActivity(new Intent(this,EditPhoneNumberActivity.class));
-        } else if(id == R.id.nav_alarm_list) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
 
     class InvitationAdapter extends RecyclerView.Adapter<InvitationActivity.InvitationAdapter.ViewHolder> {
 

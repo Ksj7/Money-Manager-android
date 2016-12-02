@@ -36,7 +36,7 @@
             android:background="@drawable/circle">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imageView"
+                android:id="@+id/profile_imageView"
                 android:layout_width="96dp"
                 android:layout_height="96dp"
                 android:background="@mipmap/ic_launcher" />

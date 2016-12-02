@@ -1,6 +1,7 @@
 package com.tonight.manage.organization.managingmoneyapp;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
 
 import okhttp3.FormBody;
@@ -59,6 +59,7 @@ public class JoinActivity extends AppCompatActivity {
                         new UpdateJoinDataAsyncTask().execute(id, pwd, name, phone);
                     } else {
                         Toast.makeText(JoinActivity.this, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+
                         pwdEdit.setText("");
                         pwdCheckEdit.setText("");
                     }
@@ -71,7 +72,6 @@ public class JoinActivity extends AppCompatActivity {
         startActivity(new Intent(this, LoginActivity.class));
     }
 
-
     //Update Join Data
     class UpdateJoinDataAsyncTask extends AsyncTask<String, Void, String> {
         @Override
@@ -79,7 +79,6 @@ public class JoinActivity extends AppCompatActivity {
             String requestURL = "";
             Response response = null;
             try {
-
                 requestURL = NetworkDefineConstant.SERVER_URL_JOIN;
 
                 //연결
