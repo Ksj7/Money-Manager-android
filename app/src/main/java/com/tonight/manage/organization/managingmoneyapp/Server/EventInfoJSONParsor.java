@@ -2,7 +2,6 @@ package com.tonight.manage.organization.managingmoneyapp.Server;
 
 import android.util.Log;
 
-import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoMemberPaymentList;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoMemberPaymentListItem;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoPaymentItem;
 
@@ -21,13 +20,14 @@ public class EventInfoJSONParsor {
     /*
      EventInfoMemberlistItem 데이터 파싱
      */
-    public static ArrayList<EventInfoMemberPaymentListItem> parseEventInfoMemberItems(String responedJSONData) {
+    public static ArrayList<EventInfoMemberPaymentListItem> parseEventInfoMemberItems(StringBuilder responedJSONData) {
         ArrayList<EventInfoMemberPaymentListItem> eventInfoMemberItemArrayList = null;
 
-        JSONObject jsonRoot = null;
+        JSONObject jsonRoot ;
 
         try {
-            jsonRoot = new JSONObject(responedJSONData);
+            jsonRoot = new JSONObject(responedJSONData.toString());
+           // Log.e("잘라봐 ",responedJSONData.toString()+"?????");
             JSONArray member = jsonRoot.getJSONArray("member");
             int  size = member.length();
             if( size > 0) {

@@ -84,7 +84,7 @@ public class PaymentFragment extends Fragment {
             return v;
         }
         final String fileName = b.getString("eventName");
-        eventnum = b.getString("eventNum");
+        eventnum = b.getString("eventnum");
 
         mPaymentListRecyclerView = (RecyclerView) v.findViewById(R.id.eventInfo_recyclerView);
         mPaymentListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -109,6 +109,7 @@ public class PaymentFragment extends Fragment {
 
             @Override
             public void onRefresh() {
+                new LoadEventInfoAsyncTask().execute();
                 mPaymentListSwipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -165,6 +166,7 @@ public class PaymentFragment extends Fragment {
             }
         });
 
+        new LoadEventInfoAsyncTask().execute();
         return v;
     }
 
@@ -411,7 +413,9 @@ public class PaymentFragment extends Fragment {
                 //연결
                 OkHttpClient toServer = NetworkDefineConstant.getOkHttpClient();
                 FormBody.Builder builder = new FormBody.Builder();
-                builder.add("eventnum", eventnum).add("userid", userid);
+                //builder.add("eventnum", eventnum).add("userid", userid);
+                builder.add("userid", userid).add("eventnum", eventnum).add("signal","0");
+                Log.e("???????????? ",eventnum+","+userid);
                 FormBody formBody = builder.build();
                 //요청
                 Request request = new Request.Builder()
@@ -424,7 +428,8 @@ public class PaymentFragment extends Fragment {
                 ResponseBody resBody = response.body();
 
                 if (flag) { //http req/res 성공
-                    return EventInfoJSONParsor.parseEventInfoMemberItems(resBody.string());
+                    //Log.e("--------------- ",resBody.string());
+                    return EventInfoJSONParsor.parseEventInfoMemberItems(new StringBuilder(resBody.string()));
                 } else { //실패시 정의
                     Log.e("에러", "데이터를 로드하는데 실패하였습니다");
                 }
