@@ -70,4 +70,6 @@ public class CustomEntrancePopup extends DialogFragment {
         int height = getResources().getDimensionPixelSize(R.dimen.popup_entrance_group_height);
         getDialog().getWindow().setLayout(width,height);
     }
+
+
 }

@@ -86,7 +86,7 @@ public class GroupListActivity extends AppCompatActivity
         mCreateGroupFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CustomCreateGroupPopup createGroupPopup = CustomCreateGroupPopup.newInstance();
+                CustomCreateGroupPopup createGroupPopup = CustomCreateGroupPopup.newInstance(userId);
                 createGroupPopup.show(getSupportFragmentManager(), "create_group");
 
             }
