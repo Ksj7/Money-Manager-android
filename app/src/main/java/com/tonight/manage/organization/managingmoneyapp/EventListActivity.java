@@ -1,8 +1,14 @@
 package com.tonight.manage.organization.managingmoneyapp;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -12,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,7 +29,12 @@ import android.widget.TextView;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomRateTextCircularProgressBar;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventListItem;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by sujinKim on 2016-11-04.
@@ -33,6 +45,13 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
     private SwipeRefreshLayout mEventListSwipeRefreshLayout;
     TextView eventname;
     TextView balance;
+
+    CircleImageView profileImage;
+    private int PICK_IMAGE_REQUEST = 1;
+    private Bitmap receivedbitmap;
+    public static final String UPLOAD_URL = "http://52.79.174.172/MAM/upload.php";
+    public static final String UPLOAD_KEY = "image";
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_eventlist);
@@ -67,8 +86,38 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
 
         NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        View headerView = navigationView.getHeaderView(0);
+        profileImage = (CircleImageView) headerView.findViewById(R.id.profile_imageView);//프로필 이미지뷰
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_PICK);//앨범으로 이동
+                intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+                startActivityForResult(intent, PICK_IMAGE_REQUEST);
+            }
+        });
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    { //이미지를 받으면 서버에 보내줌
+        if (requestCode == PICK_IMAGE_REQUEST &&
+                resultCode == RESULT_OK && data != null && data.getData() != null) {
+
+            //무사히 종료되었으면
+            Uri selectedImageUri = data.getData();
+            try {
+                receivedbitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
+                UploadImage uploadImage = new UploadImage();
+                uploadImage.execute(receivedbitmap);
+
+                profileImage.setImageBitmap(receivedbitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     @Override
     public void onBackPressed() {
@@ -210,6 +259,50 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
                 mRateTextCircularProgressBar = (CustomRateTextCircularProgressBar) v.findViewById(R.id.rate_progress_bar);
                 //recyclerView = (RecyclerView) v.findViewById(R.id.eventlist_recyclerView);
             }
+        }
+    }
+
+    class UploadImage extends AsyncTask<Bitmap, Void, String> {
+
+        ProgressDialog loading;
+        RequestHandler handler = new RequestHandler();
+        String userid;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loading = ProgressDialog.show(EventListActivity.this, "Uploading...", null, true, true);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            loading.dismiss();
+        }
+
+        @Override
+        protected String doInBackground(Bitmap... params) {
+            Bitmap bitmap = params[0];//사용자가 업로드할 이미지 비트맵
+            String uploadImage = getStringImage(bitmap);
+
+            SharedPreferences pref = getSharedPreferences("Login", MODE_PRIVATE);
+            userid = pref.getString("id","error");
+
+            HashMap<String, String> data = new HashMap<>();
+
+            data.put(UPLOAD_KEY, uploadImage);
+            data.put("userid", userid);
+            String result = handler.sendPostRequest(UPLOAD_URL, data);
+
+            return result;
+        }
+
+        public String getStringImage(Bitmap bmp) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] imageBytes = baos.toByteArray();
+            String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+            return encodedImage;
         }
     }
 }

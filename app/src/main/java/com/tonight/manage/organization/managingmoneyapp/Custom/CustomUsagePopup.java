@@ -28,12 +28,11 @@ import java.util.HashMap;
  */
 
 public class CustomUsagePopup extends DialogFragment {
-    private Bitmap loadedbitmap;
+    private Bitmap receivedbitmap;
     private static Uri imageUri;
 
     public static final String UPLOAD_URL = "http://52.79.174.172/MAM/eventInfoActivity.php";
     public static final String UPLOAD_KEY = "image";
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,10 +57,10 @@ public class CustomUsagePopup extends DialogFragment {
             public void onClick(View view) {
                 //서버에 사용내역 리스트 보내줌
                 try {
-                    loadedbitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
+                    receivedbitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
 
                     UploadImage uploadImage = new UploadImage();
-                    uploadImage.execute(loadedbitmap);
+                    uploadImage.execute(receivedbitmap);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -111,7 +110,7 @@ public class CustomUsagePopup extends DialogFragment {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             loading.dismiss();
-            Toast.makeText(getContext(), s, Toast.LENGTH_LONG).show();
+            //Toast.makeText(getContext(), s, Toast.LENGTH_LONG).show();
         }
 
         @Override
@@ -127,8 +126,6 @@ public class CustomUsagePopup extends DialogFragment {
             data.put("usagemoney", "20000");
             data.put("usagedate", "123");
             data.put("signal", "6");
-            data.put("image",uploadImage);
-            //data.put("userid", "jun");
             String result = handler.sendPostRequest(UPLOAD_URL, data);
 
             return result;
@@ -141,8 +138,6 @@ public class CustomUsagePopup extends DialogFragment {
             String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
             return encodedImage;
         }
-
-
     }
 
 }

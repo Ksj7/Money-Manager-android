@@ -112,7 +112,6 @@ public class UserFragment extends Fragment implements View.OnClickListener {
              CustomUsagePopup usagePopup = CustomUsagePopup.newInstance(selectedImageUri);
              usagePopup.show(getActivity().getSupportFragmentManager(),"usage_popup"); //popup창 띄우고
 
-
         }
     }
 
