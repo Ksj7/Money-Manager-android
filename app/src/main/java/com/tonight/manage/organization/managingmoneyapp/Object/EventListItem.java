@@ -5,6 +5,65 @@ package com.tonight.manage.organization.managingmoneyapp.Object;
  */
 
 public class EventListItem {
-    String eventName;
-    String eventNumber;
+    String membernum;
+    String eventnum;
+    String eventname;
+    String targetm;
+    String summ;
+    String eventdate;
+    String personalm;
+
+    public EventListItem setMembernum(String membernum) {
+        this.membernum = membernum;
+        return this;
+    }
+    public EventListItem setEventnum(String eventnum) {
+        this.eventnum = eventnum;
+        return this;
+    }
+    public EventListItem setEventname(String eventname) {
+        this.eventname = eventname;
+        return this;
+    }
+    public EventListItem setTargetm(String targetm) {
+        this.targetm = targetm;
+        return this;
+    }
+    public EventListItem setSumm(String summ) {
+        this.summ = summ;
+        return this;
+    }
+    public EventListItem setEventdate(String eventdate) {
+        this.eventdate = eventdate;
+        return this;
+    }
+    public EventListItem setPersonalm(String personalm) {
+        this.personalm = personalm;
+        return this;
+    }
+
+    public String getEventnum() {
+        return eventnum;
+    }
+    public String getMembernum() {
+        return membernum;
+    }
+    public String getEventname() {
+        return eventname;
+    }
+    public String getTargetm() {
+        return targetm;
+    }
+    public String getSumm() {
+        return summ;
+    }
+    public String getEventdate() {
+        return eventdate;
+    }
+    public String getPersonalm() {
+        return personalm;
+    }
+
+
+
 }

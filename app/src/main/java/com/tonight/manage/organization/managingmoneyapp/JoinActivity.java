@@ -10,11 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
 
 import okhttp3.FormBody;
@@ -35,11 +30,6 @@ public class JoinActivity extends AppCompatActivity {
     EditText pwdCheckEdit;
     EditText nameEdit;
     EditText phoneNumberEdit;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,53 +59,17 @@ public class JoinActivity extends AppCompatActivity {
                         new UpdateJoinDataAsyncTask().execute(id, pwd, name, phone);
                     } else {
                         Toast.makeText(JoinActivity.this, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+
+                        pwdEdit.setText("");
+                        pwdCheckEdit.setText("");
                     }
                 }
             }
         });
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     public void join(View v) {
         startActivity(new Intent(this, LoginActivity.class));
-    }
-
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder()
-                .setName("Join Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-                .build();
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        AppIndex.AppIndexApi.start(client, getIndexApiAction());
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.end(client, getIndexApiAction());
-        client.disconnect();
     }
 
     //Update Join Data
@@ -125,8 +79,7 @@ public class JoinActivity extends AppCompatActivity {
             String requestURL = "";
             Response response = null;
             try {
-
-                requestURL = NetworkDefineConstant.SERVER_URL_LOGIN;
+                requestURL = NetworkDefineConstant.SERVER_URL_JOIN;
 
                 //연결
                 OkHttpClient toServer = NetworkDefineConstant.getOkHttpClient();
