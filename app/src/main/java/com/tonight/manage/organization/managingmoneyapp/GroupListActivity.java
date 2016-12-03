@@ -255,6 +255,8 @@ public class GroupListActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(GroupListActivity.this, EventListActivity.class);
+                    i.putExtra("groupName",groupDatas.get(position).getGroupname());
+                    i.putExtra("balance",groupDatas.get(position).getBalance());
                     i.putExtra("groupcode",groupDatas.get(position).getGroupcode());
                     startActivity(i);
                 }

@@ -26,6 +26,7 @@ public class NetworkDefineConstant {
             "http://"+HOST_URL + "eventInfoActivity.php";
     public static final String SERVER_URL_UPDATE_INVITATION=
             "http://"+HOST_URL + "invitationActivityExtra.php";
+    public static final String SERVERP_URL_UPLOAD_PROFILE_IMAGE = "http://52.79.174.172/MAM/upload.php";
 
     private static OkHttpClient okHttpClient;
 
