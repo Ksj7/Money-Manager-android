@@ -22,17 +22,17 @@
             android:id="@+id/invitationCheckBox"/>
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@mipmap/ic_launcher"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/ic_launcher"
             android:layout_margin="5dp"
             android:id="@+id/invitationListProfileImageView"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="test"
+            android:textSize="15sp"
+            android:maxLines="1"
             android:layout_marginLeft="10dp"
             android:layout_gravity="center"
             android:id="@+id/invitationListPersonName"/>

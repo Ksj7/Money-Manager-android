@@ -157,7 +157,11 @@ public class InvitationActivity extends AppCompatActivity {
                 }
             });
 
-            Glide.with(getApplicationContext()).load(listItem.getProfileimg()).into(holder.profileImageView);
+            if(listItem.getProfileimg()==null) return;
+            Glide.with(getApplicationContext())
+                    .load(listItem.getProfileimg())
+                    .override(150, 150)
+                    .into(holder.profileImageView);
         }
 
         @Override

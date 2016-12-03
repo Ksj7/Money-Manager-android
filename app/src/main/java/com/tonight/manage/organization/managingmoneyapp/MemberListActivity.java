@@ -106,7 +106,11 @@ public class MemberListActivity extends AppCompatActivity {
                     customProfilePopup.show(getSupportFragmentManager(), "profile");
                 }
             });
-            Glide.with(getApplicationContext()).load(memberDatas.get(position).getProfileimg()).into(holder.profileImageView);
+            if(memberDatas.get(position).getProfileimg()==null) return;
+            Glide.with(getApplicationContext())
+                    .load(memberDatas.get(position).getProfileimg())
+                    .override(150, 150)
+                    .into(holder.profileImageView);
         }
 
         @Override
