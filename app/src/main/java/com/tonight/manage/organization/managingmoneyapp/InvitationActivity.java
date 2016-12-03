@@ -73,7 +73,6 @@ public class InvitationActivity extends AppCompatActivity {
         //String eventName = i.getStringExtra("eventName");
         eventnum = i.getStringExtra("eventnum");
 
-        newInvitationMemberList = new ArrayList<>();
         buttonBundle = new HashMap<>();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -137,11 +136,11 @@ public class InvitationActivity extends AppCompatActivity {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
+                    InvitationUpdateItem member = new InvitationUpdateItem();
+                    member.setUserid(listItem.getUserid());
+                    member.setEventnum(eventnum);
                     if (isChecked) {
-                        InvitationUpdateItem member = new InvitationUpdateItem();
-                        member.setUserid(listItem.getUserid());
-                        member.setEventnum(eventnum);
-                        newInvitationMemberList.add(position, member);
+                        newInvitationMemberList.add(member);
                         Button personBtn = new ProductButton.ProductBuilder(holder.personName.getText().toString()).build();
                         buttonBundle.put(position, personBtn);
                         LinearLayout.LayoutParams plControl = new LinearLayout.LayoutParams(150, 100);
@@ -151,7 +150,7 @@ public class InvitationActivity extends AppCompatActivity {
                     } else {
                         Button removeButton = buttonBundle.get(position);
                         invitationPerSonLinear.removeView(removeButton);
-                        buttonBundle.remove(position);
+                        buttonBundle.remove(member);
                         newInvitationMemberList.remove(position);
                     }
                 }
@@ -229,6 +228,8 @@ public class InvitationActivity extends AppCompatActivity {
         protected void onPostExecute(ArrayList<InvitationListItem> result) {
 
             if (result != null && result.size() > 0) {
+                newInvitationMemberList = new ArrayList<>();
+                newInvitationMemberList.ensureCapacity(result.size()+1);
                 mInvitationAdapter.addItem(result);
                 mInvitationAdapter.notifyDataSetChanged();
             }
