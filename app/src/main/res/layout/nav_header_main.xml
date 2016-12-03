@@ -65,20 +65,20 @@
         android:layout_marginStart="150dp">
 
         <TextView
+            android:id="@+id/userNameText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/nav_header_vertical_spacing"
-            android:text="John Deo"
             android:textSize="22sp" android:textStyle="bold"
             android:gravity="right"
             android:textColor="@android:color/black"/>
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/userPhoneNumberText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="right"
-            android:text="010.xxxx.xxxx"
+            android:text="번호를 입력해 주세요"
             android:textSize="17sp"
             android:textColor="@android:color/black" />
     </LinearLayout>

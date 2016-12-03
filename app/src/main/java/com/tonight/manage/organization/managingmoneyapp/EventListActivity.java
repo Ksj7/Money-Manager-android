@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -80,14 +81,26 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
 
 
         mEventListSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.eventlist_swipeRefreshLayout);
+        mEventListSwipeRefreshLayout.setColorSchemeResources(
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_green_light,
+                android.R.color.holo_red_light
+        );
         mEventListSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 
             @Override
             public void onRefresh() {
-                mEventListSwipeRefreshLayout.setRefreshing(false);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        new LoadEventListAsyncTask().execute(mGroupCode);
+                        mEventListSwipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 2500);
+
             }
         });
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -110,6 +123,8 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
                 startActivityForResult(intent, PICK_IMAGE_REQUEST);
             }
         });
+
+
 
         new LoadEventListAsyncTask().execute(mGroupCode);
     }

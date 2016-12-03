@@ -53,18 +53,13 @@ import okhttp3.ResponseBody;
 public class GroupListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private RecyclerView mGroupListRecyclerView;
+    private final int PICK_IMAGE_REQUEST = 1;
+    public static final String UPLOAD_KEY = "image";
+
     private GroupAdapter mGroupListAdapter;
     private SwipeRefreshLayout mGroupListSwipeRefreshLayout;
-    private FloatingActionButton mCreateGroupFab;
-    private FloatingActionButton mEnterGrouopFab;
-    private boolean isRefresh;
 
     CircleImageView profileImage;
-    private int PICK_IMAGE_REQUEST = 1;
-    private Bitmap receivedbitmap;
-    public static final String UPLOAD_URL = "http://52.79.174.172/MAM/upload.php";
-    public static final String UPLOAD_KEY = "image";
     private String userId;
 
     @Override
@@ -80,8 +75,8 @@ public class GroupListActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mCreateGroupFab = (FloatingActionButton) findViewById(R.id.creatGroupFab);
-        mEnterGrouopFab = (FloatingActionButton) findViewById(R.id.enterGroupFab);
+        FloatingActionButton mCreateGroupFab = (FloatingActionButton) findViewById(R.id.creatGroupFab);
+        FloatingActionButton mEnterGrouopFab = (FloatingActionButton) findViewById(R.id.enterGroupFab);
 
         mCreateGroupFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,6 +93,11 @@ public class GroupListActivity extends AppCompatActivity
                 entrancePopup.show(getSupportFragmentManager(), "entrance_group");
             }
         });
+
+
+        TextView userNameText = (TextView) findViewById(R.id.userNameText);
+        TextView userPhoneNumberText = (TextView) findViewById(R.id.userPhoneNumberText);
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -120,7 +120,7 @@ public class GroupListActivity extends AppCompatActivity
             }
         });
 
-        mGroupListRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        RecyclerView mGroupListRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mGroupListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mGroupListRecyclerView.setHasFixedSize(true);
         mGroupListAdapter = new GroupAdapter(this);
@@ -160,7 +160,7 @@ public class GroupListActivity extends AppCompatActivity
             //무사히 종료되었으면
             Uri selectedImageUri = data.getData();
             try {
-                receivedbitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
+                Bitmap receivedbitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
                 UploadImage uploadImage = new UploadImage();
                 uploadImage.execute(receivedbitmap);
 
@@ -367,7 +367,7 @@ public class GroupListActivity extends AppCompatActivity
 
             data.put(UPLOAD_KEY, uploadImage);
             data.put("userid", userid);
-            String result = handler.sendPostRequest(UPLOAD_URL, data);
+            String result = handler.sendPostRequest(NetworkDefineConstant.SERVERP_URL_UPLOAD_PROFILE_IMAGE, data);
 
             return result;
         }
