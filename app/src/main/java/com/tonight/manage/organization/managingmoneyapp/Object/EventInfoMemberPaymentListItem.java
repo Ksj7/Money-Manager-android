@@ -8,7 +8,8 @@ public class EventInfoMemberPaymentListItem {
 
     String imgurl;
     String name;
-    int spendingstatus;
+    String userid;
+    String spendingstatus;
 
 
 
@@ -21,8 +22,12 @@ public class EventInfoMemberPaymentListItem {
         return this;
     }
 
-    public EventInfoMemberPaymentListItem setSpendingstatus(int spendingstatus) {
+    public EventInfoMemberPaymentListItem setSpendingstatus(String spendingstatus) {
         this.spendingstatus = spendingstatus;
+        return this;
+    }
+    public EventInfoMemberPaymentListItem setUserId(String userid) {
+        this.userid = userid;
         return this;
     }
 
@@ -34,8 +39,12 @@ public class EventInfoMemberPaymentListItem {
         return name;
     }
 
-    public int getSpendingstatus() {
+    public String getSpendingstatus() {
         return spendingstatus;
+    }
+
+    public String getUserId() {
+        return userid;
     }
 
 }
