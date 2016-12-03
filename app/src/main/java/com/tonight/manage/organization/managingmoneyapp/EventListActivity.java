@@ -27,7 +27,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.tonight.manage.organization.managingmoneyapp.Custom.CustomAddEventPopup;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomRateTextCircularProgressBar;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventListItem;
 import com.tonight.manage.organization.managingmoneyapp.Server.EventJSONParsor;
@@ -58,6 +60,7 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
     CircleImageView profileImage;
     private final int PICK_IMAGE_REQUEST = 1;
     public static final String UPLOAD_KEY = "image";
+    private String mGroupName;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,9 +69,9 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
         if (i == null) return;
         mGroupCode = i.getStringExtra("groupcode");
         String groupBalance = i.getStringExtra("balance");
-        String groupName = i.getStringExtra("groupName");
+        mGroupName = i.getStringExtra("groupName");
         this.groupNameText = (TextView) findViewById(R.id.eventlist_groupname);
-        this.groupNameText.setText(groupName);
+        this.groupNameText.setText(mGroupName);
         balanceText = (TextView) findViewById(R.id.eventlist_balance);
         String balanceFormat = String.format(getString(R.string.price) , groupBalance);
         balanceText.setText(balanceFormat);
@@ -129,6 +132,10 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
         new LoadEventListAsyncTask().execute(mGroupCode);
     }
 
+    public void isSuccessCreateEvent(boolean isRefresh) {
+        if (isRefresh) new LoadEventListAsyncTask().execute(mGroupCode);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) { //이미지를 받으면 서버에 보내줌
         if (requestCode == PICK_IMAGE_REQUEST &&
@@ -176,8 +183,16 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
         if (id == R.id.action_member_list) {
             Intent i = new Intent(this, MemberListActivity.class);
             i.putExtra("groupcode", mGroupCode);
+            i.putExtra("groupName",mGroupName);
             startActivity(i);
             return true;
+        }else if(id == R.id.action_add_event){
+            SharedPreferences pref = getSharedPreferences("Login", MODE_PRIVATE);
+            String userid = pref.getString("id","error");
+            CustomAddEventPopup addEventPopup = CustomAddEventPopup.newInstance(userid,mGroupCode);
+            addEventPopup.show(getSupportFragmentManager(), "add_event");
+        }else{
+            Toast.makeText(this, "오류 발생!", Toast.LENGTH_SHORT).show();
         }
 
         return super.onOptionsItemSelected(item);

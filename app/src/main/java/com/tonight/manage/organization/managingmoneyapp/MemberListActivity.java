@@ -53,6 +53,11 @@ public class MemberListActivity extends AppCompatActivity {
         }
 
         String groupcode = i.getStringExtra("groupcode");
+        String groupName = i.getStringExtra("groupName");
+
+        TextView groupNameText = (TextView) findViewById(R.id.groupNameText);
+        groupNameText.setText(groupName);
+
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

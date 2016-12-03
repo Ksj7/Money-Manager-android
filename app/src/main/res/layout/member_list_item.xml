@@ -7,28 +7,26 @@
     android:background="#fff">
 
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="20dp">
+        android:padding="6dp"
+        android:orientation="horizontal">
 
 
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@mipmap/ic_launcher"
-            android:layout_margin="5dp"
             android:layout_marginLeft="20dp"
+            android:src="@mipmap/ic_launcher"
             android:id="@+id/memberListProfileImageView"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:maxLines="1"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="20dp"
             android:layout_gravity="center"
             android:id="@+id/memberListPersonName"/>
 
@@ -38,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.7dp"
         android:background="@drawable/border"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="100dp"
         android:layout_marginRight="10dp"/>
 
 </LinearLayout>
