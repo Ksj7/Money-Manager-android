@@ -33,7 +33,6 @@ public class CustomAddMoneyPopup extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NO_TITLE, R.style.CustomDialogTheme);
-        initWindow();
     }
 
     public static CustomAddMoneyPopup newInstance() {
@@ -125,24 +124,11 @@ public class CustomAddMoneyPopup extends DialogFragment {
         return view;
     }
 
-    public void initWindow(){
-        width = getResources().getDimensionPixelSize(R.dimen.popup_width);
-        height = getResources().getDimensionPixelSize(R.dimen.popup_height);
-    }
-
-
 
     @Override
     public void onStop() {
         super.onStop();
         dismiss();
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getDialog().getWindow().setLayout(width, height);
-        wrapHeight = wrapLayout.getMeasuredHeight();
     }
 
     //Update Add Money Data
