@@ -10,6 +10,16 @@ public class EventInfoMemberPaymentListItem {
     String name; //사용자 이름
     String userid; //사용자 아이디
     String spendingstatus; //지출여부
+    String personalMoney;
+
+    public String getPersonalMoney() {
+        return personalMoney;
+    }
+
+    public EventInfoMemberPaymentListItem setPersonalMoney(String personalMoney) {
+        this.personalMoney = personalMoney;
+        return this;
+    }
 
 
     public EventInfoMemberPaymentListItem setImgurl(String imgurl) {

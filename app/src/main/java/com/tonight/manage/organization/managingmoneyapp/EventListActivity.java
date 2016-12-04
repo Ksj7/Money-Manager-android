@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,10 +27,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.tonight.manage.organization.managingmoneyapp.Custom.CustomAddEventPopup;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomRateTextCircularProgressBar;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventListItem;
-import com.tonight.manage.organization.managingmoneyapp.Server.EventJSONParsor;
+import com.tonight.manage.organization.managingmoneyapp.Server.EventJSONParser;
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
 
 import java.io.ByteArrayOutputStream;
@@ -38,7 +41,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -49,18 +51,16 @@ import okhttp3.ResponseBody;
  * Created by sujinKim on 2016-11-04.
  */
 public class EventListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private RecyclerView mEventListRecyclerView;
-    private EventListActivity.EventListAdapter mEventListAdapter;
+    private EventListAdapter mEventListAdapter;
     private SwipeRefreshLayout mEventListSwipeRefreshLayout;
     private String mGroupCode;
-    TextView eventname;
-    TextView balance;
+    TextView groupNameText;
+    TextView balanceText;
 
     CircleImageView profileImage;
-    private int PICK_IMAGE_REQUEST = 1;
-    private Bitmap receivedbitmap;
-    public static final String UPLOAD_URL = "http://52.79.174.172/MAM/upload.php";
+    private final int PICK_IMAGE_REQUEST = 1;
     public static final String UPLOAD_KEY = "image";
+    private String mGroupName;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,26 +68,42 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
         Intent i = getIntent();
         if (i == null) return;
         mGroupCode = i.getStringExtra("groupcode");
+        String groupBalance = i.getStringExtra("balance");
+        mGroupName = i.getStringExtra("groupName");
+        this.groupNameText = (TextView) findViewById(R.id.eventlist_groupname);
+        this.groupNameText.setText(mGroupName);
+        balanceText = (TextView) findViewById(R.id.eventlist_balance);
+        String balanceFormat = String.format(getString(R.string.price) , groupBalance);
+        balanceText.setText(balanceFormat);
 
-        eventname = (TextView) findViewById(R.id.eventlist_eventname);
-        balance = (TextView) findViewById(R.id.eventlist_balance);
-
-        mEventListRecyclerView = (RecyclerView) findViewById(R.id.eventlist_recyclerView);
+        RecyclerView mEventListRecyclerView = (RecyclerView) findViewById(R.id.eventlist_recyclerView);
         mEventListRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         mEventListRecyclerView.setHasFixedSize(true);
-        mEventListAdapter = new EventListActivity.EventListAdapter(this);
+        mEventListAdapter = new EventListAdapter(this);
         mEventListRecyclerView.setAdapter(mEventListAdapter);
 
 
         mEventListSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.eventlist_swipeRefreshLayout);
+        mEventListSwipeRefreshLayout.setColorSchemeResources(
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_green_light,
+                android.R.color.holo_red_light
+        );
         mEventListSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 
             @Override
             public void onRefresh() {
-                mEventListSwipeRefreshLayout.setRefreshing(false);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        new LoadEventListAsyncTask().execute(mGroupCode);
+                        mEventListSwipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 2500);
+
             }
         });
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -110,19 +126,25 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
                 startActivityForResult(intent, PICK_IMAGE_REQUEST);
             }
         });
+
+
+
         new LoadEventListAsyncTask().execute(mGroupCode);
     }
 
+    public void isSuccessCreateEvent(boolean isRefresh) {
+        if (isRefresh) new LoadEventListAsyncTask().execute(mGroupCode);
+    }
+
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    { //이미지를 받으면 서버에 보내줌
+    public void onActivityResult(int requestCode, int resultCode, Intent data) { //이미지를 받으면 서버에 보내줌
         if (requestCode == PICK_IMAGE_REQUEST &&
                 resultCode == RESULT_OK && data != null && data.getData() != null) {
 
             //무사히 종료되었으면
             Uri selectedImageUri = data.getData();
             try {
-                receivedbitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
+                Bitmap receivedbitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
                 UploadImage uploadImage = new UploadImage();
                 uploadImage.execute(receivedbitmap);
 
@@ -160,9 +182,17 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_member_list) {
             Intent i = new Intent(this, MemberListActivity.class);
-            i.putExtra("groupcode",mGroupCode);
+            i.putExtra("groupcode", mGroupCode);
+            i.putExtra("groupName",mGroupName);
             startActivity(i);
             return true;
+        }else if(id == R.id.action_add_event){
+            SharedPreferences pref = getSharedPreferences("Login", MODE_PRIVATE);
+            String userid = pref.getString("id","error");
+            CustomAddEventPopup addEventPopup = CustomAddEventPopup.newInstance(userid,mGroupCode);
+            addEventPopup.show(getSupportFragmentManager(), "add_event");
+        }else{
+            Toast.makeText(this, "오류 발생!", Toast.LENGTH_SHORT).show();
         }
 
         return super.onOptionsItemSelected(item);
@@ -180,8 +210,8 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
             startActivity(new Intent(this, EditPhoneNumberActivity.class));
         } else if (id == R.id.nav_alarm_list) {
 
-        } else if( id == R.id.nav_logout){
-            Intent intent = new Intent(EventListActivity.this,LoginActivity.class);
+        } else if (id == R.id.nav_logout) {
+            Intent intent = new Intent(EventListActivity.this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
@@ -193,8 +223,7 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
         return true;
     }
 
-
-    class EventListAdapter extends RecyclerView.Adapter<EventListActivity.EventListAdapter.ViewHolder> {
+    class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder> {
 
 
         private LayoutInflater mLayoutInflater;
@@ -213,13 +242,13 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
 
 
         @Override
-        public EventListActivity.EventListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-            return new EventListActivity.EventListAdapter.ViewHolder(mLayoutInflater.inflate(R.layout.event_list_item, parent, false));
+            return new ViewHolder(mLayoutInflater.inflate(R.layout.event_list_item, parent, false));
         }
 
         @Override
-        public void onBindViewHolder(EventListActivity.EventListAdapter.ViewHolder holder, final int position) {
+        public void onBindViewHolder(ViewHolder holder, final int position) {
 
             //test
             holder.eventName.setText(eventListItems.get(position).getEventname());
@@ -231,7 +260,7 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
             holder.mRateTextCircularProgressBar.getCircularProgressBar().setCircleWidth(20);
             int summ = Integer.parseInt(eventListItems.get(position).getSumm());//모인금액 받아와야함.
             int targetm = Integer.parseInt(eventListItems.get(position).getTargetm());//목표액 받아와야함.
-            if(summ == 0) holder.mRateTextCircularProgressBar.setProgress(0);
+            if (summ == 0) holder.mRateTextCircularProgressBar.setProgress(0);
             else {
                 int percent = targetm / summ;
                 holder.mRateTextCircularProgressBar.setProgress(percent);//이 percent => 모인금액 / 목표액
@@ -243,7 +272,7 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
                 public void onClick(View v) {
                     Intent intent = new Intent(EventListActivity.this, EventInfoActivity.class);
                     intent.putExtra("eventName", eventListItems.get(position).getEventname());
-                    intent.putExtra("eventnum",eventListItems.get(position).getEventnum());
+                    intent.putExtra("eventnum", eventListItems.get(position).getEventnum());
                     startActivity(intent);
                 }
             });
@@ -256,14 +285,14 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
             return eventListItems.size();
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
+        class ViewHolder extends RecyclerView.ViewHolder {
             TextView eventName;
             TextView eventNumber;
             TextView eventpercent;
             CustomRateTextCircularProgressBar mRateTextCircularProgressBar;
             View view;
 
-            public ViewHolder(View v) {
+            ViewHolder(View v) {
                 super(v);
                 view = v;
                 eventName = (TextView) v.findViewById(R.id.eventlist_title_textview);
@@ -301,7 +330,7 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
                 ResponseBody resBody = response.body();
 
                 if (flag) { //http req/res 성공
-                    return EventJSONParsor.parseEventListItems(resBody.string());
+                    return EventJSONParser.parseEventListItems(resBody.string());
                 } else { //실패시 정의
                     Log.e("에러", "데이터를 로드하는데 실패하였습니다");
                 }
@@ -352,23 +381,21 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
             String uploadImage = getStringImage(bitmap);
 
             SharedPreferences pref = getSharedPreferences("Login", MODE_PRIVATE);
-            userid = pref.getString("id","error");
+            userid = pref.getString("id", "error");
 
             HashMap<String, String> data = new HashMap<>();
 
             data.put(UPLOAD_KEY, uploadImage);
             data.put("userid", userid);
-            String result = handler.sendPostRequest(UPLOAD_URL, data);
 
-            return result;
+            return handler.sendPostRequest(NetworkDefineConstant.SERVERP_URL_UPLOAD_PROFILE_IMAGE, data);
         }
 
-        public String getStringImage(Bitmap bmp) {
+        String getStringImage(Bitmap bmp) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] imageBytes = baos.toByteArray();
-            String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-            return encodedImage;
+            return Base64.encodeToString(imageBytes, Base64.DEFAULT);
         }
     }
 }

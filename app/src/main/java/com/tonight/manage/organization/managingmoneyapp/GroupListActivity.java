@@ -32,7 +32,7 @@ import com.github.clans.fab.FloatingActionButton;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomCreateGroupPopup;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomEntrancePopup;
 import com.tonight.manage.organization.managingmoneyapp.Object.GroupListItem;
-import com.tonight.manage.organization.managingmoneyapp.Server.GroupJSONParsor;
+import com.tonight.manage.organization.managingmoneyapp.Server.GroupJSONParser;
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
 
 import java.io.ByteArrayOutputStream;
@@ -53,18 +53,13 @@ import okhttp3.ResponseBody;
 public class GroupListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private RecyclerView mGroupListRecyclerView;
+    private final int PICK_IMAGE_REQUEST = 1;
+    public static final String UPLOAD_KEY = "image";
+
     private GroupAdapter mGroupListAdapter;
     private SwipeRefreshLayout mGroupListSwipeRefreshLayout;
-    private FloatingActionButton mCreateGroupFab;
-    private FloatingActionButton mEnterGrouopFab;
-    private boolean isRefresh;
 
     CircleImageView profileImage;
-    private int PICK_IMAGE_REQUEST = 1;
-    private Bitmap receivedbitmap;
-    public static final String UPLOAD_URL = "http://52.79.174.172/MAM/upload.php";
-    public static final String UPLOAD_KEY = "image";
     private String userId;
 
     @Override
@@ -80,8 +75,8 @@ public class GroupListActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mCreateGroupFab = (FloatingActionButton) findViewById(R.id.creatGroupFab);
-        mEnterGrouopFab = (FloatingActionButton) findViewById(R.id.enterGroupFab);
+        FloatingActionButton mCreateGroupFab = (FloatingActionButton) findViewById(R.id.creatGroupFab);
+        FloatingActionButton mEnterGrouopFab = (FloatingActionButton) findViewById(R.id.enterGroupFab);
 
         mCreateGroupFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,7 +115,7 @@ public class GroupListActivity extends AppCompatActivity
             }
         });
 
-        mGroupListRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        RecyclerView mGroupListRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mGroupListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mGroupListRecyclerView.setHasFixedSize(true);
         mGroupListAdapter = new GroupAdapter(this);
@@ -160,7 +155,7 @@ public class GroupListActivity extends AppCompatActivity
             //무사히 종료되었으면
             Uri selectedImageUri = data.getData();
             try {
-                receivedbitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
+                Bitmap receivedbitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
                 UploadImage uploadImage = new UploadImage();
                 uploadImage.execute(receivedbitmap);
 
@@ -255,6 +250,8 @@ public class GroupListActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(GroupListActivity.this, EventListActivity.class);
+                    i.putExtra("groupName",groupDatas.get(position).getGroupname());
+                    i.putExtra("balance",groupDatas.get(position).getBalance());
                     i.putExtra("groupcode",groupDatas.get(position).getGroupcode());
                     startActivity(i);
                 }
@@ -308,7 +305,7 @@ public class GroupListActivity extends AppCompatActivity
                 ResponseBody resBody = response.body();
 
                 if (flag) { //http req/res 성공
-                    return GroupJSONParsor.parseGroupListItems(resBody.string());
+                    return GroupJSONParser.parseGroupListItems(resBody.string());
                 } else { //실패시 정의
                     Log.e("에러", "데이터를 로드하는데 실패하였습니다");
                 }
@@ -365,7 +362,7 @@ public class GroupListActivity extends AppCompatActivity
 
             data.put(UPLOAD_KEY, uploadImage);
             data.put("userid", userid);
-            String result = handler.sendPostRequest(UPLOAD_URL, data);
+            String result = handler.sendPostRequest(NetworkDefineConstant.SERVERP_URL_UPLOAD_PROFILE_IMAGE, data);
 
             return result;
         }

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 /**
  * Created by sujinKim on 2016-12-02.
  */
-public class GroupJSONParsor {
+public class GroupJSONParser {
 
     /*
      GroupListItem 데이터 파싱

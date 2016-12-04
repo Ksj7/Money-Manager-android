@@ -13,7 +13,7 @@ import java.util.ArrayList;
 /**
  * Created by sujinKim on 2016-12-02.
  */
-public class EventJSONParsor {
+public class EventJSONParser {
 
     /*
      GroupListItem 데이터 파싱

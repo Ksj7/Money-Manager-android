@@ -88,11 +88,13 @@
                     android:visibility="invisible">
 
                     <android.support.v7.widget.AppCompatEditText
+                        android:id="@+id/portionEdit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" android:layout_weight="0.6"
                         android:layout_marginLeft="20dp" android:layout_marginRight="20dp"
                         android:hint="금액 입력" android:inputType="numberDecimal"
-                        android:textColor="@color/colorEditText"
+                        android:textColor="#000"
+                        android:textColorHint="@color/colorEditText"
                         android:focusable="true" android:focusableInTouchMode="true"
                         android:windowSoftInputMode="stateAlwaysHidden"
                         android:textSize="15sp" />
@@ -147,10 +149,13 @@
                     android:visibility="invisible">
 
                     <android.support.v7.widget.AppCompatEditText
+                        android:id="@+id/sumEdit"
                         android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp" android:layout_marginRight="20dp"
                         android:hint="금액 입력"
-                        android:inputType="numberDecimal" android:textColor="@color/colorEditText"
+                        android:inputType="numberDecimal"
+                        android:textColor="#000"
+                        android:textColorHint="@color/colorEditText"
                         android:focusable="true" android:focusableInTouchMode="true"
                         android:windowSoftInputMode="stateAlwaysHidden"
                         android:textSize="15sp" />

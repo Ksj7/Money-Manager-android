@@ -1,10 +1,12 @@
 package com.tonight.manage.organization.managingmoneyapp.Object;
 
+import java.io.Serializable;
+
 /**
  * Created by hooo5 on 2016-11-07.
  */
 
-public class MemberListItem {
+public class MemberListItem implements Serializable{
 
     String username;
     String phone;

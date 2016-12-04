@@ -45,7 +45,7 @@ public class EventInfoPaymentItem {
         this.balance = balance;
         return this;
     }
-    public EventInfoPaymentItem setBacnk(String bank){
+    public EventInfoPaymentItem setBank(String bank){
         this.bank = bank;
         return this;
     }

@@ -31,6 +31,7 @@
         <activity android:name=".ProfileImageActivity"/>
         <activity android:name=".EditPasswordActivity"/>
         <activity android:name=".EditPhoneNumberActivity"/>
+
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

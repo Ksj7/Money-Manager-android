@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomProfilePopup;
 import com.tonight.manage.organization.managingmoneyapp.Object.MemberListItem;
-import com.tonight.manage.organization.managingmoneyapp.Server.GroupMemberJSONParsor;
+import com.tonight.manage.organization.managingmoneyapp.Server.GroupMemberJSONParser;
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
 
 import java.io.UnsupportedEncodingException;
@@ -53,6 +53,11 @@ public class MemberListActivity extends AppCompatActivity {
         }
 
         String groupcode = i.getStringExtra("groupcode");
+        String groupName = i.getStringExtra("groupName");
+
+        TextView groupNameText = (TextView) findViewById(R.id.groupNameText);
+        groupNameText.setText(groupName);
+
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -95,18 +100,22 @@ public class MemberListActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(final MemberListActivity.MemberAdapter.ViewHolder holder, int position) {
+        public void onBindViewHolder(final MemberListActivity.MemberAdapter.ViewHolder holder, final int position) {
             //test
             holder.personName.setText(memberDatas.get(position).getUsername());
 
             holder.view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    CustomProfilePopup customProfilePopup = CustomProfilePopup.newInstance(memberDatas);
+                    CustomProfilePopup customProfilePopup = CustomProfilePopup.newInstance(memberDatas.get(position));
                     customProfilePopup.show(getSupportFragmentManager(), "profile");
                 }
             });
-            Glide.with(getApplicationContext()).load(memberDatas.get(position).getProfileimg()).into(holder.profileImageView);
+
+            Glide.with(getApplicationContext())
+                    .load(memberDatas.get(position).getProfileimg())
+                    .override(150, 150)
+                    .into(holder.profileImageView);
         }
 
         @Override
@@ -158,7 +167,8 @@ public class MemberListActivity extends AppCompatActivity {
                 int responseCode = response.code();
                 if (responseCode >= 400) return null;
                 if (flag) {
-                    return GroupMemberJSONParsor.parseMemberListItems((responseBody.string()));
+                    Glide.get(getApplicationContext()).clearDiskCache();
+                    return GroupMemberJSONParser.parseMemberListItems((responseBody.string()));
                 }
             } catch (UnknownHostException une) {
                 Log.e("connectionFail", une.toString());
@@ -178,6 +188,7 @@ public class MemberListActivity extends AppCompatActivity {
         protected void onPostExecute(ArrayList<MemberListItem> result) {
 
             if (result != null && result.size() > 0) {
+
                 mMemberAdapter.addAllItem(result);
                 mMemberAdapter.notifyDataSetChanged();
             }

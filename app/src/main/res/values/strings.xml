@@ -4,5 +4,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_member_list">Members</string>
+    <string name="action_member_list">그룹 맴버 보기</string>
+    <string name="action_add_event">이벤트 추가</string>
+    <string name="price">%1$s원</string>
 </resources>

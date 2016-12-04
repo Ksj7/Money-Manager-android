@@ -20,15 +20,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomAddMoneyPopup;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomSetDatePopup;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoMemberPaymentListItem;
-import com.tonight.manage.organization.managingmoneyapp.Object.EventListItem;
-import com.tonight.manage.organization.managingmoneyapp.Server.EventInfoJSONParsor;
-import com.tonight.manage.organization.managingmoneyapp.Server.EventJSONParsor;
+import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoPaymentItem;
+import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoPaymentTotalItem;
+import com.tonight.manage.organization.managingmoneyapp.Server.EventInfoJSONParser;
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
 import com.tonight.manage.organization.managingmoneyapp.Toss.TossConstants;
 import com.tonight.manage.organization.managingmoneyapp.Toss.TossUtils;
@@ -68,13 +70,17 @@ public class PaymentFragment extends Fragment {
     PopupMenu popup;
     private ImageButton mAddButton;
 
-
     //Toss TEST API Key
     private static final String API_KEY = "sk_test_apikey1234567890a";
 
     private ProgressDialog mProgressDialog;
     String eventnum;
-
+    TextView mEventDate;
+    TextView mTargetMoney;
+    TextView mCollectedMoney;
+    TextView mManagerName;
+    private int memberPosition=2; //초기값은 초대되어 있지 않은 회원
+    LinearLayout eventInfo_payment_userInfo;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_event_info_payment, container, false);
@@ -125,11 +131,12 @@ public class PaymentFragment extends Fragment {
                     public boolean onMenuItemClick(MenuItem item) {
                         int id = item.getItemId();
                         if (id == R.id.setdate) {
-                            CustomSetDatePopup setDatePopup = CustomSetDatePopup.newInstance();
+                            CustomSetDatePopup setDatePopup = CustomSetDatePopup.newInstance(eventnum);
                             setDatePopup.show(getFragmentManager(), "setDate");
                         } else {
-                            CustomAddMoneyPopup addMoneyPopup = CustomAddMoneyPopup.newInstance();
+                            CustomAddMoneyPopup addMoneyPopup = CustomAddMoneyPopup.newInstance(eventnum);
                             addMoneyPopup.show(getFragmentManager(), "addMoney");
+                            new LoadEventInfoAsyncTask().execute();
                         }
                         return false;
                     }
@@ -144,7 +151,7 @@ public class PaymentFragment extends Fragment {
                 if (API_KEY.contains("API KEY")) {
                     throw new IllegalStateException("API KEY를 올바르게 입력해주세요");
                 }
-                new TossRequestTask(generatePaymentParams()).execute(TossConstants.PAYMENT_API_URL);
+                new TossRequestAsyncTask(generatePaymentParams()).execute(TossConstants.PAYMENT_API_URL);
             }
         });
 
@@ -166,6 +173,16 @@ public class PaymentFragment extends Fragment {
             }
         });
 
+        mEventDate = (TextView) v.findViewById(R.id.eventInfo_date);
+        mTargetMoney = (TextView) v.findViewById(R.id.eventInfo_targetmoney);
+        mCollectedMoney = (TextView) v.findViewById(R.id.eventInfo_collectedmoney);
+        mManagerName = (TextView) v.findViewById(R.id.eventInfo_managerName);
+        eventInfo_payment_userInfo = (LinearLayout) v.findViewById(R.id.eventInfo_payment_userInfo);
+
+        if(memberPosition ==2 ){//가입되어 있지 않은 회원이라면 자신의 정보 안보임
+            eventInfo_payment_userInfo.setVisibility(View.INVISIBLE);
+        }
+
         new LoadEventInfoAsyncTask().execute();
         return v;
     }
@@ -174,7 +191,7 @@ public class PaymentFragment extends Fragment {
     class EventInfoPaymentAdapter extends RecyclerView.Adapter<EventInfoPaymentAdapter.ViewHolder> {
 
         private LayoutInflater mLayoutInflater;
-        private ArrayList<EventInfoMemberPaymentListItem> paymentArrayList; // group list
+        private ArrayList<EventInfoMemberPaymentListItem> paymentArrayList; // member list
         private Context mContext;
 
         public EventInfoPaymentAdapter(Context context) {
@@ -198,7 +215,7 @@ public class PaymentFragment extends Fragment {
         public void onBindViewHolder(EventInfoPaymentAdapter.ViewHolder holder, int position) {
 
             //test
-            holder.useName.setText("test text");
+       /*     holder.useName.setText("test text");
             holder.paymentMoney.setText("0");
             holder.payStatus.setText("미지출");
             holder.view.setOnClickListener(new View.OnClickListener() {
@@ -208,19 +225,23 @@ public class PaymentFragment extends Fragment {
 
                     // TODO 지불 내역 변경 팝업창 생성 코드 추가
                 }
-            });
+            });*/
             //이게 정상
-            //holder.eventName.setText(groupDatas.get(position).eventName);
-            //holder.groupNumber.setText(groupDatas.get(position).groupNumber+"명");
+            holder.useName.setText(paymentArrayList.get(position).getName());
+            holder.paymentMoney.setText(paymentArrayList.get(position).getPersonalMoney());
+            if(paymentArrayList.get(position).getSpendingstatus() =="1"){
+                holder.payStatus.setText("지출완료");
+            }
+
         }
 
         @Override
         public int getItemCount() {
             //test
-            return 7;
+            //return 7;
 
             //이게 원래 정상
-            // return paymentArrayList.size();
+             return paymentArrayList.size();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
@@ -229,6 +250,7 @@ public class PaymentFragment extends Fragment {
             TextView payStatus;
             RecyclerView recyclerView;
             View view;
+            ImageView profileimg;
 
             public ViewHolder(View v) {
                 super(v);
@@ -237,7 +259,7 @@ public class PaymentFragment extends Fragment {
                 paymentMoney = (TextView) v.findViewById(R.id.eventInfo_payment_money);
                 payStatus = (TextView) v.findViewById(R.id.eventInfo_payment_payState);
                 recyclerView = (RecyclerView) v.findViewById(R.id.eventInfo_recyclerView);
-
+                profileimg = (ImageView) v.findViewById(R.id.profile_imageView);
             }
         }
     }
@@ -285,11 +307,11 @@ public class PaymentFragment extends Fragment {
     /**
      * 결제 API 서버에 결제 생성을 요청하고, 성공 시 결제를 시도합니다.
      */
-    private class TossRequestTask extends AsyncTask<String, Void, String> {
+    private class TossRequestAsyncTask extends AsyncTask<String, Void, String> {
 
         private JSONObject params;
 
-        public TossRequestTask(JSONObject params) {
+        public TossRequestAsyncTask(JSONObject params) {
             this.params = params;
         }
 
@@ -398,9 +420,9 @@ public class PaymentFragment extends Fragment {
 
 
     //evnetinfo list 가져오기 위한 Thread
-    public class LoadEventInfoAsyncTask extends AsyncTask<String, Void, ArrayList<EventInfoMemberPaymentListItem>> {
+    public class LoadEventInfoAsyncTask extends AsyncTask<String, Void, EventInfoPaymentTotalItem> {
         @Override
-        protected ArrayList<EventInfoMemberPaymentListItem> doInBackground(String... arg) {
+        protected EventInfoPaymentTotalItem doInBackground(String... arg) {
             String requestURL = "";
             Response response = null;
             try {
@@ -415,7 +437,7 @@ public class PaymentFragment extends Fragment {
                 FormBody.Builder builder = new FormBody.Builder();
                 //builder.add("eventnum", eventnum).add("userid", userid);
                 builder.add("userid", userid).add("eventnum", eventnum).add("signal","0");
-                //Log.e("???????????? ",eventnum+","+userid);
+                Log.e("???????????? ",eventnum+","+userid);
                 FormBody formBody = builder.build();
                 //요청
                 Request request = new Request.Builder()
@@ -429,7 +451,7 @@ public class PaymentFragment extends Fragment {
 
                 if (flag) { //http req/res 성공
                     //Log.e("--------------- ",resBody.string());
-                    return EventInfoJSONParsor.parseEventInfoMemberItems(new StringBuilder(resBody.string()));
+                    return EventInfoJSONParser.parseEventInfoMemberItems(new StringBuilder(resBody.string()));
                 } else { //실패시 정의
                     Log.e("에러", "데이터를 로드하는데 실패하였습니다");
                 }
@@ -445,10 +467,40 @@ public class PaymentFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(ArrayList<EventInfoMemberPaymentListItem> result) {
+        protected void onPostExecute(EventInfoPaymentTotalItem result) {
+            ArrayList<EventInfoMemberPaymentListItem> eventInfoMemberItemArrayList = null ;
+            ArrayList<EventInfoPaymentItem> eventInfoPaymentItemArrayList = null;
+            ArrayList<String> eventInfoMemberPositionArrayList=null;
 
-            if (result != null && result.size() > 0) {
+            if(eventInfoMemberPositionArrayList.size() >0){
+                memberPosition = Integer.parseInt(eventInfoMemberPositionArrayList.get(0));
+                Log.e("멤버포지션",memberPosition+"?");
+            }
+
+            if (result != null) {
                 Log.e("받아온 정보들", result.toString());
+                eventInfoMemberItemArrayList = result.getEventInfoMemberItemArrayList();
+                eventInfoMemberPositionArrayList = result.getEventInfoMemberPositionArrayList();
+                eventInfoPaymentItemArrayList = result.getEventInfoPaymentItemArrayList();
+
+                if(eventInfoMemberItemArrayList.size() >0){//멤버 리스트
+                    SharedPreferences pref = getActivity().getSharedPreferences("Login", MODE_PRIVATE);
+                    String userid = pref.getString("id","error");//사용자 아이디 가져옴
+
+
+                    mPaymentListAdapter.addItem(eventInfoMemberItemArrayList);
+                    mPaymentListAdapter.notifyDataSetChanged();
+                }
+
+                if(eventInfoPaymentItemArrayList.size()>0){//이벤트 정보
+                    mTargetMoney.setText(eventInfoPaymentItemArrayList.get(0).getTargetMoney());
+                    mCollectedMoney.setText(eventInfoPaymentItemArrayList.get(0).getCollectedMoney());
+                    mEventDate.setText(eventInfoPaymentItemArrayList.get(0).getEventDate());
+                    mManagerName.setText(eventInfoPaymentItemArrayList.get(0).getManagerId());
+
+                }
+
+
 
             }
         }

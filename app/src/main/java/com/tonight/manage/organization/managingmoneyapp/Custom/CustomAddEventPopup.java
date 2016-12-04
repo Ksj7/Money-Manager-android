@@ -10,9 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CalendarView;
+import android.widget.EditText;
 import android.widget.Toast;
 
+import com.tonight.manage.organization.managingmoneyapp.EventListActivity;
 import com.tonight.manage.organization.managingmoneyapp.R;
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
 
@@ -28,9 +29,10 @@ import okhttp3.ResponseBody;
  * Created by sujinKim on 2016-11-04.
  */
 
-public class CustomSetDatePopup extends DialogFragment {
+public class CustomAddEventPopup extends DialogFragment {
 
-    int year, month, date;
+    private View view;
+    private Button positiveButton, negativeButton;
     private boolean isSuccess;
 
     @Override
@@ -39,51 +41,37 @@ public class CustomSetDatePopup extends DialogFragment {
         setStyle(STYLE_NO_TITLE, R.style.CustomDialogTheme);
     }
 
-    public static CustomSetDatePopup newInstance(String eventnum) {
-        CustomSetDatePopup setDatePopup = new CustomSetDatePopup();
+    public static CustomAddEventPopup newInstance(String id, String groupcode) {
+        CustomAddEventPopup eventPopup = new CustomAddEventPopup();
         Bundle b = new Bundle();
-        b.putString("eventnum", eventnum);
-        setDatePopup.setArguments(b);
-        return setDatePopup;
+        b.putString("id",id);
+        b.putString("groupcode",groupcode);
+        eventPopup.setArguments(b);
+        return eventPopup;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.popup_set_date, container, false);
-
-        Bundle b = getArguments();
-        if (b == null) {
-            Toast.makeText(getActivity(), "에러발생", Toast.LENGTH_SHORT).show();
-            dismiss();
-        }
-
-        final String eventnum = b.getString("eventnum");
+        view = inflater.inflate(R.layout.popup_add_event, container, false);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
-        CalendarView calendarView = (CalendarView) view.findViewById(R.id.calendar);
-        Button positiveButton = (Button) view.findViewById(R.id.confirmBtn);
-        Button negativeButton = (Button) view.findViewById(R.id.negativeBtn);
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            @Override
-            public void onSelectedDayChange(CalendarView calendarView, int i, int i1, int i2) {
-                java.util.Calendar curDate = java.util.Calendar.getInstance();
-                curDate.setTimeInMillis(calendarView.getDate());
-
-                year = curDate.get(java.util.Calendar.YEAR);
-                month = 1 + curDate.get(java.util.Calendar.MONTH);
-                date = curDate.get(java.util.Calendar.DATE);
-
-                Toast.makeText(getActivity(), "선택한 날짜 : " + year + "/" + month + "/" + date, Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        Bundle b = getArguments();
+        if(b==null){
+            Toast.makeText(getActivity(), "에러가 발생했습니다", Toast.LENGTH_SHORT).show();
+            return view;
+        }
+        final String groupcode = b.getString("groupcode");
+        final String id = b.getString("id");
+        positiveButton = (Button) view.findViewById(R.id.confirmBtn);
+        negativeButton = (Button ) view.findViewById(R.id.negativeBtn);
+        final EditText eventNameEdit = (EditText) view.findViewById(R.id.eventNameEdit);
         positiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String dateFormat = Integer.toString(year) + Integer.toString(month) +Integer.toString(date);
-                new UpdateSetDateAsyncTask().execute(eventnum, dateFormat);
+                String eventName = eventNameEdit.getText().toString();
+                new UpdateAddEventAsyncTask().execute(id,groupcode,eventName);
             }
         });
 
@@ -93,10 +81,8 @@ public class CustomSetDatePopup extends DialogFragment {
                 dismiss();
             }
         });
-
         return view;
     }
-
 
     @Override
     public void onStop() {
@@ -104,20 +90,23 @@ public class CustomSetDatePopup extends DialogFragment {
         dismiss();
     }
 
-    //Update SetDate Data
-    class UpdateSetDateAsyncTask extends AsyncTask<String, Void, String> {
+    //Update Add event Data
+    class UpdateAddEventAsyncTask extends AsyncTask<String, Void, String> {
+
         @Override
         protected String doInBackground(String... params) {
             String requestURL = "";
             Response response = null;
             try {
-                requestURL = NetworkDefineConstant.SERVER_URL_EVENT_INFO;
+                requestURL = NetworkDefineConstant.SERVER_URL_EVENT_LIST;
 
                 OkHttpClient toServer = NetworkDefineConstant.getOkHttpClient();
                 FormBody.Builder builder = new FormBody.Builder();
-                builder.add("signal", "3")
-                        .add("eventnum", params[0])
-                        .add("eventdate", params[1]);
+                builder.add("signal", "1")
+                        .add("userid", params[0])
+                        .add("groupcode", params[1])
+                        .add("eventname",params[2]);
+
                 FormBody formBody = builder.build();
 
                 Request request = new Request.Builder()
@@ -131,13 +120,13 @@ public class CustomSetDatePopup extends DialogFragment {
 
                 if (flag) {
                     String valid = resBody.string();
-                    if (valid.contains("1"))
+                    if (valid.contains("0"))
                         isSuccess = true;
                     else
                         isSuccess = false;
 
                 } else {
-                    Log.e("에러", "기한 설정 에러");
+                    Log.e("에러", "이벤트 생성 실패!");
                 }
             } catch (IOException e1) {
                 e1.printStackTrace();
@@ -154,12 +143,15 @@ public class CustomSetDatePopup extends DialogFragment {
         protected void onPostExecute(String aVoid) {
             super.onPostExecute(aVoid);
             if (isSuccess) {
-                Toast.makeText(getActivity(), "기한이 설정되었습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "이벤트가 추가 되었습니다.", Toast.LENGTH_SHORT).show();
+                EventListActivity activity = (EventListActivity) getActivity();
+                activity.isSuccessCreateEvent(true);
             } else {
-                Toast.makeText(getActivity(), "에러!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "오류가 발생했습니다. 잠시 후 다시 시도해 주세요", Toast.LENGTH_SHORT).show();
             }
             dismiss();
         }
 
     }
+
 }

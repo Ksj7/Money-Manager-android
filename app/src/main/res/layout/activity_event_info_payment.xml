@@ -113,7 +113,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
                     android:layout_marginTop="10dp"
-                    android:background="#E0E0E0">
+                    android:background="#E0E0E0"
+                    android:id="@+id/eventInfo_payment_userInfo">
 
                     <ImageView
                         android:id="@+id/eventInfo_myImageView"
