@@ -346,7 +346,9 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
                 ResponseBody resBody = response.body();
 
                 if (flag) { //http req/res 성공
-                    return EventJSONParser.parseEventListItems(resBody.string());
+                    if(resBody!=null) {
+                        return EventJSONParser.parseEventListItems(resBody.string());
+                    }
                 } else { //실패시 정의
                     Log.e("에러", "데이터를 로드하는데 실패하였습니다");
                 }
@@ -365,7 +367,7 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
         protected void onPostExecute(EventListBundle result) {
 
             // RecyclerView Adapter Item 값 추가
-            if (result != null && result.getUserinfo().size() > 0 && result.getResult().size() > 0) {
+            if (result.getResult() != null && result.getUserinfo()!= null && result.getUserinfo().size() > 0 && result.getResult().size() > 0) {
 
                 mEventListAdapter.addAllItem(result.getResult());
                 mEventListAdapter.notifyDataSetChanged();

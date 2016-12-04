@@ -167,8 +167,10 @@ public class MemberListActivity extends AppCompatActivity {
                 int responseCode = response.code();
                 if (responseCode >= 400) return null;
                 if (flag) {
-                    Glide.get(getApplicationContext()).clearDiskCache();
-                    return GroupMemberJSONParser.parseMemberListItems((responseBody.string()));
+                    if(responseBody != null) {
+                        Glide.get(getApplicationContext()).clearDiskCache();
+                        return GroupMemberJSONParser.parseMemberListItems((responseBody.string()));
+                    }
                 }
             } catch (UnknownHostException une) {
                 Log.e("connectionFail", une.toString());
