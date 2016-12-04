@@ -126,7 +126,7 @@
                         android:scaleType="centerCrop" />
 
                     <TextView
-                        android:id="@+id/eventInfo_userID"
+                        android:id="@+id/eventInfo_myuserName"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="3"

@@ -51,7 +51,8 @@ public class EventInfoJSONParser {
                             .setName(item.getString("userid"))
                             .setSpendingstatus(item.getString("ispay"))
                             .setUserId(item.getString("userid"))
-                            .setPersonalMoney(item.getString("personalm"));
+                            .setPersonalMoney(item.getString("personalm"))
+                            .setUserphone(item.getString("phone"));
 
                     eventInfoMemberItemArrayList.add(memberObject);
                 }
@@ -71,7 +72,10 @@ public class EventInfoJSONParser {
                             .setManagerId(item.getString("managerid"))
                             .setPersonalMoney(item.getString("personalm"))
                             .setName(item.getString("eventname"))
-                            .setTargetMoney(item.getString("targetm"));
+                            .setTargetMoney(item.getString("targetm"))
+                            .setUserName(item.getString("username"))
+                            .setUserIspay(item.getString("ispay"))
+                            .setUserprofileURL(item.getString("profileimg"));
 
                     eventInfoPaymentItemArrayList.add(resultObject);
                 }
@@ -81,7 +85,7 @@ public class EventInfoJSONParser {
                 eventInfoMemberPositionArrayList = new ArrayList<>();
                 for (int i = 0; i < memberpositionsize; i++) {
                     JSONObject item = memberposition.getJSONObject(i);
-                    eventInfoMemberPositionArrayList.add(item.toString());
+                    eventInfoMemberPositionArrayList.add(item.getString("position"));
                 }
             }
 

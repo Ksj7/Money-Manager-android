@@ -12,6 +12,17 @@ public class EventInfoMemberPaymentListItem {
     String spendingstatus; //지출여부
     String personalMoney;
 
+    public String getUserphone() {
+        return userphone;
+    }
+
+    public EventInfoMemberPaymentListItem setUserphone(String userphone) {
+        this.userphone = userphone;
+        return this;
+    }
+
+    String userphone;
+
     public String getPersonalMoney() {
         return personalMoney;
     }

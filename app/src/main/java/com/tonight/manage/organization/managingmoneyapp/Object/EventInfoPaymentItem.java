@@ -16,7 +16,36 @@ public class EventInfoPaymentItem {
     String bank;
     String account;
 
+    String userName;
+    String userprofileURL;
+    String userIspay;
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public EventInfoPaymentItem setUserName(String userName) {
+        this.userName = userName;
+        return this;
+    }
+
+    public String getUserprofileURL() {
+        return userprofileURL;
+    }
+
+    public EventInfoPaymentItem setUserprofileURL(String userprofileURL) {
+        this.userprofileURL = userprofileURL;
+        return this;
+    }
+
+    public String getUserIspay() {
+        return userIspay;
+    }
+
+    public EventInfoPaymentItem setUserIspay(String userIspay) {
+        this.userIspay = userIspay;
+        return this;
+    }
     public EventInfoPaymentItem setTargetMoney(String targetMoney){
         this.targetMoney = targetMoney;
         return this;
