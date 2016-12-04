@@ -26,7 +26,7 @@ import android.widget.Toast;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomAddMoneyPopup;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomSetDatePopup;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoMemberPaymentListItem;
-import com.tonight.manage.organization.managingmoneyapp.Server.EventInfoJSONParsor;
+import com.tonight.manage.organization.managingmoneyapp.Server.EventInfoJSONParser;
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
 import com.tonight.manage.organization.managingmoneyapp.Toss.TossConstants;
 import com.tonight.manage.organization.managingmoneyapp.Toss.TossUtils;
@@ -143,7 +143,7 @@ public class PaymentFragment extends Fragment {
                 if (API_KEY.contains("API KEY")) {
                     throw new IllegalStateException("API KEY를 올바르게 입력해주세요");
                 }
-                new TossRequestTask(generatePaymentParams()).execute(TossConstants.PAYMENT_API_URL);
+                new TossRequestAsyncTask(generatePaymentParams()).execute(TossConstants.PAYMENT_API_URL);
             }
         });
 
@@ -284,11 +284,11 @@ public class PaymentFragment extends Fragment {
     /**
      * 결제 API 서버에 결제 생성을 요청하고, 성공 시 결제를 시도합니다.
      */
-    private class TossRequestTask extends AsyncTask<String, Void, String> {
+    private class TossRequestAsyncTask extends AsyncTask<String, Void, String> {
 
         private JSONObject params;
 
-        public TossRequestTask(JSONObject params) {
+        public TossRequestAsyncTask(JSONObject params) {
             this.params = params;
         }
 
@@ -428,7 +428,7 @@ public class PaymentFragment extends Fragment {
 
                 if (flag) { //http req/res 성공
                     //Log.e("--------------- ",resBody.string());
-                    return EventInfoJSONParsor.parseEventInfoMemberItems(new StringBuilder(resBody.string()));
+                    return EventInfoJSONParser.parseEventInfoMemberItems(new StringBuilder(resBody.string()));
                 } else { //실패시 정의
                     Log.e("에러", "데이터를 로드하는데 실패하였습니다");
                 }

@@ -27,7 +27,7 @@ import com.bumptech.glide.Glide;
 import com.tonight.manage.organization.managingmoneyapp.Builder.ProductButton;
 import com.tonight.manage.organization.managingmoneyapp.Object.InvitationListItem;
 import com.tonight.manage.organization.managingmoneyapp.Object.InvitationUpdateItem;
-import com.tonight.manage.organization.managingmoneyapp.Server.InvitationJSONParsor;
+import com.tonight.manage.organization.managingmoneyapp.Server.InvitationJSONParser;
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
 
 import org.json.JSONArray;
@@ -212,7 +212,7 @@ public class InvitationActivity extends AppCompatActivity {
                 int responseCode = response.code();
                 if (responseCode >= 400) return null;
                 if (flag) {
-                    return InvitationJSONParsor.parseInvitationListItems((responseBody.string()));
+                    return InvitationJSONParser.parseInvitationListItems((responseBody.string()));
                 }
             } catch (Exception e) {
                 Log.e("connectionFail", e.toString());

@@ -32,7 +32,7 @@ import android.widget.Toast;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomAddEventPopup;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomRateTextCircularProgressBar;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventListItem;
-import com.tonight.manage.organization.managingmoneyapp.Server.EventJSONParsor;
+import com.tonight.manage.organization.managingmoneyapp.Server.EventJSONParser;
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
 
 import java.io.ByteArrayOutputStream;
@@ -330,7 +330,7 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
                 ResponseBody resBody = response.body();
 
                 if (flag) { //http req/res 성공
-                    return EventJSONParsor.parseEventListItems(resBody.string());
+                    return EventJSONParser.parseEventListItems(resBody.string());
                 } else { //실패시 정의
                     Log.e("에러", "데이터를 로드하는데 실패하였습니다");
                 }

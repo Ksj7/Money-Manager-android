@@ -12,8 +12,6 @@ import com.goka.flickableview.FlickableImageView;
 
 public class ProfileImageActivity extends AppCompatActivity {
 
-    private static final String TAG = ProfileImageActivity.class.getSimpleName();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

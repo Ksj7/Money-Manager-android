@@ -32,7 +32,7 @@ import com.github.clans.fab.FloatingActionButton;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomCreateGroupPopup;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomEntrancePopup;
 import com.tonight.manage.organization.managingmoneyapp.Object.GroupListItem;
-import com.tonight.manage.organization.managingmoneyapp.Server.GroupJSONParsor;
+import com.tonight.manage.organization.managingmoneyapp.Server.GroupJSONParser;
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
 
 import java.io.ByteArrayOutputStream;
@@ -305,7 +305,7 @@ public class GroupListActivity extends AppCompatActivity
                 ResponseBody resBody = response.body();
 
                 if (flag) { //http req/res 성공
-                    return GroupJSONParsor.parseGroupListItems(resBody.string());
+                    return GroupJSONParser.parseGroupListItems(resBody.string());
                 } else { //실패시 정의
                     Log.e("에러", "데이터를 로드하는데 실패하였습니다");
                 }

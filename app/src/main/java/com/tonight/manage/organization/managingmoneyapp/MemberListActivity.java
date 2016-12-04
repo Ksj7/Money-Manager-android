@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomProfilePopup;
 import com.tonight.manage.organization.managingmoneyapp.Object.MemberListItem;
-import com.tonight.manage.organization.managingmoneyapp.Server.GroupMemberJSONParsor;
+import com.tonight.manage.organization.managingmoneyapp.Server.GroupMemberJSONParser;
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
 
 import java.io.UnsupportedEncodingException;
@@ -167,7 +167,7 @@ public class MemberListActivity extends AppCompatActivity {
                 int responseCode = response.code();
                 if (responseCode >= 400) return null;
                 if (flag) {
-                    return GroupMemberJSONParsor.parseMemberListItems((responseBody.string()));
+                    return GroupMemberJSONParser.parseMemberListItems((responseBody.string()));
                 }
             } catch (UnknownHostException une) {
                 Log.e("connectionFail", une.toString());
