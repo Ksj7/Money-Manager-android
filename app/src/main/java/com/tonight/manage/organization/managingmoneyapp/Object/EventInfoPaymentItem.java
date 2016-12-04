@@ -5,35 +5,109 @@ package com.tonight.manage.organization.managingmoneyapp.Object;
  */
 
 public class EventInfoPaymentItem {
-    String date;
-    int targetMoney;
-    int collectedMoney;
 
+    String targetMoney;
+    String collectedMoney;
+    String eventName;
+    String eventDate;
+    String personalMoney;
+    String managerId;
+    String balance;
+    String bank;
+    String account;
 
-    public EventInfoPaymentItem setDate(String date){
-        this.date = date;
+    String userName;
+    String userprofileURL;
+    String userIspay;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public EventInfoPaymentItem setUserName(String userName) {
+        this.userName = userName;
         return this;
     }
 
-    public EventInfoPaymentItem getTargetMoney(int targetMoney){
+    public String getUserprofileURL() {
+        return userprofileURL;
+    }
+
+    public EventInfoPaymentItem setUserprofileURL(String userprofileURL) {
+        this.userprofileURL = userprofileURL;
+        return this;
+    }
+
+    public String getUserIspay() {
+        return userIspay;
+    }
+
+    public EventInfoPaymentItem setUserIspay(String userIspay) {
+        this.userIspay = userIspay;
+        return this;
+    }
+    public EventInfoPaymentItem setTargetMoney(String targetMoney){
         this.targetMoney = targetMoney;
         return this;
     }
-    public EventInfoPaymentItem getColectedMondey(int collectedMoney){
+    public EventInfoPaymentItem setName(String eventName){
+        this.eventName = eventName;
+        return this;
+    }
+    public EventInfoPaymentItem setDate(String eventDate){
+        this.eventDate = eventDate;
+        return this;
+    }
+    public EventInfoPaymentItem setPersonalMoney(String personalMoney){
+        this.personalMoney = personalMoney;
+        return this;
+    }
+    public EventInfoPaymentItem setColectedMondey(String collectedMoney){
         this.collectedMoney = collectedMoney;
         return this;
     }
-
-
-    public String getDate(){
-        return this.date;
+    public EventInfoPaymentItem setManagerId(String managerId){
+        this.managerId = managerId;
+        return this;
     }
-    public int getTargetMoney(){
-        return this.targetMoney;
+    public EventInfoPaymentItem setBalance(String balance){
+        this.balance = balance;
+        return this;
     }
-    public int getCollectedMoney(){
-        return this.collectedMoney;
+    public EventInfoPaymentItem setBank(String bank){
+        this.bank = bank;
+        return this;
+    }
+    public EventInfoPaymentItem setAccount(String account){
+        this.account = account;
+        return this;
     }
 
-
+    public String getTargetMoney() {
+        return targetMoney;
+    }
+    public String getCollectedMoney() {
+        return collectedMoney;
+    }
+    public String getEventName() {
+        return eventName;
+    }
+    public String getEventDate() {
+        return eventDate;
+    }
+    public String getPersonalMoney() {
+        return personalMoney;
+    }
+    public String getManagerId() {
+        return managerId;
+    }
+    public String getBalance() {
+        return balance;
+    }
+    public String getBank() {
+        return bank;
+    }
+    public String getAccount() {
+        return account;
+    }
 }

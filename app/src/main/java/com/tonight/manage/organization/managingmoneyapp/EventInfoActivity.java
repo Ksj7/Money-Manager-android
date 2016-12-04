@@ -49,7 +49,7 @@ public class EventInfoActivity extends AppCompatActivity implements TabLayout.On
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
-        Pager adapter = new Pager(getSupportFragmentManager(), tabLayout.getTabCount(),eventName , eventnum);
+        Pager adapter = new Pager(getSupportFragmentManager(), tabLayout.getTabCount(),eventName , eventnum );
         mViewPager.setAdapter(adapter);
         tabLayout.addOnTabSelectedListener(this);//Tab 선택 시 화면 이동하는 리스너
         mViewPager.addOnPageChangeListener(this);//Tab swiping시 화면 이동하는 리스너

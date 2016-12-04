@@ -25,7 +25,7 @@ public class GroupMemberJSONParser {
 
         try {
             jsonRoot = new JSONObject(responedJSONData);
-            JSONArray datas = jsonRoot.getJSONArray("result");
+            JSONArray datas = jsonRoot.getJSONArray("result"); //이벤트 정보
             int  size = datas.length();
             if( size > 0) {
                 memberListItemArrayList = new ArrayList<>();

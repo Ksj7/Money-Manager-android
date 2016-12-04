@@ -68,6 +68,8 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
     private TextView userPhone;
     String userid;
 
+
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_eventlist);
