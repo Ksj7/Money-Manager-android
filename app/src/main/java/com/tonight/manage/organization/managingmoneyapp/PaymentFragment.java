@@ -533,7 +533,7 @@ public class PaymentFragment extends Fragment {
                     //총무 프로필
                     myUserName.setText(eventInfoPaymentItemArrayList.get(0).getUserName());//유저 이름
                     myMoney.setText(eventInfoPaymentItemArrayList.get(0).getPersonalMoney()); //유저 금액
-
+                    mManagerName.setText((eventInfoPaymentItemArrayList.get(0).getManagerName()));
                     if (Integer.parseInt(eventInfoPaymentItemArrayList.get(0).getUserIspay()) == 1) {
                         myStatus.setText("지출완료");//유저 상태
                     }
@@ -543,6 +543,12 @@ public class PaymentFragment extends Fragment {
                             .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .skipMemoryCache(true)
                             .into(myProfileImage); // 유저 프로필
+                    Glide.with(getActivity().getApplicationContext())
+                            .load(eventInfoPaymentItemArrayList.get(0).getManagerProfileimg())
+                            .override(150, 150)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
+                            .into(mManagerProfile); // 유저 프로필
 
                 }
 
