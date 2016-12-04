@@ -1,5 +1,6 @@
 package com.tonight.manage.organization.managingmoneyapp;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -10,11 +11,13 @@ import com.tonight.manage.organization.managingmoneyapp.Custom.CustomSelectEvent
  */
 
 public class SMSActivity extends AppCompatActivity {
+    public static Activity smsActivity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sms);
         CustomSelectEventForReceivedTossSMSPopup customSelectEventForReceivedTossSMSPopup = CustomSelectEventForReceivedTossSMSPopup.newInstance("");
         customSelectEventForReceivedTossSMSPopup.show(getSupportFragmentManager(), "create_group");
+        smsActivity = this;
     }
 }

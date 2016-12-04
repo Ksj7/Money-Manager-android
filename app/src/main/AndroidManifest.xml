@@ -31,7 +31,7 @@
         <activity android:name=".ProfileImageActivity"/>
         <activity android:name=".EditPasswordActivity"/>
         <activity android:name=".EditPhoneNumberActivity"/>
-        <activity android:name=".SMSActivity"/>
+        <activity android:name=".SMSActivity" android:theme="@style/Theme.AppCompat.Translucent"/>
         <service android:name=".Service.SMSandPasteService">
 
             <intent-filter>
