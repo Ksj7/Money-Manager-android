@@ -26,9 +26,7 @@ import android.widget.Toast;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomAddMoneyPopup;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomSetDatePopup;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoMemberPaymentListItem;
-import com.tonight.manage.organization.managingmoneyapp.Object.EventListItem;
 import com.tonight.manage.organization.managingmoneyapp.Server.EventInfoJSONParsor;
-import com.tonight.manage.organization.managingmoneyapp.Server.EventJSONParsor;
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
 import com.tonight.manage.organization.managingmoneyapp.Toss.TossConstants;
 import com.tonight.manage.organization.managingmoneyapp.Toss.TossUtils;
@@ -128,8 +126,9 @@ public class PaymentFragment extends Fragment {
                             CustomSetDatePopup setDatePopup = CustomSetDatePopup.newInstance();
                             setDatePopup.show(getFragmentManager(), "setDate");
                         } else {
-                            CustomAddMoneyPopup addMoneyPopup = CustomAddMoneyPopup.newInstance();
+                            CustomAddMoneyPopup addMoneyPopup = CustomAddMoneyPopup.newInstance(eventnum);
                             addMoneyPopup.show(getFragmentManager(), "addMoney");
+                            new LoadEventInfoAsyncTask().execute();
                         }
                         return false;
                     }
