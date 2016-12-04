@@ -123,7 +123,7 @@ public class PaymentFragment extends Fragment {
                     public boolean onMenuItemClick(MenuItem item) {
                         int id = item.getItemId();
                         if (id == R.id.setdate) {
-                            CustomSetDatePopup setDatePopup = CustomSetDatePopup.newInstance();
+                            CustomSetDatePopup setDatePopup = CustomSetDatePopup.newInstance(eventnum);
                             setDatePopup.show(getFragmentManager(), "setDate");
                         } else {
                             CustomAddMoneyPopup addMoneyPopup = CustomAddMoneyPopup.newInstance(eventnum);

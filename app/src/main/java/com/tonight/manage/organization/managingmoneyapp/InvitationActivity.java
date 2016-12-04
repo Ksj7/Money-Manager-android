@@ -150,8 +150,8 @@ public class InvitationActivity extends AppCompatActivity {
                     } else {
                         Button removeButton = buttonBundle.get(position);
                         invitationPerSonLinear.removeView(removeButton);
-                        buttonBundle.remove(member);
-                        newInvitationMemberList.remove(position);
+                        buttonBundle.remove(position);
+                        newInvitationMemberList.remove(member);
                     }
                 }
             });

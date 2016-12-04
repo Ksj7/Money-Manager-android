@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,15 @@ import android.widget.CalendarView;
 import android.widget.Toast;
 
 import com.tonight.manage.organization.managingmoneyapp.R;
+import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
+
+import java.io.IOException;
+
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  * Created by sujinKim on 2016-11-04.
@@ -20,29 +30,40 @@ import com.tonight.manage.organization.managingmoneyapp.R;
 
 public class CustomSetDatePopup extends DialogFragment {
 
-    private View view;
-    private CalendarView calendarView;
     int year, month, date;
+    private boolean isSuccess;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NO_TITLE, R.style.CustomDialogTheme);
     }
 
-    public static CustomSetDatePopup newInstance() {
+    public static CustomSetDatePopup newInstance(String eventnum) {
         CustomSetDatePopup setDatePopup = new CustomSetDatePopup();
+        Bundle b = new Bundle();
+        b.putString("eventnum", eventnum);
+        setDatePopup.setArguments(b);
         return setDatePopup;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.popup_set_date, container, false);
+        View view = inflater.inflate(R.layout.popup_set_date, container, false);
+
+        Bundle b = getArguments();
+        if (b == null) {
+            Toast.makeText(getActivity(), "에러발생", Toast.LENGTH_SHORT).show();
+            dismiss();
+        }
+
+        final String eventnum = b.getString("eventnum");
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
-        calendarView = (CalendarView) view.findViewById(R.id.calendar);
-        Button confirmButton = (Button) view.findViewById(R.id.confirmBtn);
+        CalendarView calendarView = (CalendarView) view.findViewById(R.id.calendar);
+        Button positiveButton = (Button) view.findViewById(R.id.confirmBtn);
         Button negativeButton = (Button) view.findViewById(R.id.negativeBtn);
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
@@ -54,14 +75,15 @@ public class CustomSetDatePopup extends DialogFragment {
                 month = 1 + curDate.get(java.util.Calendar.MONTH);
                 date = curDate.get(java.util.Calendar.DATE);
 
-                Toast.makeText(getActivity(),"선택한 날짜 : "+year + "/" + month +"/" + date,Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "선택한 날짜 : " + year + "/" + month + "/" + date, Toast.LENGTH_SHORT).show();
             }
         });
 
-        confirmButton.setOnClickListener(new View.OnClickListener() {
+        positiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                String dateFormat = Integer.toString(year) + Integer.toString(month) +Integer.toString(date);
+                new UpdateSetDateAsyncTask().execute(eventnum, dateFormat);
             }
         });
 
@@ -75,15 +97,6 @@ public class CustomSetDatePopup extends DialogFragment {
         return view;
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        int width = getResources().getDimensionPixelSize(R.dimen.popup_calendar_width);
-        int height = getResources().getDimensionPixelSize(R.dimen.popup_calendar_height);
-        getDialog().getWindow().setLayout(width,height);
-    }
-
-
 
     @Override
     public void onStop() {
@@ -94,14 +107,59 @@ public class CustomSetDatePopup extends DialogFragment {
     //Update SetDate Data
     class UpdateSetDateAsyncTask extends AsyncTask<String, Void, String> {
         @Override
-        protected String doInBackground(String... userID) {
+        protected String doInBackground(String... params) {
+            String requestURL = "";
+            Response response = null;
+            try {
+                requestURL = NetworkDefineConstant.SERVER_URL_EVENT_INFO;
+
+                OkHttpClient toServer = NetworkDefineConstant.getOkHttpClient();
+                FormBody.Builder builder = new FormBody.Builder();
+                builder.add("signal", "3")
+                        .add("eventnum", params[0])
+                        .add("eventdate", params[1]);
+                FormBody formBody = builder.build();
+
+                Request request = new Request.Builder()
+                        .url(requestURL)
+                        .post(formBody)
+                        .build();
+
+                response = toServer.newCall(request).execute();
+                boolean flag = response.isSuccessful();
+                ResponseBody resBody = response.body();
+
+                if (flag) {
+                    String valid = resBody.string();
+                    if (valid.contains("1"))
+                        isSuccess = true;
+                    else
+                        isSuccess = false;
+
+                } else {
+                    Log.e("에러", "기한 설정 에러");
+                }
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            } finally {
+                if (response != null) {
+                    response.close();
+                }
+            }
 
             return null;
         }
 
         @Override
-        protected void onPostExecute(String s) {
-
+        protected void onPostExecute(String aVoid) {
+            super.onPostExecute(aVoid);
+            if (isSuccess) {
+                Toast.makeText(getActivity(), "기한이 설정되었습니다.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity(), "에러!", Toast.LENGTH_SHORT).show();
+            }
+            dismiss();
         }
+
     }
 }
