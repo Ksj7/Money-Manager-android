@@ -31,10 +31,22 @@
         <activity android:name=".ProfileImageActivity"/>
         <activity android:name=".EditPasswordActivity"/>
         <activity android:name=".EditPhoneNumberActivity"/>
+        <activity android:name=".SMSActivity"/>
+        <service android:name=".Service.SMSandPasteService">
 
+            <intent-filter>
+
+                <action android:name="service"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+
+            </intent-filter>
+
+        </service>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 </manifest>
