@@ -29,8 +29,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomAddEventPopup;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomRateTextCircularProgressBar;
+import com.tonight.manage.organization.managingmoneyapp.Object.EventListBundle;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventListItem;
 import com.tonight.manage.organization.managingmoneyapp.Server.EventJSONParser;
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
@@ -61,6 +64,9 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
     private final int PICK_IMAGE_REQUEST = 1;
     public static final String UPLOAD_KEY = "image";
     private String mGroupName;
+    private TextView userName;
+    private TextView userPhone;
+    String userid;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,8 +76,15 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
         mGroupCode = i.getStringExtra("groupcode");
         String groupBalance = i.getStringExtra("balance");
         mGroupName = i.getStringExtra("groupName");
+
+        SharedPreferences pref = getSharedPreferences("Login", MODE_PRIVATE);
+        userid = pref.getString("id","error");
+
+
         this.groupNameText = (TextView) findViewById(R.id.eventlist_groupname);
         this.groupNameText.setText(mGroupName);
+
+
         balanceText = (TextView) findViewById(R.id.eventlist_balance);
         String balanceFormat = String.format(getString(R.string.price) , groupBalance);
         balanceText.setText(balanceFormat);
@@ -117,6 +130,8 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
         navigationView.setNavigationItemSelectedListener(this);
 
         View headerView = navigationView.getHeaderView(0);
+        userName = (TextView) headerView.findViewById(R.id.userNameText) ;
+        userPhone = (TextView) headerView.findViewById(R.id.userPhoneNumberText);
         profileImage = (CircleImageView) headerView.findViewById(R.id.profile_imageView);//프로필 이미지뷰
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -187,8 +202,7 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
             startActivity(i);
             return true;
         }else if(id == R.id.action_add_event){
-            SharedPreferences pref = getSharedPreferences("Login", MODE_PRIVATE);
-            String userid = pref.getString("id","error");
+
             CustomAddEventPopup addEventPopup = CustomAddEventPopup.newInstance(userid,mGroupCode);
             addEventPopup.show(getSupportFragmentManager(), "add_event");
         }else{
@@ -305,9 +319,9 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
 
 
     //group list 가져오기 위한 Thread
-    public class LoadEventListAsyncTask extends AsyncTask<String, Void, ArrayList<EventListItem>> {
+    public class LoadEventListAsyncTask extends AsyncTask<String, Void, EventListBundle> {
         @Override
-        protected ArrayList<EventListItem> doInBackground(String... arg) {
+        protected EventListBundle doInBackground(String... arg) {
             String requestURL = "";
             Response response = null;
             try {
@@ -317,7 +331,9 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
                 //연결
                 OkHttpClient toServer = NetworkDefineConstant.getOkHttpClient();
                 FormBody.Builder builder = new FormBody.Builder();
-                builder.add("groupcode", arg[0]).add("signal", "0");
+                builder.add("groupcode", arg[0])
+                        .add("signal", "0")
+                        .add("userid",userid);
                 FormBody formBody = builder.build();
                 //요청
                 Request request = new Request.Builder()
@@ -346,13 +362,21 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
         }
 
         @Override
-        protected void onPostExecute(ArrayList<EventListItem> result) {
+        protected void onPostExecute(EventListBundle result) {
 
             // RecyclerView Adapter Item 값 추가
-            if (result != null && result.size() > 0) {
+            if (result != null && result.getUserinfo().size() > 0 && result.getResult().size() > 0) {
 
-                mEventListAdapter.addAllItem(result);
+                mEventListAdapter.addAllItem(result.getResult());
                 mEventListAdapter.notifyDataSetChanged();
+                userName.setText(result.getUserinfo().get(0).getUsername());
+                userPhone.setText(result.getUserinfo().get(0).getPhone());
+                Glide.with(getApplicationContext())
+                        .load(result.getUserinfo().get(0).getProfileimg())
+                        .override(150, 150)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .into(profileImage);
             }
         }
     }

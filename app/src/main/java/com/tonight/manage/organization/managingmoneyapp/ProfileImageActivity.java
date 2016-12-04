@@ -28,7 +28,6 @@ public class ProfileImageActivity extends AppCompatActivity {
 
         Glide.with(getApplicationContext())
                 .load(url)
-                .override(width, height)
                 .into(flickableImageView);
         flickableImageView.setOnFlickListener(new FlickableImageView.OnFlickableImageViewFlickListener() {
             @Override
