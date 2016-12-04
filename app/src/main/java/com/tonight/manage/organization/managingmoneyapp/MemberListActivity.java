@@ -100,18 +100,18 @@ public class MemberListActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(final MemberListActivity.MemberAdapter.ViewHolder holder, int position) {
+        public void onBindViewHolder(final MemberListActivity.MemberAdapter.ViewHolder holder, final int position) {
             //test
             holder.personName.setText(memberDatas.get(position).getUsername());
 
             holder.view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    CustomProfilePopup customProfilePopup = CustomProfilePopup.newInstance(memberDatas);
+                    CustomProfilePopup customProfilePopup = CustomProfilePopup.newInstance(memberDatas.get(position));
                     customProfilePopup.show(getSupportFragmentManager(), "profile");
                 }
             });
-            if(memberDatas.get(position).getProfileimg()==null) return;
+
             Glide.with(getApplicationContext())
                     .load(memberDatas.get(position).getProfileimg())
                     .override(150, 150)
@@ -167,6 +167,7 @@ public class MemberListActivity extends AppCompatActivity {
                 int responseCode = response.code();
                 if (responseCode >= 400) return null;
                 if (flag) {
+                    Glide.get(getApplicationContext()).clearDiskCache();
                     return GroupMemberJSONParser.parseMemberListItems((responseBody.string()));
                 }
             } catch (UnknownHostException une) {
@@ -187,6 +188,7 @@ public class MemberListActivity extends AppCompatActivity {
         protected void onPostExecute(ArrayList<MemberListItem> result) {
 
             if (result != null && result.size() > 0) {
+
                 mMemberAdapter.addAllItem(result);
                 mMemberAdapter.notifyDataSetChanged();
             }

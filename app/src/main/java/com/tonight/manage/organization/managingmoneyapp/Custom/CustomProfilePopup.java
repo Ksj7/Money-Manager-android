@@ -11,10 +11,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.tonight.manage.organization.managingmoneyapp.Object.MemberListItem;
 import com.tonight.manage.organization.managingmoneyapp.ProfileImageActivity;
 import com.tonight.manage.organization.managingmoneyapp.R;
-
-import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -26,23 +27,18 @@ public class CustomProfilePopup extends DialogFragment {
 
 
     private static final String ARG_PARAM1 = "profile" ;
-    private String name;
-    private String imgUrl;
-    private ArrayList profileDatas;
+    private MemberListItem profileDatas;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NO_TITLE, R.style.CustomDialogTheme);
-        if (getArguments() != null) {
-            profileDatas = getArguments().getStringArrayList(ARG_PARAM1);
-        }
     }
 
-    public static CustomProfilePopup newInstance(ArrayList datas) {
+    public static CustomProfilePopup newInstance(MemberListItem datas) {
         CustomProfilePopup profilePopup = new CustomProfilePopup();
         Bundle args = new Bundle();
-        args.putStringArrayList(ARG_PARAM1, datas);
+        args.putSerializable(ARG_PARAM1, datas);
         profilePopup.setArguments(args);
         return profilePopup;
     }
@@ -52,23 +48,34 @@ public class CustomProfilePopup extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.popup_profile,container,false);
+
+        if (getArguments() != null) {
+            profileDatas = (MemberListItem) getArguments().getSerializable(ARG_PARAM1);
+        }
+
         final Button Ybtn = (Button) view.findViewById(R.id.confirmBtn);
         TextView nameText = (TextView) view.findViewById(R.id.nameText);
         final Button phoneNumberButton = (Button) view.findViewById(R.id.phoneNumberBtn);
         final CircleImageView profileImageView = (CircleImageView) view.findViewById(R.id.profileImage);
 
-        //nameText.setText(profileDatas.get(0).toString());
-        //phoneNumberButton.setText(profileDatas.get(1).toString());
-        //IMPORTANT! profileDatas.get(2)는 imgURl에 대한 정보여야 함.
+        nameText.setText(profileDatas.getUsername());
+        phoneNumberButton.setText(profileDatas.getPhone());
+
+        Glide.with(getContext())
+                .load(profileDatas.getProfileimg())
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .override(150, 150)
+                .into(profileImageView);
+
         profileImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), ProfileImageActivity.class));
+                Intent i = new Intent(getActivity(), ProfileImageActivity.class);
+                i.putExtra("profile",profileDatas.getProfileimg());
+                startActivity(i);
             }
         });
-
-        //TODO profileImageView와 nameText는 asynctask로 받아와야함.
-
 
         Ybtn.setOnClickListener(new View.OnClickListener() {
             @Override

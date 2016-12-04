@@ -1,7 +1,5 @@
 package com.tonight.manage.organization.managingmoneyapp.Toss;
 
-import com.tonight.manage.organization.managingmoneyapp.R;
-
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -11,12 +9,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.view.View;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
+
+import com.tonight.manage.organization.managingmoneyapp.R;
 
 /**
  * 결제 건은 성공적으로 생성되었지만, 주문을 완료하기 위해 사용자 정보(전화번호)를 입력하기 위한 Activity 입니다.
@@ -25,7 +23,6 @@ import android.widget.Button;
 public class WebViewActivity extends AppCompatActivity {
 
     private ProgressDialog mProgressDialog;
-    private Button completeBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +48,6 @@ public class WebViewActivity extends AppCompatActivity {
         //주문을 완료하기 위해, 결제 토큰과 함께 사용자 정보를 입력하는 페이지를 불러옵니다.
         webView.loadUrl(TossConstants.ORDER_WAIT_URL + "?payToken=" + payToken);
 
-        completeBtn = (Button) findViewById(R.id.completeBtn);
-        completeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                webView.loadUrl(TossConstants.ORDER_COMPLETE_URL);
-            }
-        });
     }
 
     private class MyWebViewClient extends WebViewClient {

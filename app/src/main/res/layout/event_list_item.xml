@@ -39,8 +39,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginRight="5dp"
-                android:background="@mipmap/ic_launcher" />
+                android:layout_marginRight="5dp" />
 
             <TextView
                 android:id="@+id/eventlist_number_textview"
