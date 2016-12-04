@@ -28,9 +28,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.clans.fab.FloatingActionButton;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomCreateGroupPopup;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomEntrancePopup;
+import com.tonight.manage.organization.managingmoneyapp.Object.GroupListBundle;
 import com.tonight.manage.organization.managingmoneyapp.Object.GroupListItem;
 import com.tonight.manage.organization.managingmoneyapp.Server.GroupJSONParser;
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
@@ -60,6 +63,8 @@ public class GroupListActivity extends AppCompatActivity
     private SwipeRefreshLayout mGroupListSwipeRefreshLayout;
 
     CircleImageView profileImage;
+    TextView userName;
+    TextView userPhone;
     private String userId;
 
     @Override
@@ -106,6 +111,8 @@ public class GroupListActivity extends AppCompatActivity
 
         View headerView = navigationView.getHeaderView(0);
         profileImage = (CircleImageView) headerView.findViewById(R.id.profile_imageView);//프로필 이미지뷰
+        userName = (TextView) headerView.findViewById(R.id.userNameText) ;
+        userPhone = (TextView) headerView.findViewById(R.id.userPhoneNumberText);
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -280,9 +287,9 @@ public class GroupListActivity extends AppCompatActivity
     }
 
     //group list 가져오기 위한 Thread
-    public class LoadGroupListAsyncTask extends AsyncTask<Void, Void, ArrayList<GroupListItem>> {
+    public class LoadGroupListAsyncTask extends AsyncTask<Void, Void, GroupListBundle> {
         @Override
-        protected ArrayList<GroupListItem> doInBackground(Void... voids) {
+        protected GroupListBundle doInBackground(Void... voids) {
             String requestURL = "";
             Response response = null;
             try {
@@ -321,13 +328,21 @@ public class GroupListActivity extends AppCompatActivity
         }
 
         @Override
-        protected void onPostExecute(ArrayList<GroupListItem> result) {
+        protected void onPostExecute(GroupListBundle result) {
 
             // RecyclerView Adapter Item 값 추가
-            if (result != null && result.size() > 0) {
+            if (result != null && result.getResult().size() > 0 && result.getUserinfo().size()>0) {
 
-                mGroupListAdapter.addAllItem(result);
+                mGroupListAdapter.addAllItem(result.getResult());
                 mGroupListAdapter.notifyDataSetChanged();
+                userName.setText(result.getUserinfo().get(0).getUsername());
+                userPhone.setText(result.getUserinfo().get(0).getPhone());
+                Glide.with(getApplicationContext())
+                        .load(result.getUserinfo().get(0).getProfileimg())
+                        .override(150, 150)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .into(profileImage);
             }
         }
     }

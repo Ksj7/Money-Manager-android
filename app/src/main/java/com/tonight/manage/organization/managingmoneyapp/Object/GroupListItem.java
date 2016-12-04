@@ -8,10 +8,7 @@ public class GroupListItem {
     String membernum;
     String groupcode;
     String groupname;
-    String bank;
-    String account;
     String balance;
-    String managerid;
 
 
     public GroupListItem setGroupname(String groupname) {
@@ -28,44 +25,17 @@ public class GroupListItem {
         return this;
     }
 
-    public GroupListItem setBank(String bank) {
-        this.bank = bank;
-        return this;
-    }
 
     public GroupListItem setBalance(String balance) {
         this.balance = balance;
         return this;
     }
 
-    public GroupListItem setAccount(String account) {
-        this.account = account;
-        return this;
-    }
-
-    public GroupListItem setManagerid(String managerid) {
-        this.managerid = managerid;
-        return this;
-    }
-
     public String getBalance() {
         return balance;
     }
-
     public String getGroupname() {
         return groupname;
-    }
-
-
-    public String getManagerid() {
-        return managerid;
-    }
-
-    public String getAccount() {
-        return account;
-    }
-    public String getBank() {
-        return bank;
     }
     public String getGroupcode() {
         return groupcode;
