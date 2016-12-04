@@ -415,7 +415,7 @@ public class PaymentFragment extends Fragment {
                 FormBody.Builder builder = new FormBody.Builder();
                 //builder.add("eventnum", eventnum).add("userid", userid);
                 builder.add("userid", userid).add("eventnum", eventnum).add("signal","0");
-                Log.e("???????????? ",eventnum+","+userid);
+                //Log.e("???????????? ",eventnum+","+userid);
                 FormBody formBody = builder.build();
                 //요청
                 Request request = new Request.Builder()

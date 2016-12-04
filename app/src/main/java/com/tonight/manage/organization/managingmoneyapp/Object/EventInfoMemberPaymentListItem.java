@@ -6,11 +6,10 @@ package com.tonight.manage.organization.managingmoneyapp.Object;
 
 public class EventInfoMemberPaymentListItem {
 
-    String imgurl;
-    String name;
-    String userid;
-    String spendingstatus;
-
+    String imgurl; //사용자 프로필 사진
+    String name; //사용자 이름
+    String userid; //사용자 아이디
+    String spendingstatus; //지출여부
 
 
     public EventInfoMemberPaymentListItem setImgurl(String imgurl) {

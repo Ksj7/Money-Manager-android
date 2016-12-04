@@ -27,7 +27,6 @@ public class EventInfoJSONParsor {
 
         try {
             jsonRoot = new JSONObject(responedJSONData.toString());
-           // Log.e("잘라봐 ",responedJSONData.toString()+"?????");
             JSONArray member = jsonRoot.getJSONArray("member");
             int  size = member.length();
             if( size > 0) {
