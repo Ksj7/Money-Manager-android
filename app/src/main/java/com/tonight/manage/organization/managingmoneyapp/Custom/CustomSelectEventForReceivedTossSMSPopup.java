@@ -26,6 +26,7 @@ import com.tonight.manage.organization.managingmoneyapp.Object.EventListItem;
 import com.tonight.manage.organization.managingmoneyapp.Object.GroupListBundle;
 import com.tonight.manage.organization.managingmoneyapp.Object.GroupListItem;
 import com.tonight.manage.organization.managingmoneyapp.R;
+import com.tonight.manage.organization.managingmoneyapp.SMSActivity;
 import com.tonight.manage.organization.managingmoneyapp.Server.EventJSONParser;
 import com.tonight.manage.organization.managingmoneyapp.Server.GroupJSONParser;
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
@@ -112,6 +113,7 @@ public class CustomSelectEventForReceivedTossSMSPopup extends DialogFragment{
                     public void onClick(DialogInterface dialog, int id) {
                         //서버전송.
                         dismiss();
+                        SMSActivity.smsActivity.finish();
                     }
                 });
                 alert.setNegativeButton("아니요",new DialogInterface.OnClickListener() {
@@ -120,7 +122,6 @@ public class CustomSelectEventForReceivedTossSMSPopup extends DialogFragment{
                     }
                 });
                 alert.show();
-
                 return true;
             }
         });

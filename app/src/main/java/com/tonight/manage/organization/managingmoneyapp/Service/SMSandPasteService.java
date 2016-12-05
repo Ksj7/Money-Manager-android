@@ -29,7 +29,7 @@ import com.tonight.manage.organization.managingmoneyapp.SMSActivity;
  */
 
 public class SMSandPasteService extends Service {
-    static boolean semaphore = false;
+    static boolean semaphore = false;//실행중일때 중복으로 스낵바 띄우는거 방지.
     ClipboardManager clipBoard;
     ClipboardListener clipboardListener;
     @Override
@@ -51,8 +51,13 @@ public class SMSandPasteService extends Service {
                 }
             }
         }.start();
-        IntentFilter filter = new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-        registerReceiver(mBroadcastReceiver,filter);
+
+        clipboardListener = new ClipboardListener();
+        clipBoard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        clipBoard.addPrimaryClipChangedListener(clipboardListener);
+        emptyClipboard(clipBoard);
+        //IntentFilter filter = new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+        //registerReceiver(mBroadcastReceiver,filter);
     }
     @Override
     public void onDestroy() {
@@ -102,15 +107,13 @@ public class SMSandPasteService extends Service {
             Intent intent = new Intent(getApplicationContext(),SMSActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
-           /* CustomSelectEventForReceivedTossSMSPopup customSelectEventForReceivedTossSMSPopup = CustomSelectEventForReceivedTossSMSPopup.newInstance("");
-            customSelectEventForReceivedTossSMSPopup.show(getApplicationContext(, "create_group");
-*/
             if(mView != null) {
                 mManager.removeView(mView);
                 mView = null;
                 i=5;
-                semaphore = false;
+                semaphore = false;//클릭해서 들어왔을 때, 스레드는 종료가 되어야 함.
                 emptyClipboard(clipBoard);
+                //clipBoard.removePrimaryClipChangedListener(clipboardListener);
             }
         }
 
@@ -138,8 +141,9 @@ public class SMSandPasteService extends Service {
                     mView = null;
                     i = 5;
                     if(semaphore == true){
-                        emptyClipboard(clipBoard);
+                        Log.e("here","여기돔");
                         semaphore = false;
+                        emptyClipboard(clipBoard);
                     }
                 }
             }
@@ -167,10 +171,7 @@ public class SMSandPasteService extends Service {
                     if (reason.equals("homekey")) {
                         //if(start == true) {
 
-                        clipboardListener = new ClipboardListener();
-                        clipBoard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                        clipBoard.addPrimaryClipChangedListener(clipboardListener);
-                        emptyClipboard(clipBoard);
+                        //emptyClipboard(clipBoard);
 
                         //stopservice();
                         //    start = false;
