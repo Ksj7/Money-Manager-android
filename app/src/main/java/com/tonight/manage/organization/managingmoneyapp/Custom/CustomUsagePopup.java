@@ -95,7 +95,7 @@ public class CustomUsagePopup extends DialogFragment {
         });
 
         locateText = (TextView) view.findViewById(R.id.usageLocate_edit);
-        moneyText = (TextView) view.findViewById(R.id.usageMoney);
+        moneyText = (TextView) view.findViewById(R.id.usageMoney_edit);
         //서버에 사용내역 리스트 보내줌
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,7 +142,6 @@ public class CustomUsagePopup extends DialogFragment {
     class UploadImage extends AsyncTask<Bitmap, Void, String> {
 
         ProgressDialog loading;
-        RequestHandler handler = new RequestHandler();
 
         @Override
         protected void onPreExecute() {
@@ -176,13 +175,14 @@ public class CustomUsagePopup extends DialogFragment {
 
                 Bitmap bitmap = params[0];//사용자가 업로드할 이미지 비트맵
                 String uploadImage = getStringImage(bitmap);
-
+                Log.e("업로드한값","타이틀 "+locate+",이벤트넘"+eventnum+",돈이랑 날짜"+money+","+year + "/" + month + "/" + date);
                 builder.add("signal", "6")
                         .add("eventnum", eventnum)
                         .add("title", locate)
                         .add("usagemoney", money)
                         .add("usagedate", year + "/" + month + "/" + date)
                         .add(UPLOAD_KEY, uploadImage);
+
                 FormBody formBody = builder.build();
 
                 Request request = new Request.Builder()
@@ -196,13 +196,13 @@ public class CustomUsagePopup extends DialogFragment {
 
                 if (flag) {
                     String valid = resBody.string();
-                    if (isSuccess)
+                    if (valid.contains("1"))
                         isSuccess = true;
                     else
                         isSuccess = false;
 
                 } else {
-                    Log.e("에러", "기한 설정 에러");
+                    Log.e("에러", "업로드 에러");
                 }
             } catch (IOException e1) {
                 e1.printStackTrace();
