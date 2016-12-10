@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tonight.manage.organization.managingmoneyapp.EventInfoActivity;
 import com.tonight.manage.organization.managingmoneyapp.R;
 import com.tonight.manage.organization.managingmoneyapp.RequestHandler;
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
@@ -134,7 +135,7 @@ public class CustomUsagePopup extends DialogFragment {
             }
 
         });
-
+        EventInfoActivity.pagerInstance.notifyDataSetChanged();
         return view;
 
     }

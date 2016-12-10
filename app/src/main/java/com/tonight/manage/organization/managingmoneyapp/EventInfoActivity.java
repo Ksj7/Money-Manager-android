@@ -22,7 +22,7 @@ public class EventInfoActivity extends AppCompatActivity implements TabLayout.On
     private TabLayout tabLayout;
     private ViewPager mViewPager;
     private ImageButton mInvitationButton;
-
+    public static Pager pagerInstance;
     private RecyclerView mPaymentListRecyclerView;
     //    private EventInfoPaymentAdapter mPaymentListAdapter;
     private SwipeRefreshLayout mPaymentListSwipeRefreshLayout;
@@ -51,6 +51,7 @@ public class EventInfoActivity extends AppCompatActivity implements TabLayout.On
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
         Pager adapter = new Pager(getSupportFragmentManager(), tabLayout.getTabCount(),eventName , eventnum );
+        pagerInstance = adapter;
         mViewPager.setAdapter(adapter);
         tabLayout.addOnTabSelectedListener(this);//Tab 선택 시 화면 이동하는 리스너
         mViewPager.addOnPageChangeListener(this);//Tab swiping시 화면 이동하는 리스너

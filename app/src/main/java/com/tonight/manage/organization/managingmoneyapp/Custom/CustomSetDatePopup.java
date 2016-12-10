@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.Toast;
 
+import com.tonight.manage.organization.managingmoneyapp.EventInfoActivity;
 import com.tonight.manage.organization.managingmoneyapp.R;
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
 
@@ -84,6 +85,7 @@ public class CustomSetDatePopup extends DialogFragment {
             public void onClick(View v) {
                 String dateFormat = Integer.toString(year) + Integer.toString(month) +Integer.toString(date);
                 new UpdateSetDateAsyncTask().execute(eventnum, dateFormat);
+                EventInfoActivity.pagerInstance.notifyDataSetChanged();
             }
         });
 
