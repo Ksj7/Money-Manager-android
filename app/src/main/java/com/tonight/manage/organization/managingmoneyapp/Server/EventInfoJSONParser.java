@@ -75,7 +75,9 @@ public class EventInfoJSONParser {
                             .setTargetMoney(item.getString("targetm"))
                             .setUserName(item.getString("username"))
                             .setUserIspay(item.getString("ispay"))
-                            .setUserprofileURL(item.getString("profileimg"));
+                            .setUserprofileURL(item.getString("profileimg"))
+                            .setManagerProfileimg(item.getString("managerprofileimg"))
+                            .setManagerName(item.getString("managername"));
 
                     eventInfoPaymentItemArrayList.add(resultObject);
                 }

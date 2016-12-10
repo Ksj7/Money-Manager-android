@@ -33,4 +33,7 @@
     <dimen name="popup_usage_height">275dp</dimen>
     <dimen name="popup_email_height">250dp</dimen>
 
+    <dimen name="popup_cash_check_width">302dp</dimen>
+    <dimen name="popup_cash_check_height">239dp</dimen>
+
 </resources>

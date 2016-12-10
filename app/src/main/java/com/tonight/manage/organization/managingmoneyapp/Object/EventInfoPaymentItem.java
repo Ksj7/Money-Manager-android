@@ -20,6 +20,27 @@ public class EventInfoPaymentItem {
     String userprofileURL;
     String userIspay;
 
+    String managerName;
+    String managerProfileimg;
+
+    public String getManagerName() {
+        return managerName;
+    }
+
+    public EventInfoPaymentItem setManagerName(String managerName) {
+        this.managerName = managerName;
+        return this;
+    }
+
+    public String getManagerProfileimg() {
+        return managerProfileimg;
+    }
+
+    public EventInfoPaymentItem setManagerProfileimg(String managerProfileimg) {
+        this.managerProfileimg = managerProfileimg;
+        return this;
+    }
+
     public String getUserName() {
         return userName;
     }
