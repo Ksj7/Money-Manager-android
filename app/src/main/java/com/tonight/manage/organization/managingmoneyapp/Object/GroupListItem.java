@@ -9,6 +9,7 @@ public class GroupListItem {
     String groupcode;
     String groupname;
     String balance;
+    String bubblecount;
 
 
     public GroupListItem setGroupname(String groupname) {
@@ -31,6 +32,11 @@ public class GroupListItem {
         return this;
     }
 
+    public GroupListItem setBubblecount(String bubblecount) {
+        this.bubblecount = bubblecount;
+        return this;
+    }
+
     public String getBalance() {
         return balance;
     }
@@ -42,6 +48,9 @@ public class GroupListItem {
     }
     public String getMembernum() {
         return membernum;
+    }
+    public String getBubblecount() {
+        return bubblecount;
     }
 
 }
