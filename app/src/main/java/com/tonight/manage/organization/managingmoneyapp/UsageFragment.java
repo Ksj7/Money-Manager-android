@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +23,17 @@ import android.widget.Toast;
 
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomUsagePopup;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoUsageListItem;
+import com.tonight.manage.organization.managingmoneyapp.Server.EventInfoJSONParser;
+import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 
 /**
@@ -38,10 +47,13 @@ public class UsageFragment extends Fragment implements View.OnClickListener {
     private EventInfoUsageAdapter mUsageListAdapter;
     private SwipeRefreshLayout mUsageListSwipeRefreshLayout;
     Button mUsageUploadButton;
+    String eventnum;
     ArrayList<EventInfoUsageListItem> arrayList;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-
+        Bundle b = getArguments();
+        eventnum = b.getString("eventnum");
         View v= inflater.inflate(R.layout.activity_event_info_user, container, false);
 
         mUsageUploadButton = (Button) v.findViewById(R.id.eventinfo_user_btn_upload);
@@ -187,37 +199,56 @@ public class UsageFragment extends Fragment implements View.OnClickListener {
     }
 
 
-}
+    //Usage list 가져오기 위한 Thread
+    public class UsageListLoadAsyncTask extends AsyncTask<String, Void, ArrayList<EventInfoUsageListItem>> {
+        @Override
+        protected ArrayList<EventInfoUsageListItem> doInBackground(String... arg) {
+            String requestURL = "";
+            Response response = null;
+            try {
 
+                requestURL = NetworkDefineConstant.SERVER_URL_EVENT_INFO;
 
+                //연결
+                OkHttpClient toServer = NetworkDefineConstant.getOkHttpClient();
+                FormBody.Builder builder = new FormBody.Builder();
+                builder.add("eventnum", eventnum).add("signal","5");
+                Log.e("???????????? ",eventnum+",");
+                FormBody formBody = builder.build();
+                //요청
+                Request request = new Request.Builder()
+                        .url(requestURL)
+                        .post(formBody)
+                        .build();
+                //응답
+                response = toServer.newCall(request).execute();
+                boolean flag = response.isSuccessful();
+                ResponseBody resBody = response.body();
 
-/* public  void SaveBitmapToFileCache(Bitmap bitmap, String strFilePath,
-                                       String filename) {
-
-        File file = new File(strFilePath);
-
-        // If no folders
-        if (!file.exists()) {
-            file.mkdirs();
-            // Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
+                if (flag) { //http req/res 성공
+                    //Log.e("--------------- ",resBody.string());
+                    return EventInfoJSONParser.parseEventInfoUsageItems(new StringBuilder(resBody.string()));
+                } else { //실패시 정의
+                    Log.e("에러", "데이터를 로드하는데 실패하였습니다");
+                }
+            } catch (Exception e) {
+                Log.e("요청중에러", "payment프레그먼트", e);
+            } finally {
+                if (response != null) {
+                    response.close();
+                }
+            }
+            return null;
         }
 
-        File fileCacheItem = new File(strFilePath + filename);
-        OutputStream out = null;
+        @Override
+        protected void onPostExecute(ArrayList<EventInfoUsageListItem> result) {
 
-        try {
-            fileCacheItem.createNewFile();
-            out = new FileOutputStream(fileCacheItem);
-
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                out.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (result != null) {
+                Log.e("받아온 정보들", result.toString());
             }
         }
-    } //파일 생성하는 메소드*/
+    }
+
+}
 

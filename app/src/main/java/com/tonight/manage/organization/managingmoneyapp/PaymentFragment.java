@@ -265,12 +265,15 @@ public class PaymentFragment extends Fragment {
                 holder.payStatus.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(getActivity(),"여기총무임",Toast.LENGTH_SHORT).show();
-                        CustomCheckCashPopup checkcashpopup = CustomCheckCashPopup.newInstance(
-                                paymentArrayList.get(position).getName().toString(),
-                                paymentArrayList.get(position).getUserId().toString(),
-                                eventnum);
-                        checkcashpopup.show(getActivity().getSupportFragmentManager(),"check_cash_popup");
+                        if(holder.payStatus.getText().toString().equals("미지출")) {
+                            CustomCheckCashPopup checkcashpopup = CustomCheckCashPopup.newInstance(
+                                    paymentArrayList.get(position).getName().toString(),
+                                    paymentArrayList.get(position).getUserId().toString(),
+                                    eventnum);
+                            checkcashpopup.show(getActivity().getSupportFragmentManager(), "check_cash_popup");
+                        }else{
+                            Toast.makeText(getActivity(),"이미 지출하셨습니다.",Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
             }else{
