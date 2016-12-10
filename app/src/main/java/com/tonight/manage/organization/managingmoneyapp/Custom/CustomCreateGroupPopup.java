@@ -8,8 +8,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.tonight.manage.organization.managingmoneyapp.GroupListActivity;
@@ -38,8 +41,9 @@ public class CustomCreateGroupPopup extends DialogFragment {
     boolean isSuccess;
     EditText roomCodeEditText;
     EditText accountEditText;
-    EditText bankNameEditText;
+    Spinner bankSpinner;
     EditText balanceEditText;
+    private ArrayAdapter<String> mSpinnerAdapter;
 
 
     @Override
@@ -72,15 +76,32 @@ public class CustomCreateGroupPopup extends DialogFragment {
         Button NBtn = (Button) view.findViewById(R.id.negativeBtn);
         roomCodeEditText = (EditText) view.findViewById(R.id.roomCodeEdit);
         accountEditText = (EditText) view.findViewById(R.id.accountEdit);
-        bankNameEditText = (EditText) view.findViewById(R.id.balanceEdit);
+        bankSpinner = (Spinner) view.findViewById(R.id.bankSpinner);
         balanceEditText = (EditText) view.findViewById(R.id.balanceEdit);
+
+        mSpinnerAdapter= new ArrayAdapter<>(getContext(), R.layout.spinner_text, getResources().getStringArray(R.array.bank) );
+        mSpinnerAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown);
+        bankSpinner.setAdapter(mSpinnerAdapter);
+        bankSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                bank =  (String) bankSpinner.getSelectedItem();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+
+            }
+        });
+
 
         Ybtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 groupname = roomCodeEditText.getText().toString();
                 account = accountEditText.getText().toString();
-                bank = bankNameEditText.getText().toString();
                 balance = balanceEditText.getText().toString();
                 new CreateGroupAsyncTask().execute(id, groupname, bank, account, balance);
 
@@ -102,7 +123,6 @@ public class CustomCreateGroupPopup extends DialogFragment {
     private void clearSetting() {
         roomCodeEditText.setText("");
         accountEditText.setText("");
-        bankNameEditText.setText("");
         balanceEditText.setText("");
     }
 

@@ -24,7 +24,10 @@ import com.tonight.manage.organization.managingmoneyapp.AddUsageByPasteActivity;
 import com.tonight.manage.organization.managingmoneyapp.R;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by Taek on 2016. 12. 2..
@@ -32,10 +35,9 @@ import java.text.SimpleDateFormat;
 
 public class PasteService extends Service {
 
-    public static final String MESSAGE_TYPE_INBOX = "1";
-    public static final String MESSAGE_TYPE_SENT = "2";
-    public static final String MESSAGE_TYPE_CONVERSATIONS = "3";
-    public static final String MESSAGE_TYPE_NEW = "new";
+    public static String nong = "15881600";//농협
+    public static String kuck = "15881688";//국민
+    public static String sin = "15447000";//신한
 
     static boolean semaphore = false;//실행중일때 중복으로 스낵바 띄우는거 방지.
     ClipboardManager clipBoard;
@@ -47,29 +49,13 @@ public class PasteService extends Service {
 
     @Override
     public void onCreate() {
-        /*new Thread() {
-            public void run() {
-                while (true) {
-                    try {
-                        Log.e("test", "testing..");
-                        sleep(3000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }.start();*/
-
         clipboardListener = new ClipboardListener();
         clipBoard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         clipBoard.addPrimaryClipChangedListener(clipboardListener);
         emptyClipboard(clipBoard);
-        //IntentFilter filter = new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-        //registerReceiver(mBroadcastReceiver,filter);
     }
     @Override
     public void onDestroy() {
-        //unregisterReceiver(mBroadcastReceiver);
         super.onDestroy();
     }
 
@@ -82,6 +68,11 @@ public class PasteService extends Service {
         WindowManager.LayoutParams mParams;
         LayoutInflater mInflater;
         int i=5;
+
+        String smsDate = "";
+        String smsMoney = "";
+        String smsContent = "";
+
         public void onPrimaryClipChanged() {
             if(semaphore == false) {
                 semaphore = true;
@@ -89,83 +80,81 @@ public class PasteService extends Service {
                 pasteData = item.getText();
                 Log.e("data ", pasteData.toString());
 
-                mInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                mView = mInflater.inflate(R.layout.snackbar_activity, null);
-                btn = (Button) mView.findViewById(R.id.btn);
-                text = (TextView) mView.findViewById(R.id.timetext);
-                text.setText(i + "");
-                btn.setOnClickListener(this);
-                mParams = new WindowManager.LayoutParams(
-                        WindowManager.LayoutParams.MATCH_PARENT,
-                        WindowManager.LayoutParams.WRAP_CONTENT,
-                        WindowManager.LayoutParams.TYPE_PHONE,
-                        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                        PixelFormat.TRANSLUCENT);
 
-                mManager = (WindowManager) getApplicationContext().getSystemService(WINDOW_SERVICE);
-                mParams.gravity = Gravity.BOTTOM;
-                mManager.addView(mView, mParams);
+                if(SMSListCheck(pasteData.toString()) == true) {//그 문자가 은행문자라면.
+                    mInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    mView = mInflater.inflate(R.layout.snackbar_activity, null);
+                    btn = (Button) mView.findViewById(R.id.btn);
+                    text = (TextView) mView.findViewById(R.id.timetext);
+                    text.setText(i + "");
+                    btn.setOnClickListener(this);
+                    mParams = new WindowManager.LayoutParams(
+                            WindowManager.LayoutParams.MATCH_PARENT,
+                            WindowManager.LayoutParams.WRAP_CONTENT,
+                            WindowManager.LayoutParams.TYPE_PHONE,
+                            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                            PixelFormat.TRANSLUCENT);
 
-                new TimerThread().start();
+                    mManager = (WindowManager) getApplicationContext().getSystemService(WINDOW_SERVICE);
+                    mParams.gravity = Gravity.BOTTOM;
+                    mManager.addView(mView, mParams);
+                    new TimerThread().start();
+                }else{
+
+                }
             }
 
-            SMSList();
         }//클립보드 내용이 바뀌면
 
-        public void SMSList() {
-            // Retrieve All SMS
-            /*
-                Inbox = "content://sms/inbox"
-                Failed = "content://sms/failed"
-                Queued = "content://sms/queued"
-                Sent = "content://sms/sent"
-                Draft = "content://sms/draft"
-                Outbox = "content://sms/outbox"
-                Undelivered = "content://sms/undelivered"
-                All = "content://sms/all"
-                Conversations = "content://sms/conversations"
+        public Boolean SMSListCheck(String content) {
 
-                addressCol= mCurSms.getColumnIndex("address");
-                personCol= mCurSms.getColumnIndex("person");
-                dateCol = mCurSms.getColumnIndex("date");
-                protocolCol= mCurSms.getColumnIndex("protocol");
-                readCol = mCurSms.getColumnIndex("read");
-                statusCol = mCurSms.getColumnIndex("status");
-                typeCol = mCurSms.getColumnIndex("type");
-                subjectCol = mCurSms.getColumnIndex("subject");
-                bodyCol = mCurSms.getColumnIndex("body");
-             */
             Uri allMessage = Uri.parse("content://sms/");
             Cursor cur = getContentResolver().query(allMessage, null, null, null, null);
-            int count = cur.getCount();
-            Log.e("값" , "SMS count = " + count);
             String row = "";
             String msg = "";
-            String date = "";
-            String protocol = "";
+
             while (cur.moveToNext()) {
                 row = cur.getString(cur.getColumnIndex("address"));
                 msg = cur.getString(cur.getColumnIndex("body"));
-                date = cur.getString(cur.getColumnIndex("date"));
-                protocol = cur.getString(cur.getColumnIndex("protocol"));
-                // Logger.d( TAG , "SMS PROTOCOL = " + protocol);
-                String FormattedDate;
-  //              SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
-//                FormattedDate = sdf.format(date).toString();
-                String type = "";
-                if (protocol == MESSAGE_TYPE_SENT) type = "sent";
-                else if (protocol == MESSAGE_TYPE_INBOX) type = "receive";
-                else if (protocol == MESSAGE_TYPE_CONVERSATIONS) type = "conversations";
-                else if (protocol == null) type = "send";
-
-                Log.e("결과" , "SMS Phone: " + row + " / Mesg: " + msg + " / Type: " + type + " / Date: " + date);
+                if(content.contains(msg)){
+                    //if(row.contains(nong) || row.contains(kuck) || row.contains(sin)) {//만약 은행 번호랑 일치한다면, 공기계라 주석.
+                        DateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+                        Calendar calendar = Calendar.getInstance();
+                        smsContent = msg;
+                        smsDate = cur.getString(cur.getColumnIndex("date"));
+                        smsMoney = "25000";
+                        /*String[] splitString = msg.split("\\s+"); // 돈을 파싱해오는 것인데, 역시 공기계라 주석.
+                        for(int i = 0 ; i <splitString.length;i++){
+                            if(splitString[i].contains("원")){
+                                String temp = splitString[i].replaceAll(",","");
+                                temp = temp.replace("원","");
+                                smsMoney = temp;
+                            }
+                        }*/
+                        calendar.setTimeInMillis(Long.parseLong(smsDate));
+                        smsDate = formatter.format(calendar.getTime());
+                        smsDate = smsDate.substring(2);//
+                    Log.e("결과", "SMS Phone: " + row + " / Mesg: " + msg + " / Date: " + smsDate);
+                        return true;
+                    //}
+                }
+               /* date = cur.getString(cur.getColumnIndex("date"));
+                DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS");
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(Long.parseLong(date));
+                String finalDateString = formatter.format(calendar.getTime());
+                Log.e("결과" , "SMS Phone: " + row + " / Mesg: " + msg + " / Date: " + finalDateString);*/
             }
+            return false;
         }
 
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(getApplicationContext(),AddUsageByPasteActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            intent.putExtra("smsDate",smsDate);
+            intent.putExtra("smsMoney",smsMoney);
+            intent.putExtra("smsContent",smsContent);
             startActivity(intent);
             if(mView != null) {
                 mManager.removeView(mView);

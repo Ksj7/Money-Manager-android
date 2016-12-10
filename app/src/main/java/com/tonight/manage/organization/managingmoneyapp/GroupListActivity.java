@@ -68,6 +68,7 @@ public class GroupListActivity extends AppCompatActivity
     TextView userPhone;
     private String userId;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -152,8 +153,15 @@ public class GroupListActivity extends AppCompatActivity
 
             }
         });
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         new LoadGroupListAsyncTask().execute();
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     { //이미지를 받으면 서버에 보내줌
@@ -376,6 +384,7 @@ public class GroupListActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            new LoadGroupListAsyncTask().execute();
             loading.dismiss();
         }
 
