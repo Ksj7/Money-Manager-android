@@ -14,7 +14,6 @@
         android:layout_gravity="center"
         android:id="@+id/eventinfo_user_btn_upload"/>
 
-
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/eventInfo_user_swipeRefreshLayout"
         android:layout_margin="5dp"
