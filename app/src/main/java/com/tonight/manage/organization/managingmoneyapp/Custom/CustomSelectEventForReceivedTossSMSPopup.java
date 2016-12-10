@@ -1,5 +1,6 @@
 package com.tonight.manage.organization.managingmoneyapp.Custom;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -19,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tonight.manage.organization.managingmoneyapp.AddPayCheckByTossNotificationActivity;
+import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoMemberPaymentListItem;
+import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoPaymentItem;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoPaymentTotalItem;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventListBundle;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventListItem;
@@ -26,11 +29,13 @@ import com.tonight.manage.organization.managingmoneyapp.Object.GroupListBundle;
 import com.tonight.manage.organization.managingmoneyapp.Object.GroupListItem;
 import com.tonight.manage.organization.managingmoneyapp.R;
 import com.tonight.manage.organization.managingmoneyapp.AddUsageByPasteActivity;
+import com.tonight.manage.organization.managingmoneyapp.RequestHandler;
 import com.tonight.manage.organization.managingmoneyapp.Server.EventInfoJSONParser;
 import com.tonight.manage.organization.managingmoneyapp.Server.EventJSONParser;
 import com.tonight.manage.organization.managingmoneyapp.Server.GroupJSONParser;
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -46,7 +51,9 @@ import static android.content.Context.MODE_PRIVATE;
  * Created by Taek on 2016. 12. 5..
  */
 
-public class CustomSelectEventForReceivedTossSMSPopup extends DialogFragment{
+public class CustomSelectEventForReceivedTossSMSPopup extends DialogFragment {
+
+    private int isSuccess;
     private String userid;
     String name;
     int money;
@@ -62,20 +69,21 @@ public class CustomSelectEventForReceivedTossSMSPopup extends DialogFragment{
 
     int width;
     int height;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NO_TITLE, R.style.CustomDialogTheme);
 
         SharedPreferences pref = getActivity().getSharedPreferences("Login", MODE_PRIVATE);
-        userid = pref.getString("id","");
+        userid = pref.getString("id", "");
     }
 
-    public static CustomSelectEventForReceivedTossSMSPopup newInstance(String name , int money) {
+    public static CustomSelectEventForReceivedTossSMSPopup newInstance(String name, int money) {
         CustomSelectEventForReceivedTossSMSPopup customSelectEventForReceivedTossSMSPopup = new CustomSelectEventForReceivedTossSMSPopup();
         Bundle b = new Bundle();
         b.putString("name", name);
-        b.putInt("money",money);
+        b.putInt("money", money);
 
         customSelectEventForReceivedTossSMSPopup.setArguments(b);
         return customSelectEventForReceivedTossSMSPopup;
@@ -97,15 +105,15 @@ public class CustomSelectEventForReceivedTossSMSPopup extends DialogFragment{
 
         listDataHeader = new ArrayList<GroupListItem>();
         listDataChild = new HashMap<String, ArrayList<EventListItem>>();
-        expandableListAdapter = new ExpandableListAdapter(getContext(),listDataHeader,listDataChild);
+        expandableListAdapter = new ExpandableListAdapter(getContext(), listDataHeader, listDataChild);
         expListView.setAdapter(expandableListAdapter);
-        expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener(){
+        expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 String groupname = listDataHeader.get(groupPosition).getGroupname();
                 String eventname = listDataChild.get(listDataHeader.get(groupPosition).getGroupname()).get(childPosition).getEventname();
                 String eventnum = listDataChild.get(listDataHeader.get(groupPosition).getGroupname()).get(childPosition).getEventnum();
-                new LoadEventInfoAsyncTask().execute(eventname,groupname,eventnum);
+                new LoadEventInfoAsyncTask().execute(eventname, groupname, eventnum);
 
                 //Toast.makeText(getContext(), listDataChild.get(listDataHeader.get(groupPosition).getGroupname()).get(childPosition).getEventname(),Toast.LENGTH_SHORT).show();
 
@@ -180,14 +188,14 @@ public class CustomSelectEventForReceivedTossSMSPopup extends DialogFragment{
         protected void onPostExecute(GroupListBundle result) {
 
             // RecyclerView Adapter Item 값 추가
-            if (result.getResult() != null && result.getUserinfo() != null && result.getResult().size() > 0 && result.getUserinfo().size()>0) {
-                for(int i = 0 ; i < result.getResult().size() ; i ++){
-                    Log.e("결과",result.getResult().get(i).getGroupname()+" 결과입니다.");
+            if (result.getResult() != null && result.getUserinfo() != null && result.getResult().size() > 0 && result.getUserinfo().size() > 0) {
+                for (int i = 0; i < result.getResult().size(); i++) {
+                    Log.e("결과", result.getResult().get(i).getGroupname() + " 결과입니다.");
                     listDataHeader.add(result.getResult().get(i));
                 }
                 expandableListAdapter.addAllItem(result.getResult());
                 groupcount = result.getResult().size();
-                for(int i = 0 ; i < result.getResult().size() ; i++){
+                for (int i = 0; i < result.getResult().size(); i++) {
                     new LoadEventListAsyncTask().execute(result.getResult().get(i).getGroupcode());
                 }
                 //expandableListAdapter.notifyDataSetChanged();
@@ -205,6 +213,7 @@ public class CustomSelectEventForReceivedTossSMSPopup extends DialogFragment{
             }
         }
     }
+
     public class LoadEventListAsyncTask extends AsyncTask<String, Void, EventListBundle> {
         @Override
         protected EventListBundle doInBackground(String... arg) {
@@ -219,7 +228,7 @@ public class CustomSelectEventForReceivedTossSMSPopup extends DialogFragment{
                 FormBody.Builder builder = new FormBody.Builder();
                 builder.add("groupcode", arg[0])
                         .add("signal", "0")
-                        .add("userid",userid);
+                        .add("userid", userid);
                 FormBody formBody = builder.build();
                 //요청
                 Request request = new Request.Builder()
@@ -250,9 +259,9 @@ public class CustomSelectEventForReceivedTossSMSPopup extends DialogFragment{
         @Override
         protected void onPostExecute(EventListBundle result) {
             // RecyclerView Adapter Item 값 추가
-            if (result.getResult() != null && result.getUserinfo() != null && result.getResult().size() > 0 && result.getUserinfo().size()>0) {
-                for(int i = 0 ; i < result.getResult().size() ; i++){
-                    Log.e("eventlist불러오는중",result.getResult().get(i).getEventname()+" 입니다.");
+            if (result.getResult() != null && result.getUserinfo() != null && result.getResult().size() > 0 && result.getUserinfo().size() > 0) {
+                for (int i = 0; i < result.getResult().size(); i++) {
+                    Log.e("eventlist불러오는중", result.getResult().get(i).getEventname() + " 입니다.");
                 }
                 listDataChild.put(listDataHeader.get(currentindex++).getGroupname(), result.getResult());
                 expandableListAdapter.notifyDataSetChanged();
@@ -270,11 +279,17 @@ public class CustomSelectEventForReceivedTossSMSPopup extends DialogFragment{
             }
         }
     }
+
     public class LoadEventInfoAsyncTask extends AsyncTask<String, Void, EventInfoPaymentTotalItem> {
-        private int memberPosition=2;
+
+        ArrayList<EventInfoMemberPaymentListItem> eventInfoMemberItemArrayList = null;
+        ArrayList<EventInfoPaymentItem> eventInfoPaymentItemArrayList = null;
+        ArrayList<String> eventInfoMemberPositionArrayList = null;
+        private int memberPosition = 2;
         String eventnum;
         String groupname;
         String eventname;
+
         @Override
         protected EventInfoPaymentTotalItem doInBackground(String... arg) {
             String requestURL = "";
@@ -287,13 +302,13 @@ public class CustomSelectEventForReceivedTossSMSPopup extends DialogFragment{
                 requestURL = NetworkDefineConstant.SERVER_URL_EVENT_INFO;
 
                 SharedPreferences pref = getActivity().getSharedPreferences("Login", MODE_PRIVATE);
-                String userid = pref.getString("id","error");
+                String userid = pref.getString("id", "error");
 
                 //연결
                 OkHttpClient toServer = NetworkDefineConstant.getOkHttpClient();
                 FormBody.Builder builder = new FormBody.Builder();
                 //builder.add("eventnum", eventnum).add("userid", userid);
-                builder.add("userid", userid).add("eventnum", eventnum).add("signal","0");
+                builder.add("userid", userid).add("eventnum", eventnum).add("signal", "0");
 
                 FormBody formBody = builder.build();
                 //요청
@@ -324,85 +339,137 @@ public class CustomSelectEventForReceivedTossSMSPopup extends DialogFragment{
 
         @Override
         protected void onPostExecute(EventInfoPaymentTotalItem result) {
-            //ArrayList<EventInfoMemberPaymentListItem> eventInfoMemberItemArrayList = null ;
-            //ArrayList<EventInfoPaymentItem> eventInfoPaymentItemArrayList = null;
-            ArrayList<String> eventInfoMemberPositionArrayList=null;
 
 
             if (result != null) {
                 Log.e("받아온 정보들", result.toString());
-                //eventInfoMemberItemArrayList = result.getEventInfoMemberItemArrayList();
+                eventInfoMemberItemArrayList = result.getEventInfoMemberItemArrayList();
                 eventInfoMemberPositionArrayList = result.getEventInfoMemberPositionArrayList();
-                //eventInfoPaymentItemArrayList = result.getEventInfoPaymentItemArrayList();
+                eventInfoPaymentItemArrayList = result.getEventInfoPaymentItemArrayList();
 
                 if (eventInfoMemberPositionArrayList.size() > 0) {
                     memberPosition = Integer.parseInt(eventInfoMemberPositionArrayList.get(0));
                     Log.e("멤버포지션", memberPosition + "?");
-                    if(memberPosition == 0){
+                    if (memberPosition == 0) {
                         AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
                         alert.setTitle("지불 여부 체크");
-                        alert.setMessage("'"+name+"'님께서 보낸 "+money+"원을 '"+groupname+"' 그룹의 '"+eventname+"' 이벤트에 추가하시겠습니까?");
-                        alert.setPositiveButton("예",new DialogInterface.OnClickListener() {
+                        alert.setMessage("'" + name + "'님께서 보낸 " + money + "원을 '" + groupname + "' 그룹의 '" + eventname + "' 이벤트에 추가하시겠습니까?");
+                        alert.setPositiveButton("예", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                //서버전송.
-                                dismiss();
-                                AddPayCheckByTossNotificationActivity.activityInstance.finish();
+                                boolean exist = false;
+                                String userid = "";
+                                if (eventInfoMemberItemArrayList.size() > 0) {
+                                    for (int i = 0; i < eventInfoMemberItemArrayList.size(); i++) {
+                                        if(name.equals(eventInfoMemberItemArrayList.get(i).getName())){
+                                            exist = true;
+                                            userid = eventInfoMemberItemArrayList.get(i).getUserId();
+                                        }
+                                    }
+                                    if (exist == true) {
+                                        if (money == Integer.parseInt(eventInfoPaymentItemArrayList.get(0).getPersonalMoney())) {
+                                            uploadPaymentAsyncTask u = new uploadPaymentAsyncTask();
+                                            u.execute(eventnum, userid);
+                                        } else {
+                                            Toast.makeText(getContext(), "지출해야 될 금액이 '" + eventInfoPaymentItemArrayList.get(0).getPersonalMoney() + "'원 인데, '" + money + "'원 을 추가하시려 하십니다..", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                    else {
+                                        Toast.makeText(getContext(),"'"+eventname+"'라는 이벤트에 '"+name+"' 라는 이름이 존재하지 않습니다.",Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
                             }
                         });
-                        alert.setNegativeButton("아니요",new DialogInterface.OnClickListener() {
+                        alert.setNegativeButton("아니요", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
 
                             }
                         });
                         alert.show();
-                    }
-                    else{
-                        Toast.makeText(getContext(),"당신은 '"+eventname+"' 이벤트의 총무가 아닙니다",Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "당신은 '" + eventname + "' 이벤트의 총무가 아닙니다", Toast.LENGTH_SHORT).show();
                     }
                 }
-/*
-                if (eventInfoPaymentItemArrayList.size() > 0) {//이벤트 정보
-                    mTargetMoney.setText(eventInfoPaymentItemArrayList.get(0).getTargetMoney());//목표액
-                    mCollectedMoney.setText(eventInfoPaymentItemArrayList.get(0).getCollectedMoney());//모인 금액
-                    mEventDate.setText(eventInfoPaymentItemArrayList.get(0).getEventDate());//기한
-                    mManagerName.setText(eventInfoPaymentItemArrayList.get(0).getManagerId());//총무 이름
-                    //총무 프로필
-                    myUserName.setText(eventInfoPaymentItemArrayList.get(0).getUserName());//유저 이름
-                    myMoney.setText(eventInfoPaymentItemArrayList.get(0).getPersonalMoney()); //유저 금액
-
-                    if (Integer.parseInt(eventInfoPaymentItemArrayList.get(0).getUserIspay()) == 1) {
-                        myStatus.setText("지출완료");//유저 상태
-                    }
-                    Glide.with(getActivity().getApplicationContext())
-                            .load(eventInfoPaymentItemArrayList.get(0).getUserprofileURL())
-                            .override(150, 150)
-                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                            .skipMemoryCache(true)
-                            .into(myProfileImage); // 유저 프로필
-
-                }
-
-
-                if (eventInfoMemberItemArrayList.size() > 0) {//멤버 리스트
-                    SharedPreferences pref = getActivity().getSharedPreferences("Login", MODE_PRIVATE);
-                    String userid = pref.getString("id","error");
-
-                    if(memberPosition!=2){
-                        for(int i=0; i<eventInfoMemberItemArrayList.size(); i++){
-                            if(eventInfoMemberItemArrayList.get(i).getUserId().equals(userid)){//내 아이디 있으면
-                                eventInfoMemberItemArrayList.remove(i);
-                                break;
-                            }
-                        }
-                    }
-
-                    mPaymentListAdapter.addItem(eventInfoMemberItemArrayList);
-                    mPaymentListAdapter.notifyDataSetChanged();
-                }*/
-
             }
         }
     }
+
+    public class uploadPaymentAsyncTask extends AsyncTask<String, Void, String> {
+
+        ProgressDialog loading;
+        RequestHandler handler = new RequestHandler();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loading = ProgressDialog.show(getActivity(), "Uploading...", null, true, true);
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String requestURL = "";
+            Response response = null;
+            try {
+                requestURL = NetworkDefineConstant.SERVER_URL_EVENT_INFO;
+
+                OkHttpClient toServer = NetworkDefineConstant.getOkHttpClient();
+                FormBody.Builder builder = new FormBody.Builder();
+                builder.add("signal", "4")
+                        .add("eventnum", params[0])
+                        .add("userid", params[1]);
+                FormBody formBody = builder.build();
+
+                Request request = new Request.Builder()
+                        .url(requestURL)
+                        .post(formBody)
+                        .build();
+
+                response = toServer.newCall(request).execute();
+                boolean flag = response.isSuccessful();
+                ResponseBody resBody = response.body();
+
+                if (flag) {
+                    String valid = resBody.string();
+                    if (valid.contains("1"))
+                        isSuccess = 1;
+                    else if (valid.contains("2"))
+                        isSuccess = 2;
+                    else
+                        isSuccess = 0;
+                } else {
+                    Log.e("에러", "현금 체크 에러");
+                }
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            } finally {
+                if (response != null) {
+                    response.close();
+                }
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String aVoid) {
+            super.onPostExecute(aVoid);
+            loading.dismiss();//progressbar 종료
+
+            if (isSuccess == 1) {
+                Toast.makeText(getActivity(), "지출확인", Toast.LENGTH_SHORT).show();
+
+                //dismiss();
+            } else if (isSuccess == 2) {
+                Toast.makeText(getActivity(), "목표금액이 0", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity(), "에러!", Toast.LENGTH_SHORT).show();
+            }
+            dismiss();
+            AddPayCheckByTossNotificationActivity.activityInstance.finish();
+        }
+
+    }
+
     class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         private Context _context;
@@ -436,7 +503,7 @@ public class CustomSelectEventForReceivedTossSMSPopup extends DialogFragment{
         public View getChildView(int groupPosition, final int childPosition,
                                  boolean isLastChild, View convertView, ViewGroup parent) {
 
-            final String childText =  getChild(groupPosition, childPosition).getEventname();
+            final String childText = getChild(groupPosition, childPosition).getEventname();
 
             if (convertView == null) {
                 LayoutInflater infalInflater = (LayoutInflater) this._context
@@ -453,7 +520,11 @@ public class CustomSelectEventForReceivedTossSMSPopup extends DialogFragment{
 
         @Override
         public int getChildrenCount(int groupPosition) {
-            return this._listDataChild.get(this._listDataHeader.get(groupPosition).getGroupname()).size();
+            if ((this._listDataChild.get(this._listDataHeader.get(groupPosition).getGroupname())) == null) {
+                return 0;
+            } else {
+                return this._listDataChild.get(this._listDataHeader.get(groupPosition).getGroupname()).size();
+            }
         }
 
         @Override

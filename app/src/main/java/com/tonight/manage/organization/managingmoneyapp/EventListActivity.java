@@ -285,12 +285,12 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
             holder.mRateTextCircularProgressBar.setMax(100);
             holder.mRateTextCircularProgressBar.clearAnimation();
             holder.mRateTextCircularProgressBar.getCircularProgressBar().setCircleWidth(20);
-            int summ = Integer.parseInt(eventListItems.get(position).getSumm());//모인금액 받아와야함.
-            int targetm = Integer.parseInt(eventListItems.get(position).getTargetm());//목표액 받아와야함.
+            float summ = Float.parseFloat(eventListItems.get(position).getSumm());//모인금액 받아와야함.
+            float targetm = Float.parseFloat(eventListItems.get(position).getTargetm());//목표액 받아와야함.
             if (summ == 0) holder.mRateTextCircularProgressBar.setProgress(0);
             else {
-                int percent = (targetm / summ)*100;
-                holder.mRateTextCircularProgressBar.setProgress(percent);//이 percent => 모인금액 / 목표액
+                float percent = (summ/targetm)*100;
+                holder.mRateTextCircularProgressBar.setProgress((int)percent);//이 percent => 모인금액 / 목표액
             }
 
             holder.eventpercent.setText(holder.mRateTextCircularProgressBar.getCircularProgressBar().getProgress() + "%");
