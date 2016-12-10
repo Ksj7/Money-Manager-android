@@ -17,6 +17,7 @@ import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.tonight.manage.organization.managingmoneyapp.EventInfoActivity;
 import com.tonight.manage.organization.managingmoneyapp.R;
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
 
@@ -136,6 +137,7 @@ public class CustomAddMoneyPopup extends DialogFragment {
                     String sum = sumEdit.getText().toString();
                     new UpdateAddMoneyDataAsyncTask().execute("2",eventnum,sum);
                 }
+                EventInfoActivity.pagerInstance.notifyDataSetChanged();
             }
         });
 
