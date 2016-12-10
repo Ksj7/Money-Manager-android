@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.tonight.manage.organization.managingmoneyapp.EventInfoActivity;
 import com.tonight.manage.organization.managingmoneyapp.R;
 import com.tonight.manage.organization.managingmoneyapp.RequestHandler;
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
@@ -64,6 +65,8 @@ public class CustomCheckCashPopup extends DialogFragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+                EventInfoActivity.pagerInstance.notifyDataSetChanged();
                 dismiss();
             }
 
