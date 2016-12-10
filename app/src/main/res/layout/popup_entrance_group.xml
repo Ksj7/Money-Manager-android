@@ -72,7 +72,7 @@
             android:layout_height="40dp"
             android:background="@drawable/btn_selector"
             android:layout_marginRight="2.5dp"
-            android:text="NO"
+            android:text="@string/cancel"
             android:textColor="#fff"
             android:textStyle="bold" />
 
@@ -82,7 +82,7 @@
             android:layout_weight="0.5"
             android:layout_height="40dp"
             android:background="@drawable/btn_selector"
-            android:text="OK"
+            android:text="@string/confirm"
             android:layout_marginLeft="2.5dp"
             android:textColor="#fff"
             android:textStyle="bold"/>

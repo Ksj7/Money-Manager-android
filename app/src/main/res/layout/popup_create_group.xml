@@ -167,7 +167,7 @@
             android:layout_marginRight="2.5dp"
             android:layout_weight="0.5"
             android:background="@drawable/btn_selector"
-            android:text="NO"
+            android:text="@string/cancel"
             android:textColor="#fff"
             android:textStyle="bold" />
 
@@ -178,7 +178,7 @@
             android:layout_marginLeft="2.5dp"
             android:layout_weight="0.5"
             android:background="@drawable/btn_selector"
-            android:text="OK"
+            android:text="@string/confirm"
             android:textColor="#fff"
             android:textStyle="bold" />
 
