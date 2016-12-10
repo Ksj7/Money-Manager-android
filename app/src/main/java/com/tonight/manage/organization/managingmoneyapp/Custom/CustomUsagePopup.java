@@ -2,6 +2,7 @@ package com.tonight.manage.organization.managingmoneyapp.Custom;
 
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,7 +10,9 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.util.Base64;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tonight.manage.organization.managingmoneyapp.EventInfoActivity;
 import com.tonight.manage.organization.managingmoneyapp.R;
 import com.tonight.manage.organization.managingmoneyapp.RequestHandler;
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
@@ -112,10 +116,13 @@ public class CustomUsagePopup extends DialogFragment {
                     confirmButton.setText("OK");
                 }else if(count == 3){
                     money = moneyText.getText().toString();
-
                     try {
+                        Display display = getActivity().getWindowManager().getDefaultDisplay();
+                        Point size = new Point();
+                        display.getSize(size);
+
                         receivedbitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
-                        receivedbitmap = Bitmap.createScaledBitmap(receivedbitmap, 200, 200, false);
+                        receivedbitmap = Bitmap.createScaledBitmap(receivedbitmap,size.x, size.y, false);
 
                         UploadImage uploadImage = new UploadImage();
                         uploadImage.execute(receivedbitmap);
@@ -128,7 +135,7 @@ public class CustomUsagePopup extends DialogFragment {
             }
 
         });
-
+        EventInfoActivity.pagerInstance.notifyDataSetChanged();
         return view;
 
     }

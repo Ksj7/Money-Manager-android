@@ -20,7 +20,10 @@ public class Pager extends FragmentStatePagerAdapter {
         this.eventName = eventName;
         this.eventnum = eventnum;
     }
-
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
+    }
     @Override
     public Fragment getItem(int position) {
         switch (position){

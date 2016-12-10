@@ -9,6 +9,7 @@ public class UserItem {
     String username;
     String phone;
     String profileimg;
+    String manager;
 
     public UserItem setUsername(String username) {
         this.username = username;
@@ -23,7 +24,10 @@ public class UserItem {
         this.phone = phone;
         return this;
     }
-
+    public UserItem setManager(String manager) {
+        this.manager = manager;
+        return this;
+    }
     public String getUsername() {
         return username;
     }
@@ -34,6 +38,10 @@ public class UserItem {
 
     public String getPhone() {
         return phone;
+    }
+
+    public String getManager() {
+        return manager;
     }
 
 

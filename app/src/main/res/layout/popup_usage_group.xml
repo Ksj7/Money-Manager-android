@@ -47,11 +47,13 @@
         <FrameLayout
             android:id="@+id/layout"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            >
 
             <CalendarView
                 android:id="@+id/calendar"
-                android:layout_width="350dp"
+                android:layout_width="330dp"
                 android:layout_height="250dp"
                 android:showWeekNumber="false"
                 android:theme="@style/Theme.Custom.Calendar" />
@@ -115,6 +117,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:hint="Input Text Here"
+            android:inputType="number"
             android:textColorHint="@color/colorEditText"
             android:textColor="#000"
             android:textSize="20sp"

@@ -68,6 +68,7 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
     private TextView userName;
     private TextView userPhone;
     String userid;
+    boolean isManager;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,9 +209,13 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
             startActivity(i);
             return true;
         } else if (id == R.id.action_add_event) {
-
-            CustomAddEventPopup addEventPopup = CustomAddEventPopup.newInstance(userid, mGroupCode);
-            addEventPopup.show(getSupportFragmentManager(), "add_event");
+            if(isManager) {
+                CustomAddEventPopup addEventPopup = CustomAddEventPopup.newInstance(userid, mGroupCode);
+                addEventPopup.show(getSupportFragmentManager(), "add_event");
+            }
+            else {
+                Toast.makeText(this, "이벤트 추가는 총무만 가능합니다", Toast.LENGTH_SHORT).show();
+            }
         } else if (id == R.id.action_group_code) {
             CustomShowGroupCodePopup showGroupCodePopup = CustomShowGroupCodePopup.newInstance(mGroupCode);
             showGroupCodePopup.show(getSupportFragmentManager(), "add_event");
@@ -392,6 +397,12 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
                 }
                 userName.setText(result.getUserinfo().get(0).getUsername());
                 userPhone.setText(result.getUserinfo().get(0).getPhone());
+                if((result.getUserinfo().get(0).getManager()).equals("1")){
+                    isManager = true;
+                }
+                else{
+                    isManager = false;
+                }
                 Glide.with(getApplicationContext())
                         .load(result.getUserinfo().get(0).getProfileimg())
                         .override(150, 150)
