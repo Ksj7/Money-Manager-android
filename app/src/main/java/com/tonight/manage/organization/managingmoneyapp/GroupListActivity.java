@@ -68,7 +68,6 @@ public class GroupListActivity extends AppCompatActivity
     TextView userPhone;
     private String userId;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -266,7 +265,6 @@ public class GroupListActivity extends AppCompatActivity
             holder.groupName.setText(groupDatas.get(position).getGroupname());
             holder.groupNumber.setText(groupDatas.get(position).getMembernum());
             holder.view.setOnClickListener(new View.OnClickListener() {
-
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(GroupListActivity.this, EventListActivity.class);
@@ -277,10 +275,12 @@ public class GroupListActivity extends AppCompatActivity
                 }
             });
             String bubble = groupDatas.get(position).getBubblecount();
-            if(bubble.equals("0")) return;
-            BadgeView badge = new BadgeView(getApplicationContext(), holder.bubble);
-            badge.setText(bubble);
-            badge.show();
+            if(bubble.equals("0")) {
+                holder.badge.hide();
+                return;
+            }
+            holder.badge.setText(bubble);
+            holder.badge.show();
         }
 
         @Override
@@ -294,6 +294,7 @@ public class GroupListActivity extends AppCompatActivity
             View bubble;
             RecyclerView recyclerView;
             View view;
+            BadgeView badge;
 
             public ViewHolder(View v) {
                 super(v);
@@ -301,6 +302,7 @@ public class GroupListActivity extends AppCompatActivity
                 groupName = (TextView) v.findViewById(R.id.groupname);
                 groupNumber = (TextView) v.findViewById(R.id.groupNumber);
                 bubble = v.findViewById(R.id.bubble);
+                badge = new BadgeView(getApplicationContext(), bubble);
                 recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
             }
         }
