@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -23,6 +24,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.goka.flickableview.FlickableImageView;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomUsagePopup;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoUsageListItem;
 import com.tonight.manage.organization.managingmoneyapp.Server.EventInfoJSONParser;
@@ -159,20 +162,28 @@ public class UsageFragment extends Fragment implements View.OnClickListener {
         }
 
         @Override
-        public void onBindViewHolder(EventInfoUsageAdapter.ViewHolder holder, int position) {
+        public void onBindViewHolder(EventInfoUsageAdapter.ViewHolder holder, final int position) {
 
             //test
             holder.date.setText(usageArrayList.get(position).getDate());
             holder.location.setText(usageArrayList.get(position).getLocation());
             holder.usedmoney.setText(usageArrayList.get(position).getUsedMoney());
 
-            if(usageArrayList.get(position).getReceipturl() !=null && !usageArrayList.get(position).getReceipturl().equals("0")){
+            final String img = usageArrayList.get(position).getReceipturl();
+
+            if(usageArrayList.get(position).getReceipturl() !=null &&
+                    !usageArrayList.get(position).getReceipturl().equals("0")){
+                Log.e("여기이미지가있니?","여기여기"+img);
                 holder.existimg.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(getActivity(), "여기 이미지가 있어요", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getActivity(), "여기 이미지가 있어요", Toast.LENGTH_LONG).show();
+                        Intent i = new Intent(getActivity(), ProfileImageActivity.class);
+                        i.putExtra("profile",img);
+                        startActivity(i);
                     }
                 });
+
             }//영수증이 존재하면
             else{
                 holder.existimg.setVisibility(getView().GONE);
