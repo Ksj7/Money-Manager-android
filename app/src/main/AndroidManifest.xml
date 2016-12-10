@@ -27,7 +27,6 @@
         <activity android:name=".InvitationActivity"/>
         <activity android:name=".MemberListActivity"/>
         <activity android:name=".EventInfoActivity"/>
-        <activity android:name=".Toss.WebViewActivity"/>
         <activity android:name=".ProfileImageActivity"/>
         <activity android:name=".EditPasswordActivity"/>
         <activity android:name=".EditPhoneNumberActivity"/>
