@@ -5,6 +5,8 @@ import android.util.Log;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoMemberPaymentListItem;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoPaymentItem;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoPaymentTotalItem;
+import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoUsageListItem;
+import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoUsageListItemList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,7 +21,7 @@ import java.util.ArrayList;
 public class EventInfoJSONParser {
 
     /*
-     EventInfoMemberlistItem 데이터 파싱
+     EventInfoPayment 데이터 파싱
      */
     public static EventInfoPaymentTotalItem parseEventInfoMemberItems(StringBuilder responedJSONData) {
         ArrayList<EventInfoMemberPaymentListItem> eventInfoMemberItemArrayList = null;
@@ -48,7 +50,7 @@ public class EventInfoJSONParser {
                     JSONObject item = member.getJSONObject(i);
                     EventInfoMemberPaymentListItem memberObject = new EventInfoMemberPaymentListItem()
                             .setImgurl(item.getString("profileimg"))
-                            .setName(item.getString("userid"))
+                            .setName(item.getString("username"))
                             .setSpendingstatus(item.getString("ispay"))
                             .setUserId(item.getString("userid"))
                             .setPersonalMoney(item.getString("personalm"))
@@ -97,6 +99,43 @@ public class EventInfoJSONParser {
 
         EventInfoPaymentTotalItem totalItem = new EventInfoPaymentTotalItem(eventInfoMemberItemArrayList,eventInfoPaymentItemArrayList,eventInfoMemberPositionArrayList);
         return totalItem;
+    }
+
+    /*EventInfo Usage 데이터 파싱*/
+    public static ArrayList<EventInfoUsageListItem> parseEventInfoUsageItems(StringBuilder responedJSONData) {
+        ArrayList<EventInfoUsageListItem> eventInfoPaymentArrayList = null;
+
+        JSONObject jsonRoot ;
+        JSONArray result;
+
+        try {
+            Log.e("받아온 정보들 : ",responedJSONData.toString()+"여기");
+            jsonRoot = new JSONObject(responedJSONData.toString());
+            result = jsonRoot.getJSONArray("result");
+
+            int  resultsize = result.length();
+
+            if( resultsize > 0) {
+                eventInfoPaymentArrayList = new ArrayList<>();
+                for (int i = 0; i < resultsize; i++) {
+
+                    JSONObject item = result.getJSONObject(i);
+                    EventInfoUsageListItem Object = new EventInfoUsageListItem()
+                            .setReceipturl(item.getString("receiptimg"))
+                            .setDate(item.getString("usagedate"))
+                            .setLocation(item.getString("title"))
+                            .setUsedMoney((item.getString("usagemoney")));
+
+                    eventInfoPaymentArrayList.add(Object);
+                }
+            }
+
+
+        } catch (JSONException e) {
+            Log.e("parsePaymentItem", "Parsing error :", e);
+        }
+
+        return eventInfoPaymentArrayList;
     }
 
 }

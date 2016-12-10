@@ -26,13 +26,16 @@ public class Pager extends FragmentStatePagerAdapter {
         switch (position){
             case 0:
                 PaymentFragment paymentFragment = new PaymentFragment();
-                Bundle b = new Bundle();
-                b.putString("eventName", eventName);
-                b.putString("eventnum",eventnum);
-                paymentFragment.setArguments(b);
+                Bundle paymentB = new Bundle();
+                paymentB.putString("eventName", eventName);
+                paymentB.putString("eventnum",eventnum);
+                paymentFragment.setArguments(paymentB);
                 return paymentFragment;
             case 1:
                 UsageFragment userFragment = new UsageFragment();
+                Bundle usageB = new Bundle();
+                usageB.putString("eventnum",eventnum);
+                userFragment.setArguments(usageB);
                 return userFragment;
             default:
                 return null;
