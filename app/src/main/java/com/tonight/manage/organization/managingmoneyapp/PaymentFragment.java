@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,6 +53,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import jxl.write.WriteException;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -88,11 +88,11 @@ public class PaymentFragment extends Fragment {
 
     private int memberPosition = 2; //초기값은 초대되어 있지 않은 회원
     LinearLayout eventInfo_payment_userInfo;
-    ImageView myProfileImage;
+    CircleImageView myProfileImage;
     TextView myUserName;
     TextView myMoney;
     TextView myStatus;
-    ImageView mManagerProfile;
+    CircleImageView mManagerProfile;
     private ArrayList<EventInfoMemberPaymentListItem> eventInfoMemberItemArrayList;
     
     @Override
@@ -197,9 +197,9 @@ public class PaymentFragment extends Fragment {
         mTargetMoney = (TextView) v.findViewById(R.id.eventInfo_targetmoney);
         mCollectedMoney = (TextView) v.findViewById(R.id.eventInfo_collectedmoney);
         mManagerName = (TextView) v.findViewById(R.id.eventInfo_managerName);
-        mManagerProfile = (ImageView) v.findViewById(R.id.eventInfo_myManagerImageView);
+        mManagerProfile = (CircleImageView) v.findViewById(R.id.eventInfo_myManagerImageView);
         eventInfo_payment_userInfo = (LinearLayout) v.findViewById(R.id.eventInfo_payment_userInfo);
-        myProfileImage = (ImageView) v.findViewById(R.id.eventInfo_myImageView);
+        myProfileImage = (CircleImageView) v.findViewById(R.id.eventInfo_myImageView);
         myUserName = (TextView) v.findViewById(R.id.eventInfo_myuserName);
         myMoney = (TextView) v.findViewById(R.id.eventInfo_userMoney);
         myStatus = (TextView) v.findViewById(R.id.eventInfo_userPayState);
@@ -309,7 +309,7 @@ public class PaymentFragment extends Fragment {
             TextView payStatus;
             RecyclerView recyclerView;
             View view;
-            ImageView profileimg;
+            CircleImageView profileimg;
 
             public ViewHolder(View v) {
                 super(v);
@@ -318,7 +318,7 @@ public class PaymentFragment extends Fragment {
                 paymentMoney = (TextView) v.findViewById(R.id.eventInfo_payment_money);
                 payStatus = (TextView) v.findViewById(R.id.eventInfo_payment_payState);
                 recyclerView = (RecyclerView) v.findViewById(R.id.eventInfo_recyclerView);
-                profileimg = (ImageView) v.findViewById(R.id.eventInfo_payment_ImgView);
+                profileimg = (CircleImageView) v.findViewById(R.id.eventInfo_payment_ImgView);
             }
         }
     }
