@@ -14,7 +14,7 @@
 
 
     <dimen name="popup_create_group_width">302dp</dimen>
-    <dimen name="popup_create_group_height">279dp</dimen>
+    <dimen name="popup_create_group_height">269dp</dimen>
 
     <dimen name="popup_profile_width">242dp</dimen>
     <dimen name="popup_profile_height">349dp</dimen>
