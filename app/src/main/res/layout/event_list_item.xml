@@ -64,7 +64,7 @@
                 android:layout_marginRight="5dp"/>
             <TextView
                 android:id="@+id/eventlist_percent_textview"
-                android:layout_width="30dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="50%" />

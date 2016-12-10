@@ -6,7 +6,9 @@ import android.content.ClipDescription;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.PixelFormat;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -21,11 +23,20 @@ import android.widget.TextView;
 import com.tonight.manage.organization.managingmoneyapp.AddUsageByPasteActivity;
 import com.tonight.manage.organization.managingmoneyapp.R;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+
 /**
  * Created by Taek on 2016. 12. 2..
  */
 
 public class PasteService extends Service {
+
+    public static final String MESSAGE_TYPE_INBOX = "1";
+    public static final String MESSAGE_TYPE_SENT = "2";
+    public static final String MESSAGE_TYPE_CONVERSATIONS = "3";
+    public static final String MESSAGE_TYPE_NEW = "new";
+
     static boolean semaphore = false;//실행중일때 중복으로 스낵바 띄우는거 방지.
     ClipboardManager clipBoard;
     ClipboardListener clipboardListener;
@@ -36,7 +47,7 @@ public class PasteService extends Service {
 
     @Override
     public void onCreate() {
-        new Thread() {
+        /*new Thread() {
             public void run() {
                 while (true) {
                     try {
@@ -47,7 +58,7 @@ public class PasteService extends Service {
                     }
                 }
             }
-        }.start();
+        }.start();*/
 
         clipboardListener = new ClipboardListener();
         clipBoard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
@@ -97,7 +108,59 @@ public class PasteService extends Service {
 
                 new TimerThread().start();
             }
+
+            SMSList();
         }//클립보드 내용이 바뀌면
+
+        public void SMSList() {
+            // Retrieve All SMS
+            /*
+                Inbox = "content://sms/inbox"
+                Failed = "content://sms/failed"
+                Queued = "content://sms/queued"
+                Sent = "content://sms/sent"
+                Draft = "content://sms/draft"
+                Outbox = "content://sms/outbox"
+                Undelivered = "content://sms/undelivered"
+                All = "content://sms/all"
+                Conversations = "content://sms/conversations"
+
+                addressCol= mCurSms.getColumnIndex("address");
+                personCol= mCurSms.getColumnIndex("person");
+                dateCol = mCurSms.getColumnIndex("date");
+                protocolCol= mCurSms.getColumnIndex("protocol");
+                readCol = mCurSms.getColumnIndex("read");
+                statusCol = mCurSms.getColumnIndex("status");
+                typeCol = mCurSms.getColumnIndex("type");
+                subjectCol = mCurSms.getColumnIndex("subject");
+                bodyCol = mCurSms.getColumnIndex("body");
+             */
+            Uri allMessage = Uri.parse("content://sms/");
+            Cursor cur = getContentResolver().query(allMessage, null, null, null, null);
+            int count = cur.getCount();
+            Log.e("값" , "SMS count = " + count);
+            String row = "";
+            String msg = "";
+            String date = "";
+            String protocol = "";
+            while (cur.moveToNext()) {
+                row = cur.getString(cur.getColumnIndex("address"));
+                msg = cur.getString(cur.getColumnIndex("body"));
+                date = cur.getString(cur.getColumnIndex("date"));
+                protocol = cur.getString(cur.getColumnIndex("protocol"));
+                // Logger.d( TAG , "SMS PROTOCOL = " + protocol);
+                String FormattedDate;
+  //              SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+//                FormattedDate = sdf.format(date).toString();
+                String type = "";
+                if (protocol == MESSAGE_TYPE_SENT) type = "sent";
+                else if (protocol == MESSAGE_TYPE_INBOX) type = "receive";
+                else if (protocol == MESSAGE_TYPE_CONVERSATIONS) type = "conversations";
+                else if (protocol == null) type = "send";
+
+                Log.e("결과" , "SMS Phone: " + row + " / Mesg: " + msg + " / Type: " + type + " / Date: " + date);
+            }
+        }
 
         @Override
         public void onClick(View v) {
