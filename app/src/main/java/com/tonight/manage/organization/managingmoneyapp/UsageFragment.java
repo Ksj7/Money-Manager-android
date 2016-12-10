@@ -2,7 +2,7 @@ package com.tonight.manage.organization.managingmoneyapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,9 +13,11 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,7 +29,6 @@ import com.tonight.manage.organization.managingmoneyapp.Server.EventInfoJSONPars
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -49,6 +50,7 @@ public class UsageFragment extends Fragment implements View.OnClickListener {
     Button mUsageUploadButton;
     String eventnum;
     ArrayList<EventInfoUsageListItem> arrayList;
+    private  WindowManager.LayoutParams mParams;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -82,19 +84,20 @@ public class UsageFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) { //upload버튼 클릭 시
-        Snackbar snackbar = Snackbar.make(view, "", Snackbar.LENGTH_SHORT);
+        Snackbar snackbar = Snackbar.make(view, null, Snackbar.LENGTH_SHORT);
         Snackbar.SnackbarLayout layout = (Snackbar.SnackbarLayout) snackbar.getView();
-        //layout.setPadding(0, 0, 0, 0);//set padding to 0
-
-        TextView textView = (TextView) layout.findViewById(android.support.design.R.id.snackbar_text);
-        textView.setVisibility(View.INVISIBLE);
 
         View snackView = getActivity().getLayoutInflater().inflate(R.layout.activity_event_info_usage_snack,null);
         ImageView cameraButton = (ImageView) snackView.findViewById(R.id.usage_snack_camera);
         ImageView galleryButton = (ImageView) snackView.findViewById(R.id.usage_snack_gallery);
-
-        layout.addView(snackView, 0);
-        snackbar.show();
+        mParams = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.TYPE_PHONE,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT);
+        mParams.gravity = Gravity.BOTTOM;
+        layout.addView(snackView,mParams);
 
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +114,8 @@ public class UsageFragment extends Fragment implements View.OnClickListener {
                 startActivityForResult(intent, PICK_IMAGE_REQUEST);
             }
         });
+        snackbar.show();
+
     }
 
     @Override
