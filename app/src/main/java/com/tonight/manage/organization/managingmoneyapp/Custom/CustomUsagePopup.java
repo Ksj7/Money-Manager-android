@@ -111,7 +111,6 @@ public class CustomUsagePopup extends DialogFragment {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             loading.dismiss();
-            //Toast.makeText(getContext(), s, Toast.LENGTH_LONG).show();
         }
 
         @Override

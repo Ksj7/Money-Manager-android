@@ -2,17 +2,21 @@ package com.tonight.manage.organization.managingmoneyapp;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -28,6 +32,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomAddMoneyPopup;
+import com.tonight.manage.organization.managingmoneyapp.Custom.CustomCheckCashPopup;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomProfilePopup;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomSetDatePopup;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoMemberPaymentListItem;
@@ -44,6 +49,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,6 +58,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -127,7 +134,7 @@ public class PaymentFragment extends Fragment {
 
             @Override
             public void onRefresh() {
-                new LoadEventInfoAsyncTask().execute();
+                new loadPaymentAsyncTask().execute();
                 mPaymentListSwipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -148,7 +155,7 @@ public class PaymentFragment extends Fragment {
                         } else {
                             CustomAddMoneyPopup addMoneyPopup = CustomAddMoneyPopup.newInstance(eventnum);
                             addMoneyPopup.show(getFragmentManager(), "addMoney");
-                            new LoadEventInfoAsyncTask().execute();
+                            new loadPaymentAsyncTask().execute();
                         }
                         return false;
                     }
@@ -197,7 +204,7 @@ public class PaymentFragment extends Fragment {
         myStatus = (TextView) v.findViewById(R.id.eventInfo_userPayState);
 
 
-        new LoadEventInfoAsyncTask().execute();
+        new loadPaymentAsyncTask().execute();
         return v;
     }
 
@@ -243,7 +250,8 @@ public class PaymentFragment extends Fragment {
             //이게 정상
             holder.useName.setText(paymentArrayList.get(position).getName());
             holder.paymentMoney.setText(paymentArrayList.get(position).getPersonalMoney());
-            if(paymentArrayList.get(position).getSpendingstatus() =="1"){
+            Log.e("여기 리스트",paymentArrayList.get(position).getSpendingstatus()+"?");
+            if(paymentArrayList.get(position).getSpendingstatus().equals("1")){
                 holder.payStatus.setText("지출완료");
             }
             Glide.with(getActivity().getApplicationContext())
@@ -253,13 +261,21 @@ public class PaymentFragment extends Fragment {
                     .skipMemoryCache(true)
                     .into(holder.profileimg);
 
-            if(memberPosition==1){//총무이면 지불내역 변경 팝업창 생성 리스너
+            if(memberPosition==0){//총무이면 지불내역 변경 팝업창 생성 리스너
+                Log.e("총무니?",memberPosition+"ehlsehlsehlshelslhel");
                 holder.payStatus.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Toast.makeText(getActivity(),"여기총무임",Toast.LENGTH_SHORT).show();
+                        CustomCheckCashPopup checkcashpopup = CustomCheckCashPopup.newInstance(
+                                paymentArrayList.get(position).getName().toString(),
+                                paymentArrayList.get(position).getUserId().toString(),
+                                eventnum);
+                        checkcashpopup.show(getActivity().getSupportFragmentManager(),"check_cash_popup");
                     }
                 });
+            }else{
+                Log.e("여기도니?",memberPosition+"ehlsehlsehlshelslhel");
             }
 
             holder.profileimg.setOnClickListener(new View.OnClickListener() {//프로필 확인 팝업창
@@ -459,7 +475,7 @@ public class PaymentFragment extends Fragment {
 
 
     //evnetinfo list 가져오기 위한 Thread
-    public class LoadEventInfoAsyncTask extends AsyncTask<String, Void, EventInfoPaymentTotalItem> {
+    public class loadPaymentAsyncTask extends AsyncTask<String, Void, EventInfoPaymentTotalItem> {
         @Override
         protected EventInfoPaymentTotalItem doInBackground(String... arg) {
             String requestURL = "";
@@ -476,7 +492,7 @@ public class PaymentFragment extends Fragment {
                 FormBody.Builder builder = new FormBody.Builder();
                 //builder.add("eventnum", eventnum).add("userid", userid);
                 builder.add("userid", userid).add("eventnum", eventnum).add("signal","0");
-                Log.e("???????????? ",eventnum+","+userid);
+                //Log.e("???????????? ",eventnum+","+userid);
                 FormBody formBody = builder.build();
                 //요청
                 Request request = new Request.Builder()
@@ -512,14 +528,14 @@ public class PaymentFragment extends Fragment {
 
 
             if (result != null) {
-                Log.e("받아온 정보들", result.toString());
+                //Log.e("받아온 정보들", result.toString());
                 eventInfoMemberItemArrayList = result.getEventInfoMemberItemArrayList();
                 eventInfoMemberPositionArrayList = result.getEventInfoMemberPositionArrayList();
                 eventInfoPaymentItemArrayList = result.getEventInfoPaymentItemArrayList();
 
                 if (eventInfoMemberPositionArrayList.size() > 0) {
                     memberPosition = Integer.parseInt(eventInfoMemberPositionArrayList.get(0));
-                    Log.e("멤버포지션", memberPosition + "?");
+                    //Log.e("멤버포지션", memberPosition + "?");
                     if (memberPosition == 2) {//가입되어 있지 않은 회원이라면 자신의 정보 안보임
                         eventInfo_payment_userInfo.setVisibility(View.GONE);
                     }
@@ -534,7 +550,7 @@ public class PaymentFragment extends Fragment {
                     myUserName.setText(eventInfoPaymentItemArrayList.get(0).getUserName());//유저 이름
                     myMoney.setText(eventInfoPaymentItemArrayList.get(0).getPersonalMoney()); //유저 금액
                     mManagerName.setText((eventInfoPaymentItemArrayList.get(0).getManagerName()));
-                    if (Integer.parseInt(eventInfoPaymentItemArrayList.get(0).getUserIspay()) == 1) {
+                    if (eventInfoPaymentItemArrayList.get(0).getUserIspay().equals("1")) {
                         myStatus.setText("지출완료");//유저 상태
                     }
                     Glide.with(getActivity().getApplicationContext())
@@ -548,7 +564,7 @@ public class PaymentFragment extends Fragment {
                             .override(150, 150)
                             .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .skipMemoryCache(true)
-                            .into(mManagerProfile); // 유저 프로필
+                            .into(mManagerProfile); // 메니저 프로필
 
                 }
 
@@ -573,5 +589,6 @@ public class PaymentFragment extends Fragment {
             }
         }
     }
+
 
 }
