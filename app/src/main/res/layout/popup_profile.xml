@@ -55,7 +55,7 @@
             android:layout_height="30dp"
             android:layout_gravity="center"
             android:textSize="13sp"
-            android:text="확인"
+            android:text="@string/confirm"
             android:textStyle="bold"
             android:textColor="#000"
             android:background="@drawable/gray_round_line_selector"  />

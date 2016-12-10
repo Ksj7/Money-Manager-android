@@ -379,7 +379,11 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
         protected void onPostExecute(EventListBundle result) {
 
             // RecyclerView Adapter Item 값 추가
-            if (result.getResult() != null && result.getUserinfo()!= null && result.getUserinfo().size() > 0 && result.getResult().size() > 0) {
+            if (result == null ){
+                Toast.makeText(EventListActivity.this,"이벤트가 존재하지 않습니다.",Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if ( result.getResult() != null && result.getUserinfo()!= null && result.getUserinfo().size() > 0 && result.getResult().size() > 0) {
 
                 mEventListAdapter.addAllItem(result.getResult());
                 mEventListAdapter.notifyDataSetChanged();
