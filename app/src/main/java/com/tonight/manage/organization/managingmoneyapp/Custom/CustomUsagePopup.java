@@ -130,12 +130,12 @@ public class CustomUsagePopup extends DialogFragment {
                         e.printStackTrace();
                     }
                     dismiss();
+                    EventInfoActivity.pagerInstance.notifyDataSetChanged();
                 }
                 count++;
             }
 
         });
-        EventInfoActivity.pagerInstance.notifyDataSetChanged();
         return view;
 
     }
