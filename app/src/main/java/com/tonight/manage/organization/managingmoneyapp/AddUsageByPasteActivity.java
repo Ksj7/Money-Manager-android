@@ -1,6 +1,7 @@
 package com.tonight.manage.organization.managingmoneyapp;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -17,9 +18,11 @@ public class AddUsageByPasteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sms);
-        //CustomSelectEventForReceivedTossSMSPopup customSelectEventForReceivedTossSMSPopup = CustomSelectEventForReceivedTossSMSPopup.newInstance("");
-        //customSelectEventForReceivedTossSMSPopup.show(getSupportFragmentManager(), "create_group");
-        CustomSelectEventForUsageSMSPupup customSelectEventForUsageSMSPupup = CustomSelectEventForUsageSMSPupup.newInstance("");
+        Intent intent = getIntent();
+        String smsMoney = intent.getStringExtra("smsMoney");
+        String smsDate = intent.getStringExtra("smsDate");
+        String smsContent = intent.getStringExtra("smsContent");
+        CustomSelectEventForUsageSMSPupup customSelectEventForUsageSMSPupup = CustomSelectEventForUsageSMSPupup.newInstance(smsMoney,smsDate,smsContent);
         customSelectEventForUsageSMSPupup.show(getSupportFragmentManager(),"add usage");
         activityInstance = this;
     }

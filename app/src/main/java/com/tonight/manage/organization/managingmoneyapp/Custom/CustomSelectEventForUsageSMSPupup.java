@@ -1,14 +1,17 @@
 package com.tonight.manage.organization.managingmoneyapp.Custom;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +37,8 @@ import com.tonight.manage.organization.managingmoneyapp.Server.EventJSONParser;
 import com.tonight.manage.organization.managingmoneyapp.Server.GroupJSONParser;
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -51,10 +56,12 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class CustomSelectEventForUsageSMSPupup extends DialogFragment{
     private boolean isSuccess;
-    private String id;
     private String userid;
     int groupcount = 0;
     int currentindex = 0;
+    String smsMoney="";
+    String smsContent="";
+    String smsDate="";
     //----
     CustomSelectEventForUsageSMSPupup.ExpandableListAdapter expandableListAdapter;
     ExpandableListView expListView;
@@ -74,10 +81,12 @@ public class CustomSelectEventForUsageSMSPupup extends DialogFragment{
         userid = pref.getString("id","");
     }
 
-    public static CustomSelectEventForUsageSMSPupup newInstance(String id) {
+    public static CustomSelectEventForUsageSMSPupup newInstance(String smsMoney,String smsDate,String smsContent) {
         CustomSelectEventForUsageSMSPupup customSelectEventForUsageSMSPupup = new CustomSelectEventForUsageSMSPupup();
         Bundle b = new Bundle();
-        b.putString("id", id);
+        b.putString("smsMoney", smsMoney);
+        b.putString("smsDate", smsDate);
+        b.putString("smsContent", smsContent);
         customSelectEventForUsageSMSPupup.setArguments(b);
         return customSelectEventForUsageSMSPupup;
     }
@@ -92,7 +101,9 @@ public class CustomSelectEventForUsageSMSPupup extends DialogFragment{
             return view;
         }
 
-        id = b.getString("id");
+        smsMoney = b.getString("smsMoney");
+        smsDate = b.getString("smsDate");
+        smsContent = b.getString("smsContent");
 
         ExpandableListView expListView = (ExpandableListView) view.findViewById(R.id.expandable_listview);
         //prepareListData();
@@ -329,12 +340,12 @@ public class CustomSelectEventForUsageSMSPupup extends DialogFragment{
                     if(memberPosition == 0){
                         AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
                         alert.setTitle("사용내역 추가");
-                        alert.setMessage("조선주막에서 사용한 4000원을 '"+groupname+"' 그룹의 '"+eventname+"' 이벤트의 사용내역에 추가하시겠습니까?");
+                        alert.setMessage("'"+smsContent+"' 라는 결제내역을 '"+groupname+"' 그룹의 '"+eventname+"' 이벤트의 사용내역으로 추가하시겠습니까?");
                         alert.setPositiveButton("예",new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 //서버전송.
-                                dismiss();
-                                //AddUsageByPasteActivity.AddUsageByPasteActivity.finish();
+                                UploadImage u = new UploadImage();
+                                u.execute(eventnum,smsContent,smsMoney,smsDate);
                             }
                         });
                         alert.setNegativeButton("아니요",new DialogInterface.OnClickListener() {
@@ -350,47 +361,90 @@ public class CustomSelectEventForUsageSMSPupup extends DialogFragment{
                         Toast.makeText(getContext(),"당신은 '"+eventname+"' 이벤트의 총무가 아닙니다",Toast.LENGTH_SHORT).show();
                     }
                 }
-/*
-                if (eventInfoPaymentItemArrayList.size() > 0) {//이벤트 정보
-                    mTargetMoney.setText(eventInfoPaymentItemArrayList.get(0).getTargetMoney());//목표액
-                    mCollectedMoney.setText(eventInfoPaymentItemArrayList.get(0).getCollectedMoney());//모인 금액
-                    mEventDate.setText(eventInfoPaymentItemArrayList.get(0).getEventDate());//기한
-                    mManagerName.setText(eventInfoPaymentItemArrayList.get(0).getManagerId());//총무 이름
-                    //총무 프로필
-                    myUserName.setText(eventInfoPaymentItemArrayList.get(0).getUserName());//유저 이름
-                    myMoney.setText(eventInfoPaymentItemArrayList.get(0).getPersonalMoney()); //유저 금액
+            }
+        }
+    }
+    public class UploadImage extends AsyncTask<String, Void, String> {
 
-                    if (Integer.parseInt(eventInfoPaymentItemArrayList.get(0).getUserIspay()) == 1) {
-                        myStatus.setText("지출완료");//유저 상태
-                    }
-                    Glide.with(getActivity().getApplicationContext())
-                            .load(eventInfoPaymentItemArrayList.get(0).getUserprofileURL())
-                            .override(150, 150)
-                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                            .skipMemoryCache(true)
-                            .into(myProfileImage); // 유저 프로필
+        ProgressDialog loading;
+        String eventnum;
+        String locate;
+        String money;
+        String date;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loading = ProgressDialog.show(getActivity(), "Uploading...", null, true, true);
+        }
 
-                }
-
-
-                if (eventInfoMemberItemArrayList.size() > 0) {//멤버 리스트
-                    SharedPreferences pref = getActivity().getSharedPreferences("Login", MODE_PRIVATE);
-                    String userid = pref.getString("id","error");
-
-                    if(memberPosition!=2){
-                        for(int i=0; i<eventInfoMemberItemArrayList.size(); i++){
-                            if(eventInfoMemberItemArrayList.get(i).getUserId().equals(userid)){//내 아이디 있으면
-                                eventInfoMemberItemArrayList.remove(i);
-                                break;
-                            }
-                        }
-                    }
-
-                    mPaymentListAdapter.addItem(eventInfoMemberItemArrayList);
-                    mPaymentListAdapter.notifyDataSetChanged();
-                }*/
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (isSuccess) {
+                Toast.makeText(getContext(), "사용내역이 업로드되었습니다.", Toast.LENGTH_SHORT).show();
+                Log.e("사용내역이 업로드되었습니다.","isSuccess is true"+isSuccess);
+                dismiss();
+                AddUsageByPasteActivity.activityInstance.finish();
+            } else {
+                Toast.makeText(getContext(), "에러!", Toast.LENGTH_SHORT).show();
+                Log.e("에러","isSuccess is false"+isSuccess);
 
             }
+            loading.dismiss();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String requestURL = "";
+            Response response = null;
+            eventnum = params[0];
+            locate = params[1];
+            money = params[2];
+            date = params[3];
+            try {
+                requestURL = NetworkDefineConstant.SERVER_URL_EVENT_INFO;
+
+                OkHttpClient toServer = NetworkDefineConstant.getOkHttpClient();
+                FormBody.Builder builder = new FormBody.Builder();
+
+                Log.e("업로드한값","타이틀 "+locate+",이벤트넘"+eventnum+",돈이랑 날짜"+money+","+date);
+                builder.add("signal", "6")
+                        .add("eventnum", eventnum)
+                        .add("title", locate)
+                        .add("usagemoney", money)
+                        .add("usagedate", date)
+                        .add("image", "0");
+
+                FormBody formBody = builder.build();
+
+                Request request = new Request.Builder()
+                        .url(requestURL)
+                        .post(formBody)
+                        .build();
+
+                response = toServer.newCall(request).execute();
+                boolean flag = response.isSuccessful();
+                ResponseBody resBody = response.body();
+
+                if (flag) {
+                    String valid = resBody.string();
+                    if (valid.contains("1"))
+                        isSuccess = true;
+                    else
+                        isSuccess = false;
+
+                } else {
+                    Log.e("에러", "업로드 에러");
+                }
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            } finally {
+                if (response != null) {
+                    response.close();
+                }
+            }
+
+            return null;
         }
     }
 
@@ -444,7 +498,11 @@ public class CustomSelectEventForUsageSMSPupup extends DialogFragment{
 
         @Override
         public int getChildrenCount(int groupPosition) {
-            return this._listDataChild.get(this._listDataHeader.get(groupPosition).getGroupname()).size();
+            if((this._listDataChild.get(this._listDataHeader.get(groupPosition).getGroupname())) == null){
+                return 0;
+            }else{
+                return this._listDataChild.get(this._listDataHeader.get(groupPosition).getGroupname()).size();
+            }
         }
 
         @Override
