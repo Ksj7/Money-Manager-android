@@ -117,26 +117,26 @@ public class PasteService extends Service {
                 row = cur.getString(cur.getColumnIndex("address"));
                 msg = cur.getString(cur.getColumnIndex("body"));
                 if(content.contains(msg)){
-                    //if(row.contains(nong) || row.contains(kuck) || row.contains(sin)) {//만약 은행 번호랑 일치한다면, 공기계라 주석.
+                    if(row.contains(nong) || row.contains(kuck) || row.contains(sin)) {//만약 은행 번호랑 일치한다면, 공기계라 주석.
                         DateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
                         Calendar calendar = Calendar.getInstance();
                         smsContent = msg;
                         smsDate = cur.getString(cur.getColumnIndex("date"));
-                        smsMoney = "25000";
-                        /*String[] splitString = msg.split("\\s+"); // 돈을 파싱해오는 것인데, 역시 공기계라 주석.
+                        //smsMoney = "25000";
+                        String[] splitString = msg.split("\\s+"); // 돈을 파싱해오는 것인데, 역시 공기계라 주석.
                         for(int i = 0 ; i <splitString.length;i++){
                             if(splitString[i].contains("원")){
                                 String temp = splitString[i].replaceAll(",","");
                                 temp = temp.replace("원","");
                                 smsMoney = temp;
                             }
-                        }*/
+                        }
                         calendar.setTimeInMillis(Long.parseLong(smsDate));
                         smsDate = formatter.format(calendar.getTime());
                         smsDate = smsDate.substring(2);//
                     Log.e("결과", "SMS Phone: " + row + " / Mesg: " + msg + " / Date: " + smsDate);
                         return true;
-                    //}
+                    }
                 }
                /* date = cur.getString(cur.getColumnIndex("date"));
                 DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS");
