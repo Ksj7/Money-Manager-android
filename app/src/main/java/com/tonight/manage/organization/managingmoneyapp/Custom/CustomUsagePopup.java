@@ -1,5 +1,6 @@
 package com.tonight.manage.organization.managingmoneyapp.Custom;
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -12,9 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CalendarView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
-
-import android.app.ProgressDialog;
 
 import com.tonight.manage.organization.managingmoneyapp.R;
 import com.tonight.manage.organization.managingmoneyapp.RequestHandler;
@@ -34,6 +36,17 @@ public class CustomUsagePopup extends DialogFragment {
     public static final String UPLOAD_URL = "http://52.79.174.172/MAM/eventInfoActivity.php";
     public static final String UPLOAD_KEY = "image";
 
+    LinearLayout contentLinearLayout1;
+    LinearLayout contentLinearLayout2;
+    LinearLayout contentLinearLayout3;
+
+    Button confirmButton;
+
+    int count = 1;
+    private int year, month, date;
+    private String locate , money;
+    TextView locateText , moneyText;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,29 +63,59 @@ public class CustomUsagePopup extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.popup_usage_group,container,false);
-        Button Ybtn = (Button) view.findViewById(R.id.confirmBtn);
-        Button NBtn = (Button) view.findViewById(R.id.cancelBtn);
-        Ybtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //서버에 사용내역 리스트 보내줌
-                try {
-                    receivedbitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
-                    receivedbitmap = Bitmap.createScaledBitmap(receivedbitmap, 200, 200, false);
+        confirmButton = (Button) view.findViewById(R.id.confirmBtn);
+        contentLinearLayout1 = (LinearLayout) view.findViewById(R.id.contentLinearLayout1);
+        contentLinearLayout2 = (LinearLayout) view.findViewById(R.id.contentLinearLayout2);
+        contentLinearLayout3 = (LinearLayout) view.findViewById(R.id.contentLinearLayout3);
+        contentLinearLayout2.setVisibility(View.GONE);
+        contentLinearLayout3.setVisibility(View.GONE);
 
-                    UploadImage uploadImage = new UploadImage();
-                    uploadImage.execute(receivedbitmap);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                dismiss();
+        CalendarView calendarView = (CalendarView) view.findViewById(R.id.calendar);
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(CalendarView calendarView, int i, int i1, int i2) {
+                java.util.Calendar curDate = java.util.Calendar.getInstance();
+                curDate.setTimeInMillis(calendarView.getDate());
+
+                year = curDate.get(java.util.Calendar.YEAR);
+                month = 1 + curDate.get(java.util.Calendar.MONTH);
+                date = curDate.get(java.util.Calendar.DATE);
+
+                Toast.makeText(getActivity(), "선택한 날짜 : " + year + "/" + month + "/" + date, Toast.LENGTH_SHORT).show();
             }
-
         });
-        NBtn.setOnClickListener(new View.OnClickListener() {
+
+        locateText = (TextView) view.findViewById(R.id.usageLocate_edit);
+        moneyText = (TextView) view.findViewById(R.id.usageMoney);
+        //서버에 사용내역 리스트 보내줌
+        confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dismiss();
+                if(count == 1){
+                    contentLinearLayout1.setVisibility(View.GONE);
+                    contentLinearLayout2.setVisibility(View.VISIBLE);
+                    contentLinearLayout3.setVisibility(View.GONE);
+                }else if(count == 2){
+                    locate = locateText.getText().toString();
+                    contentLinearLayout1.setVisibility(View.GONE);
+                    contentLinearLayout2.setVisibility(View.GONE);
+                    contentLinearLayout3.setVisibility(View.VISIBLE);
+                    confirmButton.setText("OK");
+                }else if(count == 3){
+                    money = moneyText.getText().toString();
+
+                    try {
+                        receivedbitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
+                        receivedbitmap = Bitmap.createScaledBitmap(receivedbitmap, 200, 200, false);
+
+                        UploadImage uploadImage = new UploadImage();
+                        uploadImage.execute(receivedbitmap);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    dismiss();
+                }
+                count++;
             }
 
         });
@@ -86,15 +129,6 @@ public class CustomUsagePopup extends DialogFragment {
         super.onStop();
         dismiss();
     }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        int width = getResources().getDimensionPixelSize(R.dimen.popup_usage_width);
-        int height = getResources().getDimensionPixelSize(R.dimen.popup_usage_height);
-        getDialog().getWindow().setLayout(width,height);
-    }
-
 
     class UploadImage extends AsyncTask<Bitmap, Void, String> {
 

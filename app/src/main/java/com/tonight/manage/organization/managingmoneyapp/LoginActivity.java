@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
+import com.tonight.manage.organization.managingmoneyapp.Service.SMSandPasteService;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -124,9 +125,11 @@ public class LoginActivity extends AppCompatActivity {
                     SharedPreferences pref = getSharedPreferences("Login", MODE_PRIVATE);
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putBoolean("autoLogin", false);
-                    editor.putString("id", "");
+                    editor.putString("id", idEditText.getText().toString());
                     editor.apply();
                 }
+                Intent serviceIntent = new Intent(LoginActivity.this, SMSandPasteService.class);
+                startService(serviceIntent);
                 Intent i = new Intent(LoginActivity.this, GroupListActivity.class);
                 i.putExtra("userId",idEditText.getText().toString());
                 startActivity(i);

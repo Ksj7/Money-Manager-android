@@ -312,7 +312,9 @@ public class GroupListActivity extends AppCompatActivity
                 ResponseBody resBody = response.body();
 
                 if (flag) { //http req/res 성공
-                    return GroupJSONParser.parseGroupListItems(resBody.string());
+                    if(resBody!=null) {
+                        return GroupJSONParser.parseGroupListItems(resBody.string());
+                    }
                 } else { //실패시 정의
                     Log.e("에러", "데이터를 로드하는데 실패하였습니다");
                 }
@@ -331,7 +333,7 @@ public class GroupListActivity extends AppCompatActivity
         protected void onPostExecute(GroupListBundle result) {
 
             // RecyclerView Adapter Item 값 추가
-            if (result != null && result.getResult().size() > 0 && result.getUserinfo().size()>0) {
+            if (result.getResult() != null && result.getUserinfo() != null && result.getResult().size() > 0 && result.getUserinfo().size()>0) {
 
                 mGroupListAdapter.addAllItem(result.getResult());
                 mGroupListAdapter.notifyDataSetChanged();

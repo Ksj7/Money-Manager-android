@@ -43,7 +43,6 @@ import com.tonight.manage.organization.managingmoneyapp.Server.EventInfoJSONPars
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
 import com.tonight.manage.organization.managingmoneyapp.Toss.TossConstants;
 import com.tonight.manage.organization.managingmoneyapp.Toss.TossUtils;
-import com.tonight.manage.organization.managingmoneyapp.Toss.WebViewActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -354,9 +353,7 @@ public class PaymentFragment extends Fragment {
         if (TossUtils.isTossInstalled(getActivity())) {
             TossUtils.launchForPayment(getActivity(), payToken);
         } else {
-            Intent intent = new Intent(getActivity(), WebViewActivity.class);
-            intent.putExtra(TossConstants.INTENT_EXTRA_PAY_TOKEN, payToken);
-            startActivity(intent);
+            TossUtils.goToPlayStore(getActivity());
         }
     }
 
