@@ -160,7 +160,17 @@ public class UsageFragment extends Fragment implements View.OnClickListener {
             holder.date.setText(usageArrayList.get(position).getDate());
             holder.location.setText(usageArrayList.get(position).getLocation());
             holder.usedmoney.setText(usageArrayList.get(position).getUsedMoney());
-
+            if(usageArrayList.get(position).getReceipturl() !=null && !usageArrayList.get(position).getReceipturl().equals("0")){
+                holder.existimg.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(getActivity(), "여기 이미지가 있어요", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }//영수증이 존재하면
+            else{
+                holder.existimg.setVisibility(getView().GONE);
+            }
 
         }
 
@@ -174,6 +184,7 @@ public class UsageFragment extends Fragment implements View.OnClickListener {
             TextView location ;
             TextView usedmoney;
             RecyclerView recyclerView;
+            ImageView existimg;
             View view;
             public ViewHolder(View v) {
                 super(v);
@@ -182,7 +193,7 @@ public class UsageFragment extends Fragment implements View.OnClickListener {
                 location = (TextView) v.findViewById(R.id.eventInfo_usage_Location);
                 usedmoney = (TextView) v.findViewById(R.id.eventInfo_usage_usedMoney);
                 recyclerView = (RecyclerView) v.findViewById(R.id.eventInfo_user_recyclerView);
-
+                existimg = (ImageView) v.findViewById(R.id.usage_existImg);
             }
         }
     }

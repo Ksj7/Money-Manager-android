@@ -64,11 +64,12 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="match_parent"
-        android:id="@+id/usage_existImg">
+        android:id="@+id/usage_existImg_listview">
         <ImageView
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_gravity="center"
-            android:src="@drawable/paperclip"/>
+            android:src="@drawable/paperclip"
+            android:id="@+id/usage_existImg"/>
     </LinearLayout>
 </LinearLayout>
