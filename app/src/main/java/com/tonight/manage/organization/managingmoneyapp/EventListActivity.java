@@ -227,6 +227,10 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
         } else if (id == R.id.nav_alarm_list) {
 
         } else if (id == R.id.nav_logout) {
+            SharedPreferences pref = getSharedPreferences("Login", MODE_PRIVATE);
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putBoolean("loginok", false);
+            editor.apply();
             Intent intent = new Intent(EventListActivity.this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);

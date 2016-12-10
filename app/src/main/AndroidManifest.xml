@@ -30,8 +30,9 @@
         <activity android:name=".ProfileImageActivity"/>
         <activity android:name=".EditPasswordActivity"/>
         <activity android:name=".EditPhoneNumberActivity"/>
-        <activity android:name=".SMSActivity" android:theme="@style/Theme.AppCompat.Translucent"/>
-        <service android:name=".Service.SMSandPasteService">
+        <activity android:name=".AddUsageByPasteActivity" android:theme="@style/Theme.AppCompat.Translucent"/>
+        <activity android:name=".AddPayCheckByTossNotificationActivity" android:theme="@style/Theme.AppCompat.Translucent"/>
+        <service android:name=".Service.PasteService">
 
             <intent-filter>
 
@@ -41,6 +42,14 @@
 
             </intent-filter>
 
+        </service>
+
+        <service android:name="com.tonight.manage.organization.managingmoneyapp.Service.NotificationService"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
         </service>
     </application>
 

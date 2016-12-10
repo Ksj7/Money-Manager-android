@@ -1,13 +1,11 @@
 package com.tonight.manage.organization.managingmoneyapp.Service;
 
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.os.IBinder;
@@ -20,15 +18,14 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.tonight.manage.organization.managingmoneyapp.Custom.CustomSelectEventForReceivedTossSMSPopup;
+import com.tonight.manage.organization.managingmoneyapp.AddUsageByPasteActivity;
 import com.tonight.manage.organization.managingmoneyapp.R;
-import com.tonight.manage.organization.managingmoneyapp.SMSActivity;
 
 /**
  * Created by Taek on 2016. 12. 2..
  */
 
-public class SMSandPasteService extends Service {
+public class PasteService extends Service {
     static boolean semaphore = false;//실행중일때 중복으로 스낵바 띄우는거 방지.
     ClipboardManager clipBoard;
     ClipboardListener clipboardListener;
@@ -61,7 +58,7 @@ public class SMSandPasteService extends Service {
     }
     @Override
     public void onDestroy() {
-        unregisterReceiver(mBroadcastReceiver);
+        //unregisterReceiver(mBroadcastReceiver);
         super.onDestroy();
     }
 
@@ -100,11 +97,11 @@ public class SMSandPasteService extends Service {
 
                 new TimerThread().start();
             }
-        }
+        }//클립보드 내용이 바뀌면
 
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(getApplicationContext(),SMSActivity.class);
+            Intent intent = new Intent(getApplicationContext(),AddUsageByPasteActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
             if(mView != null) {
@@ -150,7 +147,7 @@ public class SMSandPasteService extends Service {
         }
     }
 
-    public void emptyClipboard(ClipboardManager clipBoard)
+    public void emptyClipboard(ClipboardManager clipBoard)//클립보드 비우는 작업.
     {
         ClipData.Item item = new ClipData.Item("");
         String[] mimeType = new String[1];
@@ -160,28 +157,6 @@ public class SMSandPasteService extends Service {
         clipBoard.setPrimaryClip(cd);
         clipBoard.addPrimaryClipChangedListener(clipboardListener);
     }
-
-    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
-                String reason = intent.getStringExtra("reason");
-                if (reason != null) {
-                    if (reason.equals("homekey")) {
-                        //if(start == true) {
-
-                        //emptyClipboard(clipBoard);
-
-                        //stopservice();
-                        //    start = false;
-                        //}
-                    }
-                }
-            }
-
-        }
-    };
 
     public void stopservice(){
         this.stopSelf();
