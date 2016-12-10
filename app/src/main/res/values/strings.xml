@@ -7,5 +7,7 @@
     <string name="action_member_list">그룹 맴버 보기</string>
     <string name="action_add_event">이벤트 추가</string>
     <string name="group_code">그룹 코드</string>
+    <string name="confirm">확인</string>
+    <string name="cancel">취소</string>
     <string name="price">%1$s원</string>
 </resources>

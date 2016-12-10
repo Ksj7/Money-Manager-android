@@ -74,6 +74,7 @@ public class InvitationActivity extends AppCompatActivity {
         eventnum = i.getStringExtra("eventnum");
 
         buttonBundle = new HashMap<>();
+        newInvitationMemberList = new ArrayList<>();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -90,7 +91,8 @@ public class InvitationActivity extends AppCompatActivity {
         invitationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new UpdateInvitationListAsyncTask().execute(eventnum);
+                if(newInvitationMemberList.size()==0) finish();
+                else new UpdateInvitationListAsyncTask().execute(eventnum);
             }
         });
         new LoadInvitationListAsyncTask().execute(eventnum);
@@ -228,8 +230,6 @@ public class InvitationActivity extends AppCompatActivity {
         protected void onPostExecute(ArrayList<InvitationListItem> result) {
 
             if (result != null && result.size() > 0) {
-                newInvitationMemberList = new ArrayList<>();
-                newInvitationMemberList.ensureCapacity(result.size()+1);
                 mInvitationAdapter.addItem(result);
                 mInvitationAdapter.notifyDataSetChanged();
             }
