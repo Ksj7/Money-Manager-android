@@ -121,7 +121,7 @@ public class UsageFragment extends Fragment implements View.OnClickListener {
              Uri selectedImageUri = data.getData();
              Toast.makeText(getActivity(), selectedImageUri + " ", Toast.LENGTH_LONG).show();
 
-             CustomUsagePopup usagePopup = CustomUsagePopup.newInstance(selectedImageUri);
+             CustomUsagePopup usagePopup = CustomUsagePopup.newInstance(selectedImageUri,eventnum);
              usagePopup.show(getActivity().getSupportFragmentManager(),"usage_popup"); //popup창 띄우고
 
         }
