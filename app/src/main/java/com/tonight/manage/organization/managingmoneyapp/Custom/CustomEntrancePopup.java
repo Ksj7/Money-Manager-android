@@ -30,7 +30,7 @@ import okhttp3.ResponseBody;
 
 public class CustomEntrancePopup extends DialogFragment {
 
-    private boolean isSuccess;
+    private int isSuccess;
     private String id;
 
     @Override
@@ -129,9 +129,11 @@ public class CustomEntrancePopup extends DialogFragment {
                 if (flag) {
                     String valid = resBody.string();
                     if (valid.contains("0"))
-                        isSuccess = false;
-                    else
-                        isSuccess = true;
+                        isSuccess = 0;
+                    else if(valid.contains("1"))
+                        isSuccess = 1;
+                    else if(valid.contains("2"))
+                        isSuccess = 2;
 
                 } else {
                     Log.e("에러", "그룹 입장 실패");
@@ -150,12 +152,15 @@ public class CustomEntrancePopup extends DialogFragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if (isSuccess) {
+            if (isSuccess==1) {
                 Toast.makeText(getActivity(), "그룹이 추가 되었습니다.", Toast.LENGTH_SHORT).show();
                 GroupListActivity activity = (GroupListActivity) getActivity();
                 activity.isSuccessCreateGroup(true);
-            } else {
+            } else if(isSuccess == 0){
                 Toast.makeText(getActivity(), "이미 속해 있는 그룹입니다", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                Toast.makeText(getActivity(),"없는 그룹입니다.",Toast.LENGTH_SHORT).show();
             }
 
             dismiss();
