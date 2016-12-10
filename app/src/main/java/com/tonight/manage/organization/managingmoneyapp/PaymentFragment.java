@@ -93,8 +93,8 @@ public class PaymentFragment extends Fragment {
     TextView myMoney;
     TextView myStatus;
     ImageView mManagerProfile;
-
     private ArrayList<EventInfoMemberPaymentListItem> eventInfoMemberItemArrayList;
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_event_info_payment, container, false);
