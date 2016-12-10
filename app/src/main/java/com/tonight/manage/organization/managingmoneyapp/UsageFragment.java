@@ -160,6 +160,7 @@ public class UsageFragment extends Fragment implements View.OnClickListener {
             holder.date.setText(usageArrayList.get(position).getDate());
             holder.location.setText(usageArrayList.get(position).getLocation());
             holder.usedmoney.setText(usageArrayList.get(position).getUsedMoney());
+
             if(usageArrayList.get(position).getReceipturl() !=null && !usageArrayList.get(position).getReceipturl().equals("0")){
                 holder.existimg.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -171,7 +172,6 @@ public class UsageFragment extends Fragment implements View.OnClickListener {
             else{
                 holder.existimg.setVisibility(getView().GONE);
             }
-
         }
 
         @Override

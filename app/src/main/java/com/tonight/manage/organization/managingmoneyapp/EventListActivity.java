@@ -288,7 +288,7 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
             int targetm = Integer.parseInt(eventListItems.get(position).getTargetm());//목표액 받아와야함.
             if (summ == 0) holder.mRateTextCircularProgressBar.setProgress(0);
             else {
-                int percent = targetm / summ;
+                int percent = (targetm / summ)*100;
                 holder.mRateTextCircularProgressBar.setProgress(percent);//이 percent => 모인금액 / 목표액
             }
 
