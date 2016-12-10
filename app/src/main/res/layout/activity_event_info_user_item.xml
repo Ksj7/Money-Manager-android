@@ -41,7 +41,7 @@
             android:gravity="left"
             android:paddingLeft="10dp"
             android:layout_height="match_parent"
-            android:id="@+id/eventInfo_usage_Location"/>
+            android:id="@+id/eventInfo_usage_usedMoney"/>
     </LinearLayout>
 
     <LinearLayout
@@ -56,7 +56,8 @@
             android:layout_height="match_parent"
             android:text=""
             android:gravity="left"
-            android:id="@+id/eventInfo_usage_usedMoney"/>
+            android:id="@+id/eventInfo_usage_Location"
+            />
     </LinearLayout>
 
     </LinearLayout>
@@ -64,11 +65,12 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="match_parent"
-        android:id="@+id/usage_existImg">
+        android:id="@+id/usage_existImg_listview">
         <ImageView
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_gravity="center"
-            android:src="@drawable/paperclip"/>
+            android:src="@drawable/paperclip"
+            android:id="@+id/usage_existImg"/>
     </LinearLayout>
 </LinearLayout>
