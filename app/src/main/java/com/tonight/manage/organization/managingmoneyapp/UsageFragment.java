@@ -70,10 +70,12 @@ public class UsageFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void onRefresh() {
+                new UsageListLoadAsyncTask().execute();
                 mUsageListSwipeRefreshLayout.setRefreshing(false);
             }
         });
 
+        new UsageListLoadAsyncTask().execute();
         return v;
 
     }
@@ -155,28 +157,15 @@ public class UsageFragment extends Fragment implements View.OnClickListener {
         public void onBindViewHolder(EventInfoUsageAdapter.ViewHolder holder, int position) {
 
             //test
-            holder.date.setText("16.11.04");
-            holder.location.setText("회식");
-            holder.usedmoney.setText("20000원");
-            holder.view.setOnClickListener(new View.OnClickListener(){
+            holder.date.setText(usageArrayList.get(position).getDate());
+            holder.location.setText(usageArrayList.get(position).getLocation());
+            holder.usedmoney.setText(usageArrayList.get(position).getUsedMoney());
 
-                @Override
-                public void onClick(View v) {
-                    //Intent i = new Intent(EventInfoActivity.this,EventListActivity.class);
-                    //startActivity(i);
-                }
-            });
-            //이게 정상
-            //holder.eventName.setText(groupDatas.get(position).eventName);
-            //holder.groupNumber.setText(groupDatas.get(position).groupNumber+"명");
+
         }
 
         @Override
         public int getItemCount() {
-            //test
-            //return 3;
-
-            //이게 원래 정상
              return usageArrayList.size();
         }
 
@@ -244,8 +233,11 @@ public class UsageFragment extends Fragment implements View.OnClickListener {
         @Override
         protected void onPostExecute(ArrayList<EventInfoUsageListItem> result) {
 
-            if (result != null) {
+            if (result != null && result.size() > 0) {
                 Log.e("받아온 정보들", result.toString());
+
+                mUsageListAdapter.addItem(result);
+                mUsageListAdapter.notifyDataSetChanged();
             }
         }
     }
