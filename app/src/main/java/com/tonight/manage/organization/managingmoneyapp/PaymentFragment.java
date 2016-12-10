@@ -98,7 +98,6 @@ public class PaymentFragment extends Fragment {
     TextView myStatus;
     ImageView mManagerProfile;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_event_info_payment, container, false);
@@ -154,7 +153,6 @@ public class PaymentFragment extends Fragment {
                         } else {
                             CustomAddMoneyPopup addMoneyPopup = CustomAddMoneyPopup.newInstance(eventnum);
                             addMoneyPopup.show(getFragmentManager(), "addMoney");
-                            new loadPaymentAsyncTask().execute();
                         }
                         return false;
                     }
@@ -290,7 +288,6 @@ public class PaymentFragment extends Fragment {
                     customProfilePopup.show(getActivity().getSupportFragmentManager(), "profile");
                 }
             });
-
         }
 
         @Override
