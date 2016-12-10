@@ -45,7 +45,8 @@ public class EventJSONParser {
                     UserItem valueObject = new UserItem()
                             .setUsername(item.getString("username"))
                             .setPhone(item.getString("phone"))
-                            .setProfileimg(item.getString("profileimg"));
+                            .setProfileimg(item.getString("profileimg"))
+                            .setManager(item.getString("manager"));
 
                     userItemArrayList.add(valueObject);
                 }
