@@ -1,9 +1,11 @@
 package com.tonight.manage.organization.managingmoneyapp;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -13,7 +15,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
-import com.tonight.manage.organization.managingmoneyapp.Service.SMSandPasteService;
+import com.tonight.manage.organization.managingmoneyapp.Service.NotificationService;
+import com.tonight.manage.organization.managingmoneyapp.Service.PasteService;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -46,6 +49,9 @@ public class LoginActivity extends AppCompatActivity {
             autoLoginCheckbox.setChecked(true);
             idEditText.setText(pref.getString("id", ""));
         }
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean("loginok", false);
+        editor.apply();
     }
 
     public void login(View v) {
@@ -120,16 +126,36 @@ public class LoginActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putBoolean("autoLogin", true);
                     editor.putString("id", idEditText.getText().toString());
+                    editor.putBoolean("loginok", true);
                     editor.apply();
                 } else {
                     SharedPreferences pref = getSharedPreferences("Login", MODE_PRIVATE);
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putBoolean("autoLogin", false);
                     editor.putString("id", idEditText.getText().toString());
+                    editor.putBoolean("loginok", true);
                     editor.apply();
                 }
-                Intent serviceIntent = new Intent(LoginActivity.this, SMSandPasteService.class);
+                ContentResolver contentResolver = getContentResolver();
+                String enabledNotificationListeners = Settings.Secure.getString(contentResolver, "enabled_notification_listeners");
+                String packageName = getPackageName();
+
+// check to see if the enabledNotificationListeners String contains our package name
+                if (enabledNotificationListeners == null || !enabledNotificationListeners.contains(packageName))
+                {
+                    // in this situation we know that the user has not granted the app the Notification access permission
+                    Log.e("체크되어있지않음.","야호");
+                    Toast.makeText(getApplicationContext(),"AMA앱의 알림접근을 허용해주시기 바랍니다.",Toast.LENGTH_LONG).show();
+                    Intent intent=new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
+                    startActivity(intent);
+                }
+                else
+                {
+                    Log.e("체크되어있음.","ㅎㅎㅎㅎ");
+                }
+                Intent serviceIntent = new Intent(LoginActivity.this, PasteService.class);//문자로 사용내역 추가 서비스
                 startService(serviceIntent);
+
                 Intent i = new Intent(LoginActivity.this, GroupListActivity.class);
                 i.putExtra("userId",idEditText.getText().toString());
                 startActivity(i);

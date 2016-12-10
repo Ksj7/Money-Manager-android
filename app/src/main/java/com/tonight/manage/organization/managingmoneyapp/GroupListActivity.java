@@ -200,6 +200,10 @@ public class GroupListActivity extends AppCompatActivity
         } else if (id == R.id.nav_alarm_list) {
 
         } else if( id == R.id.nav_logout){
+            SharedPreferences pref = getSharedPreferences("Login", MODE_PRIVATE);
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putBoolean("loginok", false);
+            editor.apply();
             Intent intent = new Intent(GroupListActivity.this,LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
