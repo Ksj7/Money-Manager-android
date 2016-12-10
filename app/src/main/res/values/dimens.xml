@@ -35,5 +35,7 @@
 
     <dimen name="popup_cash_check_width">302dp</dimen>
     <dimen name="popup_cash_check_height">239dp</dimen>
+    <dimen name="popup_group_width">282dp</dimen>
+    <dimen name="popup_group_height">150dp</dimen>
 
 </resources>

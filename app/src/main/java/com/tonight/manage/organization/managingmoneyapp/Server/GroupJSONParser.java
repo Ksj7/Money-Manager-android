@@ -29,7 +29,9 @@ public class GroupJSONParser {
         JSONArray[] datas = null;
 
         try {
-            jsonRoot = new JSONObject(responedJSONData);
+            String errorCheck = responedJSONData;
+            if(errorCheck.length()<=2) return null;
+            jsonRoot = new JSONObject(errorCheck);
             datas = new JSONArray[2];
 
             datas[0] = jsonRoot.getJSONArray("userinfo");
@@ -61,6 +63,7 @@ public class GroupJSONParser {
                             .setMembernum(item.getString("membernum"))
                             .setGroupcode(item.getString("groupcode"))
                             .setGroupname(item.getString("groupname"))
+                            .setBubblecount(item.getString("bubblecount"))
                             .setBalance(item.getString("balance"));
 
                     groupListItemArrayList.add(valueObject);

@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.tonight.manage.organization.managingmoneyapp.R;
 import com.tonight.manage.organization.managingmoneyapp.RequestHandler;
+import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -33,7 +34,6 @@ public class CustomUsagePopup extends DialogFragment {
     private Bitmap receivedbitmap;
     private static Uri imageUri;
 
-    public static final String UPLOAD_URL = "http://52.79.174.172/MAM/eventInfoActivity.php";
     public static final String UPLOAD_KEY = "image";
 
     LinearLayout contentLinearLayout1;
@@ -149,6 +149,10 @@ public class CustomUsagePopup extends DialogFragment {
 
         @Override
         protected String doInBackground(Bitmap... params) {
+            String requestURL = "";
+
+            requestURL = NetworkDefineConstant.SERVER_URL_EVENT_LIST;
+
             Bitmap bitmap = params[0];//사용자가 업로드할 이미지 비트맵
             String uploadImage = getStringImage(bitmap);
 
@@ -160,7 +164,7 @@ public class CustomUsagePopup extends DialogFragment {
             data.put("usagemoney", "20000");
             data.put("usagedate", "123");
             data.put("signal", "6");
-            String result = handler.sendPostRequest(UPLOAD_URL, data);
+            String result = handler.sendPostRequest(requestURL, data);
 
             return result;
         }

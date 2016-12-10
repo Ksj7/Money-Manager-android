@@ -33,6 +33,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomAddEventPopup;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomRateTextCircularProgressBar;
+import com.tonight.manage.organization.managingmoneyapp.Custom.CustomShowGroupCodePopup;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventListBundle;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventListItem;
 import com.tonight.manage.organization.managingmoneyapp.Server.EventJSONParser;
@@ -207,7 +208,12 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
 
             CustomAddEventPopup addEventPopup = CustomAddEventPopup.newInstance(userid,mGroupCode);
             addEventPopup.show(getSupportFragmentManager(), "add_event");
-        }else{
+        }else if(id == R.id.action_group_code){
+            CustomShowGroupCodePopup showGroupCodePopup = CustomShowGroupCodePopup.newInstance(mGroupCode);
+            showGroupCodePopup.show(getSupportFragmentManager(), "add_event");
+        }
+
+        else{
             Toast.makeText(this, "오류 발생!", Toast.LENGTH_SHORT).show();
         }
 
@@ -373,7 +379,11 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
         protected void onPostExecute(EventListBundle result) {
 
             // RecyclerView Adapter Item 값 추가
-            if (result.getResult() != null && result.getUserinfo()!= null && result.getUserinfo().size() > 0 && result.getResult().size() > 0) {
+            if (result == null ){
+                Toast.makeText(EventListActivity.this,"이벤트가 존재하지 않습니다.",Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if ( result.getResult() != null && result.getUserinfo()!= null && result.getUserinfo().size() > 0 && result.getResult().size() > 0) {
 
                 mEventListAdapter.addAllItem(result.getResult());
                 mEventListAdapter.notifyDataSetChanged();

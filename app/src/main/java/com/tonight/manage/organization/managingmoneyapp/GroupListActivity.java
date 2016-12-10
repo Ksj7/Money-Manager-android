@@ -31,6 +31,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.clans.fab.FloatingActionButton;
+import com.readystatesoftware.viewbadger.BadgeView;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomCreateGroupPopup;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomEntrancePopup;
 import com.tonight.manage.organization.managingmoneyapp.Object.GroupListBundle;
@@ -267,6 +268,11 @@ public class GroupListActivity extends AppCompatActivity
                     startActivity(i);
                 }
             });
+            String bubble = groupDatas.get(position).getBubblecount();
+            if(bubble.equals("0")) return;
+            BadgeView badge = new BadgeView(getApplicationContext(), holder.bubble);
+            badge.setText(bubble);
+            badge.show();
         }
 
         @Override
@@ -277,6 +283,7 @@ public class GroupListActivity extends AppCompatActivity
         public class ViewHolder extends RecyclerView.ViewHolder {
             TextView groupName;
             TextView groupNumber;
+            View bubble;
             RecyclerView recyclerView;
             View view;
 
@@ -285,6 +292,7 @@ public class GroupListActivity extends AppCompatActivity
                 view = v;
                 groupName = (TextView) v.findViewById(R.id.groupname);
                 groupNumber = (TextView) v.findViewById(R.id.groupNumber);
+                bubble = v.findViewById(R.id.bubble);
                 recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
             }
         }
