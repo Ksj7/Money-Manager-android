@@ -33,6 +33,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomAddEventPopup;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomRateTextCircularProgressBar;
+import com.tonight.manage.organization.managingmoneyapp.Custom.CustomShowGroupCodePopup;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventListBundle;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventListItem;
 import com.tonight.manage.organization.managingmoneyapp.Server.EventJSONParser;
@@ -207,7 +208,12 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
 
             CustomAddEventPopup addEventPopup = CustomAddEventPopup.newInstance(userid,mGroupCode);
             addEventPopup.show(getSupportFragmentManager(), "add_event");
-        }else{
+        }else if(id == R.id.action_group_code){
+            CustomShowGroupCodePopup showGroupCodePopup = CustomShowGroupCodePopup.newInstance(mGroupCode);
+            showGroupCodePopup.show(getSupportFragmentManager(), "add_event");
+        }
+
+        else{
             Toast.makeText(this, "오류 발생!", Toast.LENGTH_SHORT).show();
         }
 
