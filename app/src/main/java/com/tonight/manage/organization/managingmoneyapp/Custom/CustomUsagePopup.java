@@ -115,7 +115,6 @@ public class CustomUsagePopup extends DialogFragment {
                     confirmButton.setText("OK");
                 }else if(count == 3){
                     money = moneyText.getText().toString();
-
                     try {
                         Display display = getActivity().getWindowManager().getDefaultDisplay();
                         Point size = new Point();
