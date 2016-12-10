@@ -9,6 +9,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+
 /**
  * Created by 3 on 2016-12-02.
  */
@@ -33,7 +40,7 @@ import java.util.HashMap;
 public class CustomUsagePopup extends DialogFragment {
     private Bitmap receivedbitmap;
     private static Uri imageUri;
-
+    private static String eventnum;
     public static final String UPLOAD_KEY = "image";
 
     LinearLayout contentLinearLayout1;
@@ -46,6 +53,7 @@ public class CustomUsagePopup extends DialogFragment {
     private int year, month, date;
     private String locate , money;
     TextView locateText , moneyText;
+    private boolean isSuccess;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,8 +61,9 @@ public class CustomUsagePopup extends DialogFragment {
         setStyle(STYLE_NO_TITLE, R.style.CustomDialogTheme);
     }
 
-    public static CustomUsagePopup newInstance(Uri uri) {
+    public static CustomUsagePopup newInstance(Uri uri, String num) {
         imageUri = uri;
+        eventnum = num;
         CustomUsagePopup UsagePopup = new CustomUsagePopup();
         return UsagePopup;
     }
@@ -86,7 +95,7 @@ public class CustomUsagePopup extends DialogFragment {
         });
 
         locateText = (TextView) view.findViewById(R.id.usageLocate_edit);
-        moneyText = (TextView) view.findViewById(R.id.usageMoney);
+        moneyText = (TextView) view.findViewById(R.id.usageMoney_edit);
         //서버에 사용내역 리스트 보내줌
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,7 +142,6 @@ public class CustomUsagePopup extends DialogFragment {
     class UploadImage extends AsyncTask<Bitmap, Void, String> {
 
         ProgressDialog loading;
-        RequestHandler handler = new RequestHandler();
 
         @Override
         protected void onPreExecute() {
@@ -144,29 +152,67 @@ public class CustomUsagePopup extends DialogFragment {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            if (isSuccess) {
+               // Toast.makeText(getActivity(), "사용내역이 업로드되었습니다.", Toast.LENGTH_SHORT).show();
+                Log.e("사용내역이 업로드되었습니다.","isSuccess is true"+isSuccess);
+            } else {
+               // Toast.makeText(getActivity(), "에러!", Toast.LENGTH_SHORT).show();
+                Log.e("에러","isSuccess is false"+isSuccess);
+
+            }
             loading.dismiss();
         }
 
         @Override
         protected String doInBackground(Bitmap... params) {
             String requestURL = "";
+            Response response = null;
+            try {
+                requestURL = NetworkDefineConstant.SERVER_URL_EVENT_INFO;
 
-            requestURL = NetworkDefineConstant.SERVER_URL_EVENT_LIST;
+                OkHttpClient toServer = NetworkDefineConstant.getOkHttpClient();
+                FormBody.Builder builder = new FormBody.Builder();
 
-            Bitmap bitmap = params[0];//사용자가 업로드할 이미지 비트맵
-            String uploadImage = getStringImage(bitmap);
+                Bitmap bitmap = params[0];//사용자가 업로드할 이미지 비트맵
+                String uploadImage = getStringImage(bitmap);
+                Log.e("업로드한값","타이틀 "+locate+",이벤트넘"+eventnum+",돈이랑 날짜"+money+","+year + "/" + month + "/" + date);
+                builder.add("signal", "6")
+                        .add("eventnum", eventnum)
+                        .add("title", locate)
+                        .add("usagemoney", money)
+                        .add("usagedate", year + "/" + month + "/" + date)
+                        .add(UPLOAD_KEY, uploadImage);
 
-            HashMap<String, String> data = new HashMap<>();
+                FormBody formBody = builder.build();
 
-            data.put(UPLOAD_KEY, uploadImage);
-            data.put("eventnum", "4");
-            data.put("title", "나도테스트할래");
-            data.put("usagemoney", "20000");
-            data.put("usagedate", "123");
-            data.put("signal", "6");
-            String result = handler.sendPostRequest(requestURL, data);
+                Request request = new Request.Builder()
+                        .url(requestURL)
+                        .post(formBody)
+                        .build();
 
-            return result;
+                response = toServer.newCall(request).execute();
+                boolean flag = response.isSuccessful();
+                ResponseBody resBody = response.body();
+
+                if (flag) {
+                    String valid = resBody.string();
+                    if (valid.contains("1"))
+                        isSuccess = true;
+                    else
+                        isSuccess = false;
+
+                } else {
+                    Log.e("에러", "업로드 에러");
+                }
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            } finally {
+                if (response != null) {
+                    response.close();
+                }
+            }
+
+            return null;
         }
 
         public String getStringImage(Bitmap bmp) {

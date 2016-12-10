@@ -70,10 +70,12 @@ public class UsageFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void onRefresh() {
+                new UsageListLoadAsyncTask().execute();
                 mUsageListSwipeRefreshLayout.setRefreshing(false);
             }
         });
 
+        new UsageListLoadAsyncTask().execute();
         return v;
 
     }
@@ -121,7 +123,7 @@ public class UsageFragment extends Fragment implements View.OnClickListener {
              Uri selectedImageUri = data.getData();
              Toast.makeText(getActivity(), selectedImageUri + " ", Toast.LENGTH_LONG).show();
 
-             CustomUsagePopup usagePopup = CustomUsagePopup.newInstance(selectedImageUri);
+             CustomUsagePopup usagePopup = CustomUsagePopup.newInstance(selectedImageUri,eventnum);
              usagePopup.show(getActivity().getSupportFragmentManager(),"usage_popup"); //popup창 띄우고
 
         }
@@ -155,28 +157,25 @@ public class UsageFragment extends Fragment implements View.OnClickListener {
         public void onBindViewHolder(EventInfoUsageAdapter.ViewHolder holder, int position) {
 
             //test
-            holder.date.setText("16.11.04");
-            holder.location.setText("회식");
-            holder.usedmoney.setText("20000원");
-            holder.view.setOnClickListener(new View.OnClickListener(){
+            holder.date.setText(usageArrayList.get(position).getDate());
+            holder.location.setText(usageArrayList.get(position).getLocation());
+            holder.usedmoney.setText(usageArrayList.get(position).getUsedMoney());
 
-                @Override
-                public void onClick(View v) {
-                    //Intent i = new Intent(EventInfoActivity.this,EventListActivity.class);
-                    //startActivity(i);
-                }
-            });
-            //이게 정상
-            //holder.eventName.setText(groupDatas.get(position).eventName);
-            //holder.groupNumber.setText(groupDatas.get(position).groupNumber+"명");
+            if(usageArrayList.get(position).getReceipturl() !=null && !usageArrayList.get(position).getReceipturl().equals("0")){
+                holder.existimg.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(getActivity(), "여기 이미지가 있어요", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }//영수증이 존재하면
+            else{
+                holder.existimg.setVisibility(getView().GONE);
+            }
         }
 
         @Override
         public int getItemCount() {
-            //test
-            //return 3;
-
-            //이게 원래 정상
              return usageArrayList.size();
         }
 
@@ -185,6 +184,7 @@ public class UsageFragment extends Fragment implements View.OnClickListener {
             TextView location ;
             TextView usedmoney;
             RecyclerView recyclerView;
+            ImageView existimg;
             View view;
             public ViewHolder(View v) {
                 super(v);
@@ -193,7 +193,7 @@ public class UsageFragment extends Fragment implements View.OnClickListener {
                 location = (TextView) v.findViewById(R.id.eventInfo_usage_Location);
                 usedmoney = (TextView) v.findViewById(R.id.eventInfo_usage_usedMoney);
                 recyclerView = (RecyclerView) v.findViewById(R.id.eventInfo_user_recyclerView);
-
+                existimg = (ImageView) v.findViewById(R.id.usage_existImg);
             }
         }
     }
@@ -244,8 +244,11 @@ public class UsageFragment extends Fragment implements View.OnClickListener {
         @Override
         protected void onPostExecute(ArrayList<EventInfoUsageListItem> result) {
 
-            if (result != null) {
+            if (result != null && result.size() > 0) {
                 Log.e("받아온 정보들", result.toString());
+
+                mUsageListAdapter.addItem(result);
+                mUsageListAdapter.notifyDataSetChanged();
             }
         }
     }
