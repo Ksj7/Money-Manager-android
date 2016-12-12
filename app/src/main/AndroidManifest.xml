@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.tonight.manage.organization.managingmoneyapp">
 
+    <uses-permission android:name="android.permission.READ_SMS"/>
 
     <application
         android:name="MyApplication"
@@ -57,5 +58,4 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-    <uses-permission android:name="android.permission.READ_SMS"/>
 </manifest>
