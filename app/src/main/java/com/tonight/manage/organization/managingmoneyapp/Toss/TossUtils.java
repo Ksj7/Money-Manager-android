@@ -30,20 +30,12 @@ public class TossUtils {
      * 결제를 하기 위해 토스 앱을 실행합니다.
      *
      * @param context  토스 앱을 실행하기 위해 사용하는 {@link Context}.
-     * @param payToken 결제 시 사용되는 결제 Token
      */
-    public static void launchForPayment(Context context, String payToken) {
+    public static void launchForPayment(Context context) {
         if (isTossInstalled(context)) {
             //Toss 앱의 설치 유무를 확인하고, 앱이 설치되어 있다면 토스의 main activity 를 실행하는 Intent를 반환합니다.
             Intent tossLauncherIntent = context.getPackageManager().getLaunchIntentForPackage(TOSS_PACKAGE_NAME);
-
-            //PayToken 정보를 uri 포맷에 맞추어 생성합니다.
-            //supertoss://pay?payToken=XXXXX
-            Uri uri = Uri.parse("supertoss://pay?payToken=" + payToken);
-
-            //Intent에 uri 형태로 생성된 PayToken 값을 설정합니다.
-            tossLauncherIntent.setData(uri);
-            //PayToken 정보와 함께 토스 앱을 실행합니다.
+            tossLauncherIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(tossLauncherIntent);
         }
     }

@@ -39,20 +39,10 @@ import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoPaymentT
 import com.tonight.manage.organization.managingmoneyapp.Object.MemberListItem;
 import com.tonight.manage.organization.managingmoneyapp.Server.EventInfoJSONParser;
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
-import com.tonight.manage.organization.managingmoneyapp.Toss.TossConstants;
 import com.tonight.manage.organization.managingmoneyapp.Toss.TossUtils;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -170,10 +160,7 @@ public class PaymentFragment extends Fragment {
         v.findViewById(R.id.eventInfo_userPayState).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (API_KEY.contains("API KEY")) {
-                    throw new IllegalStateException("API KEY를 올바르게 입력해주세요");
-                }
-                new TossRequestAsyncTask(generatePaymentParams()).execute(TossConstants.PAYMENT_API_URL);
+                payWithToss();
             }
         });
 
@@ -345,157 +332,14 @@ public class PaymentFragment extends Fragment {
         }
     }
 
-    /**
-     * 결제 생성 API 요청에 필요한 파라미터들을 설정합니다.
-     * 파라미터에 대한 자세한 정보는 https://toss.im/tosspay/developer/apidoc#charge 에서 확인 할 수 있습니다..
-     *
-     * @return 테스트 결제용으로 10,000원짜리 상품에 대한 파라미터 {@link JSONObject}
-     */
-    private JSONObject generatePaymentParams() {
-        JSONObject params = new JSONObject();
-        try {
-            //필수 항목
-            params.put(TossConstants.PARAM_API_KEY, API_KEY);
-            //필수 항목, 테스트 용도로 매번 다른 주문번호를 생성하도록 함
-            params.put(TossConstants.PARAM_ORDER_NO, System.currentTimeMillis());
-            //필수 항목
-            params.put(TossConstants.PARAM_AMOUNT, 10000);
-            //필수 항목
-            params.put(TossConstants.PARAM_PRODUCT_DESC, "테스트 결제");
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return params;
-    }
-
-    /**
-     * 결제 건이 성공적으로 생성되면 토스 앱을 실행하거나, 사용자 정보를 입력받는 페이지를 통해 주문을 완료합니다.
-     *
-     * @param payToken 결제 시 사용되는 결제 Token
-     */
-    private void payWithToss(String payToken) {
+    private void payWithToss() {
         if (TossUtils.isTossInstalled(getActivity())) {
-            TossUtils.launchForPayment(getActivity(), payToken);
+            TossUtils.launchForPayment(getActivity());
         } else {
             TossUtils.goToPlayStore(getActivity());
         }
     }
-
-    /**
-     * 결제 API 서버에 결제 생성을 요청하고, 성공 시 결제를 시도합니다.
-     */
-    private class TossRequestAsyncTask extends AsyncTask<String, Void, String> {
-
-        private JSONObject params;
-
-        public TossRequestAsyncTask(JSONObject params) {
-            this.params = params;
-        }
-
-        public String readSomething(InputStream in) throws IOException {
-            StringBuilder content = new StringBuilder();
-            String line;
-            BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-            while ((line = br.readLine()) != null) {
-                content.append(line);
-            }
-            return content.toString();
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            if (mProgressDialog == null) {
-                mProgressDialog = new ProgressDialog(getActivity());
-                mProgressDialog.setCancelable(false);
-                mProgressDialog.setMessage("서버와 통신중입니다.");
-            }
-            mProgressDialog.show();
-        }
-
-        @Override
-        protected String doInBackground(String... urls) {
-            InputStream is = null;
-            OutputStream os = null;
-
-            try {
-                URL url = new URL(urls[0]);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.addRequestProperty("Content-Type", "application/json");
-                conn.setReadTimeout(10000 /* milliseconds */);
-                conn.setConnectTimeout(15000 /* milliseconds */);
-                conn.setRequestMethod("POST");
-                conn.setDoOutput(true);
-                conn.setDoInput(true);
-
-                os = conn.getOutputStream();
-                System.out.print(params.toString().getBytes() + "***\n");
-                os.write(params.toString().getBytes());
-                os.flush();
-                int response = conn.getResponseCode();
-                is = conn.getInputStream();
-
-                String contentAsString = readSomething(is);
-                return contentAsString;
-            } catch (IOException e) {
-                e.printStackTrace();
-                return "Error : Unable to retrieve web page. URL may be invalid.";
-            } finally {
-                if (is != null) {
-                    try {
-                        is.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                if (os != null) {
-                    try {
-                        os.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            if (mProgressDialog.isShowing()) {
-                mProgressDialog.dismiss();
-            }
-
-            //서버에 요청이 실패하였을 때
-            if (result.contains("Error")) {
-                Toast.makeText(getActivity(), result, Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            //서버에서 응답이 온 경우
-            try {
-                JSONObject response = new JSONObject(result);
-                int resultCode = response.optInt(TossConstants.PARAM_RESULT_CODE, TossConstants.RESULT_FAILED);
-                switch (resultCode) {
-                    case TossConstants.RESULT_SUCCEED:
-                        //결제 건이 성공적으로 생성된 경우, 결제 요청을 합니다.
-                        payWithToss(response.optString(TossConstants.PARAM_PAY_TOKEN));
-                        break;
-                    case TossConstants.RESULT_FAILED:
-                    case TossConstants.RESULT_FAILED_ORDER_DUPLICATED:
-                    case TossConstants.RESULT_FAILED_EXCEED_LIMIT:
-                        //실패 사유를 Toast로 보여줍니다.
-                        String msg = response.optString(TossConstants.PARAM_MSG);
-                        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-                        break;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
 
     //evnetinfo list 가져오기 위한 Thread
     public class loadPaymentAsyncTask extends AsyncTask<String, Void, EventInfoPaymentTotalItem> {
