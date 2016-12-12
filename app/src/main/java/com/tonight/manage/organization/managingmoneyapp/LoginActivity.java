@@ -154,9 +154,14 @@ public class LoginActivity extends AppCompatActivity  {
                 else
                 {
                     Log.e("체크되어있음.","ㅎㅎㅎㅎ");
+
+                    Intent serviceIntent = new Intent(LoginActivity.this, PasteService.class);//문자로 사용내역 추가 서비스
+                    startService(serviceIntent);
+                    Intent i = new Intent(LoginActivity.this, GroupListActivity.class);
+                    i.putExtra("userId",idEditText.getText().toString());
+                    startActivity(i);
+                    finish();
                 }
-                Intent serviceIntent = new Intent(LoginActivity.this, PasteService.class);//문자로 사용내역 추가 서비스
-                startService(serviceIntent);
 
             }
             else {
@@ -177,6 +182,9 @@ public class LoginActivity extends AppCompatActivity  {
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     { //이미지를 받으면 서버에 보내줌
         if (requestCode == 0) {
+
+            Intent serviceIntent = new Intent(LoginActivity.this, PasteService.class);//문자로 사용내역 추가 서비스
+            startService(serviceIntent);
             Intent i = new Intent(LoginActivity.this, GroupListActivity.class);
             i.putExtra("userId",idEditText.getText().toString());
             startActivity(i);
