@@ -128,13 +128,13 @@ public class CustomUsagePopup extends DialogFragment {
 
                         if(width<size.x) {//화면 크기보다 이미지 크기 작으면
                             if (height < size.y) {
-                                receivedbitmap = Bitmap.createScaledBitmap(receivedbitmap, (int) width, (int) height, false);
+                                receivedbitmap = Bitmap.createScaledBitmap(receivedbitmap, width, height, false);
                             }else{
-                                receivedbitmap = Bitmap.createScaledBitmap(receivedbitmap, (int) width, size.y, false);
+                                receivedbitmap = Bitmap.createScaledBitmap(receivedbitmap, width, size.y, false);
                             }
                         }else{
                             if (height < size.y) {
-                                receivedbitmap = Bitmap.createScaledBitmap(receivedbitmap, size.x,(int) height, false);
+                                receivedbitmap = Bitmap.createScaledBitmap(receivedbitmap, size.x, height, false);
                             }else{
                                 receivedbitmap = Bitmap.createScaledBitmap(receivedbitmap,size.x, size.y, false);
                             }
