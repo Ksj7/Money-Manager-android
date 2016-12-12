@@ -8,5 +8,6 @@
     <color name="colorDarkRed">#C0392B</color>
     <color name="colorEditText">#405B79</color>
     <color name="white">#fff</color>
+    <color name="colorDisableBackground">#5E5E5E</color>
 </resources>
 
