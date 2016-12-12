@@ -112,6 +112,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
                     android:background="#E0E0E0"
                     android:id="@+id/eventInfo_payment_userInfo">
 
@@ -169,6 +170,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:background="#E0E0E0">
 

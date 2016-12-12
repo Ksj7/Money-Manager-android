@@ -137,6 +137,8 @@ public class PaymentFragment extends Fragment {
             @Override
             public void onRefresh() {
                 new loadPaymentAsyncTask().execute();
+                buttonBundle.clear();
+                finedPersonLinear.removeAllViews();
                 mPaymentListSwipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -271,7 +273,7 @@ public class PaymentFragment extends Fragment {
                 Button personBtn = new ProductButton.ProductBuilder(holder.useName.getText().toString(),1).build();
                 buttonBundle.put(position, personBtn);
                 LinearLayout.LayoutParams plControl = new LinearLayout.LayoutParams(150, 100);
-                plControl.setMargins(18, 50, 0, 50);
+                plControl.setMargins(15, 0, 15, 0);
                 finedPersonLinear.addView(personBtn, plControl);
                 finedPersonScroll.computeScroll();
             }
