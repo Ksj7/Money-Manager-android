@@ -66,6 +66,11 @@ public class CustomSetDatePopup extends DialogFragment {
         CalendarView calendarView = (CalendarView) view.findViewById(R.id.calendar);
         Button positiveButton = (Button) view.findViewById(R.id.confirmBtn);
         Button negativeButton = (Button) view.findViewById(R.id.negativeBtn);
+        java.util.Calendar curDate = java.util.Calendar.getInstance();
+        curDate.setTimeInMillis(calendarView.getDate());
+        year = curDate.get(java.util.Calendar.YEAR);
+        month = 1 + curDate.get(java.util.Calendar.MONTH);
+        date = curDate.get(java.util.Calendar.DATE);
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView calendarView, int i, int i1, int i2) {

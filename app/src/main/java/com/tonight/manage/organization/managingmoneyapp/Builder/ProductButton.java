@@ -20,9 +20,11 @@ public class ProductButton extends Button{
     }
 
     private String name;
+    private Context context;
 
-    public ProductButton(Context context, ProductBuilder builder) {
+    public ProductButton(Context context, ProductBuilder builder, int color) {
         super(context);
+        this.context = context;
         this.name = builder.name;
         setText(name);
 
@@ -30,8 +32,12 @@ public class ProductButton extends Button{
         float textSize = spTextSize * getResources().getDisplayMetrics().scaledDensity;
         setTextSize(textSize);
         setMaxLines(1);
-        setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
         setTextColor(Color.WHITE);
+        if(color == 0){
+            setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
+        }else if(color==1){
+            setBackgroundColor(ContextCompat.getColor(context, R.color.colorDarkRed));
+        }
     }
 
     public String getName() {
@@ -40,13 +46,14 @@ public class ProductButton extends Button{
 
     public static class ProductBuilder {
         private String name;
+        private int color;
 
-        public ProductBuilder(String name) {
-
+        public ProductBuilder(String name, int color) {
             this.name = name;
+            this.color = color;
         }
         public ProductButton build() {
-            return new ProductButton(MyApplication.getItemContext(),this);
+            return new ProductButton(MyApplication.getItemContext(),this,color);
         }
 
     }

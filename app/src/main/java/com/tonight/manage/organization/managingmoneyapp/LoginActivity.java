@@ -15,7 +15,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
-import com.tonight.manage.organization.managingmoneyapp.Service.NotificationService;
 import com.tonight.manage.organization.managingmoneyapp.Service.PasteService;
 
 import okhttp3.FormBody;
@@ -28,7 +27,7 @@ import okhttp3.ResponseBody;
  * Created by sujinKim on 2016-11-04.
  */
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity  {
     EditText idEditText;
     EditText pwdEditText;
     Button mJoinBtn;
@@ -59,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
         String pwd = pwdEditText.getText().toString();
         new CheckInvalidLoginDataAsyncTask().execute(id,pwd);
     }
+
 
     public void join(View v) {
         startActivity(new Intent(this, JoinActivity.class));

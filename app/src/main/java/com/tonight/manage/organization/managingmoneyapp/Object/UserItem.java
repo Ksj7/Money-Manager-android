@@ -10,6 +10,8 @@ public class UserItem {
     String phone;
     String profileimg;
     String manager;
+    String balance;
+
 
     public UserItem setUsername(String username) {
         this.username = username;
@@ -28,6 +30,11 @@ public class UserItem {
         this.manager = manager;
         return this;
     }
+    public UserItem setBalance(String balance) {
+        this.balance = balance;
+        return this;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -42,6 +49,10 @@ public class UserItem {
 
     public String getManager() {
         return manager;
+    }
+
+    public String getBalance() {
+        return balance;
     }
 
 
