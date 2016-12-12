@@ -178,57 +178,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     }
-        @RequiresApi(api = Build.VERSION_CODES.M)
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            if (ContextCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
-                Log.e("문자 권한 없습니다", "ㅠㅠㅠㅠ");
-                // 이 권한을 필요한 이유를 설명해야하는가?
-                if (ActivityCompat.shouldShowRequestPermissionRationale(LoginActivity.this, Manifest.permission.READ_SMS)) {
-
-                    // 다이어로그같은것을 띄워서 사용자에게 해당 권한이 필요한 이유에 대해 설명합니다
-                    // 해당 설명이 끝난뒤 requestPermissions()함수를 호출하여 권한허가를 요청해야 합니다
-
-                } else {
-
-                    ActivityCompat.requestPermissions(LoginActivity.this,
-                            new String[]{Manifest.permission.READ_SMS},
-                            1);
-
-                    // 필요한 권한과 요청 코드를 넣어서 권한허가요청에 대한 결과를 받아야 합니다
-
-                }
-            } else {
-
-                        if (!Settings.canDrawOverlays(LoginActivity.this)) {
-                            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                                    Uri.parse("package:" + getPackageName()));
-                            startActivityForResult(intent, 1234);
-                        }else{
-
-                            loginstart();
-                        }
-
-                    // 이 권한을 필요한 이유를 설명해야하는가?
-                    /*if (ActivityCompat.shouldShowRequestPermissionRationale(LoginActivity.this, Manifest.permission.SYSTEM_ALERT_WINDOW)) {
-
-                        // 다이어로그같은것을 띄워서 사용자에게 해당 권한이 필요한 이유에 대해 설명합니다
-                        // 해당 설명이 끝난뒤 requestPermissions()함수를 호출하여 권한허가를 요청해야 합니다
-
-                    } else {
-
-                        ActivityCompat.requestPermissions(LoginActivity.this,
-                                new String[]{Manifest.permission.SYSTEM_ALERT_WINDOW},
-                                2);
-
-                        // 필요한 권한과 요청 코드를 넣어서 권한허가요청에 대한 결과를 받아야 합니다
-
-                    }*/
-            }
-        }
-    }
-
     public void loginstart() {
         if (loginSuccess == 0) {//로그인 성공시
             if (autoLoginCheckbox.isChecked()) {
@@ -259,9 +208,6 @@ public class LoginActivity extends AppCompatActivity {
                 startActivityForResult(intent, 0);
             } else {
                 Log.e("체크되어있음.", "ㅎㅎㅎㅎ");
-
-                Intent serviceIntent = new Intent(LoginActivity.this, PasteService.class);//문자로 사용내역 추가 서비스
-                startService(serviceIntent);
 
                 Intent serviceIntent = new Intent(LoginActivity.this, PasteService.class);//문자로 사용내역 추가 서비스
                 startService(serviceIntent);
@@ -335,7 +281,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) { //이미지를 받으면 서버에 보내줌
         if (requestCode == 0) {
@@ -349,26 +294,14 @@ public class LoginActivity extends AppCompatActivity {
                         Log.e("문자 권한 없습니다", "ㅠㅠㅠㅠ");
                         // 이 권한을 필요한 이유를 설명해야하는가?
 
-                            ActivityCompat.requestPermissions(LoginActivity.this,
-                                    new String[]{Manifest.permission.READ_SMS},
-                                    1);
+                        ActivityCompat.requestPermissions(LoginActivity.this,
+                                new String[]{Manifest.permission.READ_SMS},
+                                1);
                     }
                 }else{
                     Log.e("권한전체다잇어야되","진짜?");
                     loginstart();
                 }
-            }
-            Intent serviceIntent = new Intent(LoginActivity.this, PasteService.class);//문자로 사용내역 추가 서비스
-            startService(serviceIntent);
-            Intent i = new Intent(LoginActivity.this, GroupListActivity.class);
-            i.putExtra("userId", idEditText.getText().toString());
-            startActivity(i);
-            finish();
-        }
-        if (requestCode == 1234) {
-            if (!Settings.canDrawOverlays(this)) {
-                // SYSTEM_ALERT_WINDOW permission not granted...
-                loginstart();
             }
         }
     }
