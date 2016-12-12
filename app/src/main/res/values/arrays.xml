@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="bank">
+        <item>하나</item>
+        <item>NH투자</item>
+        <item>NH농협</item>
+        <item>KB국민</item>
+        <item>신한</item>
+        <item>IBK기업</item>
+        <item>새마을</item>
+        <item>부산</item>
+        <item>경남</item>
+        <item>광주</item>
+        <item>전북</item>
+        <item>신협</item>
+        <item>SC</item>
+        <item>KDB산업</item>
+        <item>대구</item>
+        <item>제주</item>
+        <item>외한</item>
+        <item>우체국</item>
+        <item>수협</item>
+    </string-array>
+</resources>

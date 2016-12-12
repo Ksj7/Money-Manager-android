@@ -57,6 +57,7 @@
                 android:id="@+id/changePhoneNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
                 android:hint="휴대폰 번호를 입력해주세요"/>
         </LinearLayout>
 

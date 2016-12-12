@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,10 +27,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.tonight.manage.organization.managingmoneyapp.Custom.CustomAddEventPopup;
+import com.tonight.manage.organization.managingmoneyapp.Custom.CustomInfoGroupPopup;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomRateTextCircularProgressBar;
+import com.tonight.manage.organization.managingmoneyapp.Custom.CustomShowGroupCodePopup;
+import com.tonight.manage.organization.managingmoneyapp.Object.EventListBundle;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventListItem;
-import com.tonight.manage.organization.managingmoneyapp.Server.EventJSONParsor;
+import com.tonight.manage.organization.managingmoneyapp.Server.EventJSONParser;
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
 
 import java.io.ByteArrayOutputStream;
@@ -38,7 +46,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -49,18 +56,24 @@ import okhttp3.ResponseBody;
  * Created by sujinKim on 2016-11-04.
  */
 public class EventListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private RecyclerView mEventListRecyclerView;
-    private EventListActivity.EventListAdapter mEventListAdapter;
+    private EventListAdapter mEventListAdapter;
     private SwipeRefreshLayout mEventListSwipeRefreshLayout;
     private String mGroupCode;
-    TextView eventname;
-    TextView balance;
+    private String mGroupName;
+    private String mGroupBank;
+    private String mGroupAccount;
+    private String mGroupBalance;
+    TextView groupNameText;
+    TextView balanceText;
 
     CircleImageView profileImage;
-    private int PICK_IMAGE_REQUEST = 1;
-    private Bitmap receivedbitmap;
-    public static final String UPLOAD_URL = "http://52.79.174.172/MAM/upload.php";
+    private final int PICK_IMAGE_REQUEST = 1;
     public static final String UPLOAD_KEY = "image";
+    private TextView userName;
+    private TextView userPhone;
+    String userid;
+    boolean isManager;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,26 +81,49 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
         Intent i = getIntent();
         if (i == null) return;
         mGroupCode = i.getStringExtra("groupcode");
+        mGroupName = i.getStringExtra("groupName");
+        mGroupBank = i.getStringExtra("bank");
+        mGroupAccount = i.getStringExtra("account");
 
-        eventname = (TextView) findViewById(R.id.eventlist_eventname);
-        balance = (TextView) findViewById(R.id.eventlist_balance);
+        SharedPreferences pref = getSharedPreferences("Login", MODE_PRIVATE);
+        userid = pref.getString("id", "error");
 
-        mEventListRecyclerView = (RecyclerView) findViewById(R.id.eventlist_recyclerView);
+
+        this.groupNameText = (TextView) findViewById(R.id.eventlist_groupname);
+        this.groupNameText.setText(mGroupName);
+
+
+        balanceText = (TextView) findViewById(R.id.eventlist_balance);
+
+
+        RecyclerView mEventListRecyclerView = (RecyclerView) findViewById(R.id.eventlist_recyclerView);
         mEventListRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         mEventListRecyclerView.setHasFixedSize(true);
-        mEventListAdapter = new EventListActivity.EventListAdapter(this);
+        mEventListAdapter = new EventListAdapter(this);
         mEventListRecyclerView.setAdapter(mEventListAdapter);
 
 
         mEventListSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.eventlist_swipeRefreshLayout);
+        mEventListSwipeRefreshLayout.setColorSchemeResources(
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_green_light,
+                android.R.color.holo_red_light
+        );
         mEventListSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 
             @Override
             public void onRefresh() {
-                mEventListSwipeRefreshLayout.setRefreshing(false);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        new LoadEventListAsyncTask().execute(mGroupCode);
+                        mEventListSwipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 2500);
+
             }
         });
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -101,6 +137,8 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
         navigationView.setNavigationItemSelectedListener(this);
 
         View headerView = navigationView.getHeaderView(0);
+        userName = (TextView) headerView.findViewById(R.id.userNameText);
+        userPhone = (TextView) headerView.findViewById(R.id.userPhoneNumberText);
         profileImage = (CircleImageView) headerView.findViewById(R.id.profile_imageView);//프로필 이미지뷰
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,19 +148,29 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
                 startActivityForResult(intent, PICK_IMAGE_REQUEST);
             }
         });
-        new LoadEventListAsyncTask().execute(mGroupCode);
+
+
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    { //이미지를 받으면 서버에 보내줌
+    protected void onResume() {
+        super.onResume();
+        new LoadEventListAsyncTask().execute(mGroupCode);
+    }
+
+    public void isSuccessCreateEvent(boolean isRefresh) {
+        if (isRefresh) new LoadEventListAsyncTask().execute(mGroupCode);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) { //이미지를 받으면 서버에 보내줌
         if (requestCode == PICK_IMAGE_REQUEST &&
                 resultCode == RESULT_OK && data != null && data.getData() != null) {
 
             //무사히 종료되었으면
             Uri selectedImageUri = data.getData();
             try {
-                receivedbitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
+                Bitmap receivedbitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
                 UploadImage uploadImage = new UploadImage();
                 uploadImage.execute(receivedbitmap);
 
@@ -160,8 +208,28 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_member_list) {
             Intent i = new Intent(this, MemberListActivity.class);
+            i.putExtra("groupcode", mGroupCode);
+            i.putExtra("groupName", mGroupName);
             startActivity(i);
             return true;
+        } else if (id == R.id.action_add_event) {
+            if(isManager) {
+                CustomAddEventPopup addEventPopup = CustomAddEventPopup.newInstance(userid, mGroupCode);
+                addEventPopup.show(getSupportFragmentManager(), "add_event");
+            }
+            else {
+                Toast.makeText(this, "이벤트 추가는 총무만 가능합니다", Toast.LENGTH_SHORT).show();
+            }
+        } else if (id == R.id.action_group_code) {
+            CustomShowGroupCodePopup showGroupCodePopup = CustomShowGroupCodePopup.newInstance(mGroupCode);
+            showGroupCodePopup.show(getSupportFragmentManager(), "add_event");
+        } else if(id == R.id.action_info_group){
+            CustomInfoGroupPopup infoGroupPopup = CustomInfoGroupPopup.newInstance(mGroupName,mGroupAccount,mGroupBank);
+            infoGroupPopup.show(getSupportFragmentManager(),"info_group");
+        }
+
+        else {
+            Toast.makeText(this, "오류 발생!", Toast.LENGTH_SHORT).show();
         }
 
         return super.onOptionsItemSelected(item);
@@ -177,10 +245,12 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
             startActivity(new Intent(this, EditPasswordActivity.class));
         } else if (id == R.id.nav_edit_phoneNumber) {
             startActivity(new Intent(this, EditPhoneNumberActivity.class));
-        } else if (id == R.id.nav_alarm_list) {
-
-        } else if( id == R.id.nav_logout){
-            Intent intent = new Intent(EventListActivity.this,LoginActivity.class);
+        } else if (id == R.id.nav_logout) {
+            SharedPreferences pref = getSharedPreferences("Login", MODE_PRIVATE);
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putBoolean("loginok", false);
+            editor.apply();
+            Intent intent = new Intent(EventListActivity.this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
@@ -192,8 +262,7 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
         return true;
     }
 
-
-    class EventListAdapter extends RecyclerView.Adapter<EventListActivity.EventListAdapter.ViewHolder> {
+    class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder> {
 
 
         private LayoutInflater mLayoutInflater;
@@ -212,13 +281,13 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
 
 
         @Override
-        public EventListActivity.EventListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-            return new EventListActivity.EventListAdapter.ViewHolder(mLayoutInflater.inflate(R.layout.event_list_item, parent, false));
+            return new ViewHolder(mLayoutInflater.inflate(R.layout.event_list_item, parent, false));
         }
 
         @Override
-        public void onBindViewHolder(EventListActivity.EventListAdapter.ViewHolder holder, final int position) {
+        public void onBindViewHolder(ViewHolder holder, final int position) {
 
             //test
             holder.eventName.setText(eventListItems.get(position).getEventname());
@@ -228,12 +297,12 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
             holder.mRateTextCircularProgressBar.setMax(100);
             holder.mRateTextCircularProgressBar.clearAnimation();
             holder.mRateTextCircularProgressBar.getCircularProgressBar().setCircleWidth(20);
-            int summ = Integer.parseInt(eventListItems.get(position).getSumm());//모인금액 받아와야함.
-            int targetm = Integer.parseInt(eventListItems.get(position).getTargetm());//목표액 받아와야함.
-            if(summ == 0) holder.mRateTextCircularProgressBar.setProgress(0);
+            float summ = Float.parseFloat(eventListItems.get(position).getSumm());//모인금액 받아와야함.
+            float targetm = Float.parseFloat(eventListItems.get(position).getTargetm());//목표액 받아와야함.
+            if (summ == 0) holder.mRateTextCircularProgressBar.setProgress(0);
             else {
-                int percent = targetm / summ;
-                holder.mRateTextCircularProgressBar.setProgress(percent);//이 percent => 모인금액 / 목표액
+                float percent = (summ/targetm)*100;
+                holder.mRateTextCircularProgressBar.setProgress((int)percent);//이 percent => 모인금액 / 목표액
             }
 
             holder.eventpercent.setText(holder.mRateTextCircularProgressBar.getCircularProgressBar().getProgress() + "%");
@@ -242,9 +311,17 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
                 public void onClick(View v) {
                     Intent intent = new Intent(EventListActivity.this, EventInfoActivity.class);
                     intent.putExtra("eventName", eventListItems.get(position).getEventname());
+                    intent.putExtra("eventnum", eventListItems.get(position).getEventnum());
                     startActivity(intent);
                 }
             });
+            /*String bubble = eventListItems.get(position).getBubblecount();
+            if(bubble.equals("0")) {
+                holder.badge.hide();
+                return;
+            }
+            holder.badge.setText(bubble);
+            holder.badge.show();*/
 
         }
 
@@ -254,19 +331,23 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
             return eventListItems.size();
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
+        class ViewHolder extends RecyclerView.ViewHolder {
+            View view;
             TextView eventName;
             TextView eventNumber;
             TextView eventpercent;
             CustomRateTextCircularProgressBar mRateTextCircularProgressBar;
-            View view;
+            /*View bubble;
+            BadgeView badge;*/
 
-            public ViewHolder(View v) {
+            ViewHolder(View v) {
                 super(v);
                 view = v;
                 eventName = (TextView) v.findViewById(R.id.eventlist_title_textview);
                 eventNumber = (TextView) v.findViewById(R.id.eventlist_number_textview);
                 eventpercent = (TextView) v.findViewById(R.id.eventlist_percent_textview);
+                /*bubble = v.findViewById(R.id.bubble);
+                badge = new BadgeView(getApplicationContext(), bubble);*/
                 mRateTextCircularProgressBar = (CustomRateTextCircularProgressBar) v.findViewById(R.id.rate_progress_bar);
             }
         }
@@ -274,9 +355,9 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
 
 
     //group list 가져오기 위한 Thread
-    public class LoadEventListAsyncTask extends AsyncTask<String, Void, ArrayList<EventListItem>> {
+    public class LoadEventListAsyncTask extends AsyncTask<String, Void, EventListBundle> {
         @Override
-        protected ArrayList<EventListItem> doInBackground(String... arg) {
+        protected EventListBundle doInBackground(String... arg) {
             String requestURL = "";
             Response response = null;
             try {
@@ -286,7 +367,9 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
                 //연결
                 OkHttpClient toServer = NetworkDefineConstant.getOkHttpClient();
                 FormBody.Builder builder = new FormBody.Builder();
-                builder.add("groupcode", arg[0]).add("signal", "0");
+                builder.add("groupcode", arg[0])
+                        .add("signal", "0")
+                        .add("userid", userid);
                 FormBody formBody = builder.build();
                 //요청
                 Request request = new Request.Builder()
@@ -299,7 +382,9 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
                 ResponseBody resBody = response.body();
 
                 if (flag) { //http req/res 성공
-                    return EventJSONParsor.parseEventListItems(resBody.string());
+                    if (resBody != null) {
+                        return EventJSONParser.parseEventListItems(resBody.string());
+                    }
                 } else { //실패시 정의
                     Log.e("에러", "데이터를 로드하는데 실패하였습니다");
                 }
@@ -315,13 +400,37 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
         }
 
         @Override
-        protected void onPostExecute(ArrayList<EventListItem> result) {
+        protected void onPostExecute(EventListBundle result) {
 
             // RecyclerView Adapter Item 값 추가
-            if (result != null && result.size() > 0) {
+            if (result == null) {
+                Toast.makeText(EventListActivity.this, "이벤트가 존재하지 않습니다.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (result.getUserinfo() != null && result.getUserinfo().size() > 0) {
 
-                mEventListAdapter.addAllItem(result);
-                mEventListAdapter.notifyDataSetChanged();
+                if (result.getResult() != null && result.getResult().size() > 0) {
+                    mEventListAdapter.addAllItem(result.getResult());
+                    mEventListAdapter.notifyDataSetChanged();
+                }
+                userName.setText(result.getUserinfo().get(0).getUsername());
+                userPhone.setText(result.getUserinfo().get(0).getPhone());
+                mGroupBalance = result.getUserinfo().get(0).getBalance();
+                String balanceFormat = String.format(getString(R.string.price), mGroupBalance);
+                balanceText.setText(balanceFormat);
+
+                if((result.getUserinfo().get(0).getManager()).equals("1")){
+                    isManager = true;
+                }
+                else{
+                    isManager = false;
+                }
+                Glide.with(getApplicationContext())
+                        .load(result.getUserinfo().get(0).getProfileimg())
+                        .override(150, 150)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .into(profileImage);
             }
         }
     }
@@ -341,6 +450,7 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            new LoadEventListAsyncTask().execute(mGroupCode);
             loading.dismiss();
         }
 
@@ -350,23 +460,21 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
             String uploadImage = getStringImage(bitmap);
 
             SharedPreferences pref = getSharedPreferences("Login", MODE_PRIVATE);
-            userid = pref.getString("id","error");
+            userid = pref.getString("id", "error");
 
             HashMap<String, String> data = new HashMap<>();
 
             data.put(UPLOAD_KEY, uploadImage);
             data.put("userid", userid);
-            String result = handler.sendPostRequest(UPLOAD_URL, data);
 
-            return result;
+            return handler.sendPostRequest(NetworkDefineConstant.SERVERP_URL_UPLOAD_PROFILE_IMAGE, data);
         }
 
-        public String getStringImage(Bitmap bmp) {
+        String getStringImage(Bitmap bmp) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] imageBytes = baos.toByteArray();
-            String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-            return encodedImage;
+            return Base64.encodeToString(imageBytes, Base64.DEFAULT);
         }
     }
 }

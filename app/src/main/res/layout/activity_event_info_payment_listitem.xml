@@ -7,11 +7,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="0dp"
             android:layout_weight="2"
             android:layout_height="50dp"
-            android:background="@mipmap/ic_launcher"
             android:layout_margin="5dp"
             android:scaleType="centerCrop"
             android:id="@+id/eventInfo_payment_ImgView"/>

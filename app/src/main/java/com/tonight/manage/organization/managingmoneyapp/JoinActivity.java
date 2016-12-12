@@ -1,7 +1,6 @@
 package com.tonight.manage.organization.managingmoneyapp;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
 
 import okhttp3.FormBody;
@@ -22,7 +22,7 @@ import okhttp3.ResponseBody;
  * Created by sujinKim on 2016-11-04.
  */
 
-public class JoinActivity extends AppCompatActivity {
+public class JoinActivity extends AppCompatActivity{
 
     private boolean joinSuccess;
     EditText idEdit;

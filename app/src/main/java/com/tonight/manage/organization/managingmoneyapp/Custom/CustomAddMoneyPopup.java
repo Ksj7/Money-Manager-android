@@ -5,16 +5,29 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.SwitchCompat;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import com.tonight.manage.organization.managingmoneyapp.EventInfoActivity;
 import com.tonight.manage.organization.managingmoneyapp.R;
+import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
+
+import java.io.IOException;
+
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  * Created by sujinKim on 2016-11-04.
@@ -22,22 +35,22 @@ import com.tonight.manage.organization.managingmoneyapp.R;
 
 public class CustomAddMoneyPopup extends DialogFragment {
 
-    private View view;
     private boolean isPortion;
     private boolean isSum;
-    private int width,height;
     RelativeLayout wrapLayout;
-    private int wrapHeight;
-    private Button positiveButton, negativeButton;
+    private boolean isSuccess;
+    Bundle b;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NO_TITLE, R.style.CustomDialogTheme);
-        initWindow();
     }
 
-    public static CustomAddMoneyPopup newInstance() {
+    public static CustomAddMoneyPopup newInstance(String eventnum) {
         CustomAddMoneyPopup togglePopup = new CustomAddMoneyPopup();
+        Bundle b = new Bundle();
+        b.putString("eventnum",eventnum);
+        togglePopup.setArguments(b);
         return togglePopup;
     }
 
@@ -47,8 +60,14 @@ public class CustomAddMoneyPopup extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.popup_add_money, container, false);
+        View view = inflater.inflate(R.layout.popup_add_money, container, false);
 
+        b = getArguments();
+        if(b== null){
+            Toast.makeText(getActivity(), "에러발생!", Toast.LENGTH_SHORT).show();
+            dismiss();
+        }
+        final String eventnum = b.getString("eventnum");
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -58,53 +77,50 @@ public class CustomAddMoneyPopup extends DialogFragment {
 
         wrapLayout = (RelativeLayout) view.findViewById(R.id.wrapLayout);
 
-        positiveButton = (Button) view.findViewById(R.id.confirmBtn);
-        negativeButton = (Button ) view.findViewById(R.id.negativeBtn);
+        Button positiveButton = (Button) view.findViewById(R.id.confirmBtn);
+        Button negativeButton = (Button) view.findViewById(R.id.negativeBtn);
+
+        final AppCompatEditText portionEdit = (AppCompatEditText)view.findViewById(R.id.portionEdit);
+        final AppCompatEditText sumEdit = (AppCompatEditText) view.findViewById(R.id.sumEdit);
 
         portionLayout.setVisibility(View.GONE);
         sumLayout.setVisibility(View.GONE);
 
-        final SwitchCompat switchButton = (SwitchCompat) view.findViewById(R.id.portionSwitch);
-        final SwitchCompat switchButton2 = (SwitchCompat) view.findViewById(R.id.sumSwitch);
+        final SwitchCompat portionSwitch = (SwitchCompat) view.findViewById(R.id.portionSwitch);
+        final SwitchCompat sumSwitch = (SwitchCompat) view.findViewById(R.id.sumSwitch);
 
 
-        switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        portionSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 isPortion = isChecked;
                 if (isChecked) {
                     if (isSum) {
-                        switchButton2.setChecked(false);
+                        sumSwitch.setChecked(false);
                         sumLayout.setVisibility(View.GONE);
+                        isSum = false;
                     }
                     portionLayout.setVisibility(View.VISIBLE);
-                    wrapLayout.setMinimumHeight(wrapHeight+100);
-                    wrapLayout.invalidate();
                 } else {
                     portionLayout.setVisibility(View.GONE);
-                    wrapLayout.setMinimumHeight(wrapHeight-100);
-                    wrapLayout.invalidate();
 
                 }
             }
         });
 
-        switchButton2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        sumSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 isSum = isChecked;
                 if (isChecked) {
                     if (isPortion) {
-                        switchButton.setChecked(false);
+                        portionSwitch.setChecked(false);
                         portionLayout.setVisibility(View.GONE);
+                        isPortion = false;
                     }
                     sumLayout.setVisibility(View.VISIBLE);
-                    wrapLayout.setMinimumHeight(wrapHeight+100);
-                    wrapLayout.invalidate();
                 } else {
                     sumLayout.setVisibility(View.GONE);
-                    wrapLayout.setMinimumHeight(wrapHeight-100);
-                    wrapLayout.invalidate();
                 }
             }
         });
@@ -112,7 +128,16 @@ public class CustomAddMoneyPopup extends DialogFragment {
         positiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // UpdateAddMoneyDataAsyncTask();
+
+                if(isPortion){
+                    String portion = portionEdit.getText().toString();
+                    new UpdateAddMoneyDataAsyncTask().execute("1",eventnum,portion);
+                }
+                else if(isSum){
+                    String sum = sumEdit.getText().toString();
+                    new UpdateAddMoneyDataAsyncTask().execute("2",eventnum,sum);
+                }
+                EventInfoActivity.pagerInstance.notifyDataSetChanged();
             }
         });
 
@@ -125,12 +150,6 @@ public class CustomAddMoneyPopup extends DialogFragment {
         return view;
     }
 
-    public void initWindow(){
-        width = getResources().getDimensionPixelSize(R.dimen.popup_width);
-        height = getResources().getDimensionPixelSize(R.dimen.popup_height);
-    }
-
-
 
     @Override
     public void onStop() {
@@ -138,24 +157,73 @@ public class CustomAddMoneyPopup extends DialogFragment {
         dismiss();
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getDialog().getWindow().setLayout(width, height);
-        wrapHeight = wrapLayout.getMeasuredHeight();
-    }
-
     //Update Add Money Data
     class UpdateAddMoneyDataAsyncTask extends AsyncTask<String, Void, String> {
+
         @Override
-        protected String doInBackground(String... userID) {
+        protected String doInBackground(String... params) {
+            String requestURL = "";
+            Response response = null;
+            try {
+                requestURL = NetworkDefineConstant.SERVER_URL_EVENT_INFO;
+
+                OkHttpClient toServer = NetworkDefineConstant.getOkHttpClient();
+                FormBody.Builder builder = new FormBody.Builder();
+                if(params[0].equals("1")) {
+                    builder.add("signal", params[0])
+                            .add("eventnum",params[1])
+                            .add("personalm", params[2]);
+                }
+                else if(params[0].equals("2")){
+                    builder.add("signal", params[0])
+                            .add("eventnum",params[1])
+                            .add("targetm", params[2]);
+
+                }
+
+                FormBody formBody = builder.build();
+
+                Request request = new Request.Builder()
+                        .url(requestURL)
+                        .post(formBody)
+                        .build();
+
+                response = toServer.newCall(request).execute();
+                boolean flag = response.isSuccessful();
+                ResponseBody resBody = response.body();
+
+                if (flag) {
+                    String valid = resBody.string();
+                    if (valid.contains("1"))
+                        isSuccess = true;
+                    else
+                        isSuccess = false;
+
+                } else {
+                    Log.e("에러", "금액 추가 실패");
+                }
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            } finally
+            {
+                if (response != null) {
+                    response.close();
+                }
+            }
 
             return null;
         }
 
         @Override
-        protected void onPostExecute(String s) {
-
+        protected void onPostExecute(String aVoid) {
+            super.onPostExecute(aVoid);
+            if (isSuccess) {
+                Toast.makeText(getActivity(), "목표액이 설정되었습니다.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity(), "금액 추가 실패!", Toast.LENGTH_SHORT).show();
+            }
+            dismiss();
         }
+
     }
 }

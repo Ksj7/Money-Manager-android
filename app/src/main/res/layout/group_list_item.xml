@@ -10,8 +10,8 @@
     <LinearLayout
         android:layout_width="match_parent" android:layout_height="80dp"
         android:layout_gravity="center" android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginLeft="20dp" android:layout_marginRight="20dp">
+        android:gravity="center_vertical"
+        android:layout_marginLeft="20dp" android:layout_marginRight="5dp">
 
         <TextView android:layout_width="0dp" android:layout_height="wrap_content"
             android:paddingLeft="30dp" android:paddingRight="30dp"
@@ -20,19 +20,24 @@
             android:textColor="#000"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:gravity="center"
             android:maxLines="1"
             android:layout_weight="0.7"/>
 
         <ImageView
             android:layout_width="24dp" android:layout_height="24dp"
-            android:background="@mipmap/ic_launcher"
+            android:src="@drawable/ic_people_outline_black_36dp"
             android:layout_marginRight="5dp"/>
 
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:textColor="#0d0d0d" android:textSize="20sp" android:text=""
             android:layout_marginRight="5dp"
             android:id="@+id/groupNumber"/>
+
+        <View
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="top|right"
+            android:id="@+id/bubble"/>
 
     </LinearLayout>
 

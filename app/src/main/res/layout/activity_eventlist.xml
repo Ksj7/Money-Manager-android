@@ -32,6 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/appbarLayout"
+            android:background="#fff"
             android:orientation="vertical">
 
             <LinearLayout
@@ -42,11 +43,13 @@
                 android:background="@color/colorBackground">
 
                 <TextView
-                    android:id="@+id/eventlist_eventname"
+                    android:id="@+id/eventlist_groupname"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="이벤트 이름"
+                    android:text="Group name"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
                     android:textColor="#000" />
             </LinearLayout>
 

@@ -6,10 +6,31 @@ package com.tonight.manage.organization.managingmoneyapp.Object;
 
 public class EventInfoMemberPaymentListItem {
 
-    String imgurl;
-    String name;
-    int spendingstatus;
+    String imgurl; //사용자 프로필 사진
+    String name; //사용자 이름
+    String userid; //사용자 아이디
+    String spendingstatus; //지출여부
+    String personalMoney;
 
+    public String getUserphone() {
+        return userphone;
+    }
+
+    public EventInfoMemberPaymentListItem setUserphone(String userphone) {
+        this.userphone = userphone;
+        return this;
+    }
+
+    String userphone;
+
+    public String getPersonalMoney() {
+        return personalMoney;
+    }
+
+    public EventInfoMemberPaymentListItem setPersonalMoney(String personalMoney) {
+        this.personalMoney = personalMoney;
+        return this;
+    }
 
 
     public EventInfoMemberPaymentListItem setImgurl(String imgurl) {
@@ -21,8 +42,12 @@ public class EventInfoMemberPaymentListItem {
         return this;
     }
 
-    public EventInfoMemberPaymentListItem setSpendingstatus(int spendingstatus) {
+    public EventInfoMemberPaymentListItem setSpendingstatus(String spendingstatus) {
         this.spendingstatus = spendingstatus;
+        return this;
+    }
+    public EventInfoMemberPaymentListItem setUserId(String userid) {
+        this.userid = userid;
         return this;
     }
 
@@ -34,8 +59,12 @@ public class EventInfoMemberPaymentListItem {
         return name;
     }
 
-    public int getSpendingstatus() {
+    public String getSpendingstatus() {
         return spendingstatus;
+    }
+
+    public String getUserId() {
+        return userid;
     }
 
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/popup_usage_width"
-    android:layout_height="@dimen/popup_usage_height"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:background="@color/colorBackground"
     android:orientation="vertical">
@@ -19,41 +19,45 @@
             android:layout_height="wrap_content"
             android:text="사용내역 추가하기"
             android:textColor="#000"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
     </RelativeLayout>
+
+
 
     <LinearLayout
         android:id="@+id/contentLinearLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/titleRelativeLayout"
-        android:layout_marginBottom="10dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
-
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:orientation="vertical">
         <TextView
             android:id="@+id/usageDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="날짜 :"
-            android:textColor="#000"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/usageDate_edit"
-            android:layout_width="0dp"
+            android:layout_gravity="left"
+            android:text="기한설정"
+            android:textColor="@color/colorPrimary"
+            android:textSize="12sp"/>
+        <FrameLayout
+            android:id="@+id/layout"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_weight="0.7"
-            android:text="Input Text Here"
-            android:textColor="#FF5ACA"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            android:gravity="center"
+            >
+
+            <CalendarView
+                android:id="@+id/calendar"
+                android:layout_width="330dp"
+                android:layout_height="250dp"
+                android:showWeekNumber="false"
+                android:theme="@style/Theme.Custom.Calendar" />
+        </FrameLayout>
 
     </LinearLayout>
 
@@ -62,28 +66,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/contentLinearLayout1"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:orientation="horizontal">
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal"
+        android:gravity="center">
 
         <TextView
             android:id="@+id/usageLocate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="장소 :"
-            android:textColor="#000"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            android:text="장소"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp" />
 
         <EditText
             android:id="@+id/usageLocate_edit"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_weight="0.7"
-            android:text="Input Text Here"
-            android:textColor="#FF5ACA"
-            android:textSize="15sp"
+            android:layout_marginLeft="10dp"
+            android:hint="Input Text Here"
+            android:inputType="text"
+            android:textColorHint="@color/colorEditText"
+            android:textColor="#000"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
     </LinearLayout>
@@ -93,29 +99,29 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/contentLinearLayout2"
         android:layout_marginBottom="10dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/usageMoney"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="금액 :"
-            android:textColor="#000"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            android:text="금액"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp" />
 
         <EditText
             android:id="@+id/usageMoney_edit"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_weight="0.7"
-            android:text="Input Text Here"
-            android:textColor="#FF5ACA"
-            android:textSize="15sp"
+            android:layout_marginLeft="10dp"
+            android:hint="Input Text Here"
+            android:inputType="number"
+            android:textColorHint="@color/colorEditText"
+            android:textColor="#000"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
     </LinearLayout>
@@ -125,29 +131,20 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_margin="10dp"
+        android:gravity="right"
         android:layout_below="@+id/contentLinearLayout3">
 
         <Button
             android:id="@+id/confirmBtn"
-            android:layout_width="0dp"
-            android:layout_weight="0.5"
+            android:layout_width="60dp"
             android:layout_height="40dp"
             android:background="@drawable/btn_selector"
-            android:text="OK"
-            android:textColor="#fff"
-            android:textStyle="bold"
-            android:layout_marginRight="2.5dp"/>
-
-        <Button
-            android:id="@+id/cancelBtn"
-            android:layout_width="0dp"
-            android:layout_weight="0.5"
-            android:layout_height="40dp"
-            android:background="@drawable/btn_selector"
+            android:text="다음"
             android:layout_marginLeft="2.5dp"
-            android:text="NO"
             android:textColor="#fff"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
+
+
     </LinearLayout>
 
 </RelativeLayout>

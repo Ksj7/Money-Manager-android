@@ -29,13 +29,11 @@
                 android:id="@+id/profileImage"
                 android:layout_width="@dimen/profile_image_size"
                 android:layout_height="@dimen/profile_image_size"
-                android:layout_marginBottom="30dp"
-                android:background="@mipmap/ic_launcher"/>
+                android:layout_marginBottom="30dp"/>
             <TextView
                 android:id="@+id/nameText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="홍길동"
                 android:textColor="#000" />
 
         </LinearLayout>
@@ -46,7 +44,7 @@
             android:layout_marginBottom="10dp"
             android:layout_gravity="center"
             android:textSize="15sp"
-            android:text="010-1234-5678"
+            android:text="-"
             android:textColor="#000"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
@@ -57,7 +55,7 @@
             android:layout_height="30dp"
             android:layout_gravity="center"
             android:textSize="13sp"
-            android:text="확인"
+            android:text="@string/confirm"
             android:textStyle="bold"
             android:textColor="#000"
             android:background="@drawable/gray_round_line_selector"  />

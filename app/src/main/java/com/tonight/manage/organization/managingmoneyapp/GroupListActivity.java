@@ -23,17 +23,20 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.clans.fab.FloatingActionButton;
+import com.readystatesoftware.viewbadger.BadgeView;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomCreateGroupPopup;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomEntrancePopup;
+import com.tonight.manage.organization.managingmoneyapp.Object.GroupListBundle;
 import com.tonight.manage.organization.managingmoneyapp.Object.GroupListItem;
-import com.tonight.manage.organization.managingmoneyapp.Server.GroupJSONParsor;
+import com.tonight.manage.organization.managingmoneyapp.Server.GroupJSONParser;
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
 
 import java.io.ByteArrayOutputStream;
@@ -54,19 +57,17 @@ import okhttp3.ResponseBody;
 public class GroupListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private RecyclerView mGroupListRecyclerView;
+    private final int PICK_IMAGE_REQUEST = 1;
+    public static final String UPLOAD_KEY = "image";
+
     private GroupAdapter mGroupListAdapter;
     private SwipeRefreshLayout mGroupListSwipeRefreshLayout;
-    private FloatingActionButton mCreateGroupFab;
-    private FloatingActionButton mEnterGrouopFab;
-    private boolean isRefresh;
 
     CircleImageView profileImage;
-    private int PICK_IMAGE_REQUEST = 1;
-    private Bitmap receivedbitmap;
-    public static final String UPLOAD_URL = "http://52.79.174.172/MAM/upload.php";
-    public static final String UPLOAD_KEY = "image";
+    TextView userName;
+    TextView userPhone;
     private String userId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,15 +75,15 @@ public class GroupListActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         Intent i = getIntent();
-        if(i==null) return;
+        if (i == null) return;
         userId = i.getStringExtra("userId");
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mCreateGroupFab = (FloatingActionButton) findViewById(R.id.creatGroupFab);
-        mEnterGrouopFab = (FloatingActionButton) findViewById(R.id.enterGroupFab);
+        FloatingActionButton mCreateGroupFab = (FloatingActionButton) findViewById(R.id.creatGroupFab);
+        FloatingActionButton mEnterGrouopFab = (FloatingActionButton) findViewById(R.id.enterGroupFab);
 
         mCreateGroupFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +96,7 @@ public class GroupListActivity extends AppCompatActivity
         mEnterGrouopFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CustomEntrancePopup entrancePopup = CustomEntrancePopup.newInstance();
+                CustomEntrancePopup entrancePopup = CustomEntrancePopup.newInstance(userId);
                 entrancePopup.show(getSupportFragmentManager(), "entrance_group");
             }
         });
@@ -112,6 +113,8 @@ public class GroupListActivity extends AppCompatActivity
 
         View headerView = navigationView.getHeaderView(0);
         profileImage = (CircleImageView) headerView.findViewById(R.id.profile_imageView);//프로필 이미지뷰
+        userName = (TextView) headerView.findViewById(R.id.userNameText);
+        userPhone = (TextView) headerView.findViewById(R.id.userPhoneNumberText);
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -121,7 +124,7 @@ public class GroupListActivity extends AppCompatActivity
             }
         });
 
-        mGroupListRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        RecyclerView mGroupListRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mGroupListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mGroupListRecyclerView.setHasFixedSize(true);
         mGroupListAdapter = new GroupAdapter(this);
@@ -150,18 +153,24 @@ public class GroupListActivity extends AppCompatActivity
 
             }
         });
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         new LoadGroupListAsyncTask().execute();
     }
+
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    { //이미지를 받으면 서버에 보내줌
+    public void onActivityResult(int requestCode, int resultCode, Intent data) { //이미지를 받으면 서버에 보내줌
         if (requestCode == PICK_IMAGE_REQUEST &&
                 resultCode == RESULT_OK && data != null && data.getData() != null) {
 
             //무사히 종료되었으면
             Uri selectedImageUri = data.getData();
             try {
-                receivedbitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
+                Bitmap receivedbitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
                 UploadImage uploadImage = new UploadImage();
                 uploadImage.execute(receivedbitmap);
 
@@ -196,10 +205,12 @@ public class GroupListActivity extends AppCompatActivity
             startActivity(new Intent(this, EditPasswordActivity.class));
         } else if (id == R.id.nav_edit_phoneNumber) {
             startActivity(new Intent(this, EditPhoneNumberActivity.class));
-        } else if (id == R.id.nav_alarm_list) {
-
-        } else if( id == R.id.nav_logout){
-            Intent intent = new Intent(GroupListActivity.this,LoginActivity.class);
+        } else if (id == R.id.nav_logout) {
+            SharedPreferences pref = getSharedPreferences("Login", MODE_PRIVATE);
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putBoolean("loginok", false);
+            editor.apply();
+            Intent intent = new Intent(GroupListActivity.this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
@@ -209,11 +220,10 @@ public class GroupListActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    public boolean onKeyDown(int keyCode, KeyEvent event)
-    {
 
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0)
-        {
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
 
             this.moveTaskToBack(true);
             return true;
@@ -252,14 +262,23 @@ public class GroupListActivity extends AppCompatActivity
             holder.groupName.setText(groupDatas.get(position).getGroupname());
             holder.groupNumber.setText(groupDatas.get(position).getMembernum());
             holder.view.setOnClickListener(new View.OnClickListener() {
-
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(GroupListActivity.this, EventListActivity.class);
-                    i.putExtra("groupcode",groupDatas.get(position).getGroupcode());
+                    i.putExtra("groupName", groupDatas.get(position).getGroupname());
+                    i.putExtra("groupcode", groupDatas.get(position).getGroupcode());
+                    i.putExtra("account", groupDatas.get(position).getAccount());
+                    i.putExtra("bank", groupDatas.get(position).getBank());
                     startActivity(i);
                 }
             });
+            String bubble = groupDatas.get(position).getBubblecount();
+            if (bubble.equals("0")) {
+                holder.badge.hide();
+                return;
+            }
+            holder.badge.setText(bubble);
+            holder.badge.show();
         }
 
         @Override
@@ -270,23 +289,27 @@ public class GroupListActivity extends AppCompatActivity
         public class ViewHolder extends RecyclerView.ViewHolder {
             TextView groupName;
             TextView groupNumber;
+            View bubble;
             RecyclerView recyclerView;
             View view;
+            BadgeView badge;
 
             public ViewHolder(View v) {
                 super(v);
                 view = v;
                 groupName = (TextView) v.findViewById(R.id.groupname);
                 groupNumber = (TextView) v.findViewById(R.id.groupNumber);
+                bubble = v.findViewById(R.id.bubble);
+                badge = new BadgeView(getApplicationContext(), bubble);
                 recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
             }
         }
     }
 
     //group list 가져오기 위한 Thread
-    public class LoadGroupListAsyncTask extends AsyncTask<Void, Void, ArrayList<GroupListItem>> {
+    public class LoadGroupListAsyncTask extends AsyncTask<Void, Void, GroupListBundle> {
         @Override
-        protected ArrayList<GroupListItem> doInBackground(Void... voids) {
+        protected GroupListBundle doInBackground(Void... voids) {
             String requestURL = "";
             Response response = null;
             try {
@@ -309,7 +332,9 @@ public class GroupListActivity extends AppCompatActivity
                 ResponseBody resBody = response.body();
 
                 if (flag) { //http req/res 성공
-                    return GroupJSONParsor.parseGroupListItems(resBody.string());
+                    if (resBody != null) {
+                        return GroupJSONParser.parseGroupListItems(resBody.string());
+                    }
                 } else { //실패시 정의
                     Log.e("에러", "데이터를 로드하는데 실패하였습니다");
                 }
@@ -325,13 +350,28 @@ public class GroupListActivity extends AppCompatActivity
         }
 
         @Override
-        protected void onPostExecute(ArrayList<GroupListItem> result) {
+        protected void onPostExecute(GroupListBundle result) {
 
             // RecyclerView Adapter Item 값 추가
-            if (result != null && result.size() > 0) {
+            if (result == null) {
+                return;
+            }
 
-                mGroupListAdapter.addAllItem(result);
-                mGroupListAdapter.notifyDataSetChanged();
+            if (result.getUserinfo() != null && result.getUserinfo().size() > 0) {
+
+                if (result.getResult() != null && result.getResult().size() > 0) {
+                    mGroupListAdapter.addAllItem(result.getResult());
+                    mGroupListAdapter.notifyDataSetChanged();
+                }
+                userName.setText(result.getUserinfo().get(0).getUsername());
+                userPhone.setText(result.getUserinfo().get(0).getPhone());
+                Glide.with(getApplicationContext())
+                        .load(result.getUserinfo().get(0).getProfileimg())
+                        .override(150, 150)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .into(profileImage);
+
             }
         }
     }
@@ -351,6 +391,7 @@ public class GroupListActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            new LoadGroupListAsyncTask().execute();
             loading.dismiss();
         }
 
@@ -360,13 +401,13 @@ public class GroupListActivity extends AppCompatActivity
             String uploadImage = getStringImage(bitmap);
 
             SharedPreferences pref = getSharedPreferences("Login", MODE_PRIVATE);
-            userid = pref.getString("id","error");
+            userid = pref.getString("id", "error");
 
             HashMap<String, String> data = new HashMap<>();
 
             data.put(UPLOAD_KEY, uploadImage);
             data.put("userid", userid);
-            String result = handler.sendPostRequest(UPLOAD_URL, data);
+            String result = handler.sendPostRequest(NetworkDefineConstant.SERVERP_URL_UPLOAD_PROFILE_IMAGE, data);
 
             return result;
         }

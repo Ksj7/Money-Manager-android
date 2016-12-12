@@ -11,11 +11,16 @@
         android:background="@color/colorBackground"
         android:orientation="vertical">
 
+        <View
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="top|right"
+            android:id="@+id/bubble"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="10dp"
-            android:layout_marginTop="20dp"
             android:layout_weight="1">
 
             <TextView
@@ -39,8 +44,8 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginRight="5dp"
-                android:background="@mipmap/ic_launcher" />
+                android:src="@drawable/ic_people_outline_black_36dp"
+                android:layout_marginRight="5dp" />
 
             <TextView
                 android:id="@+id/eventlist_number_textview"
@@ -65,12 +70,11 @@
                 android:layout_marginRight="5dp"/>
             <TextView
                 android:id="@+id/eventlist_percent_textview"
-                android:layout_width="30dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="50%" />
         </LinearLayout>
-
 
     </LinearLayout>
 

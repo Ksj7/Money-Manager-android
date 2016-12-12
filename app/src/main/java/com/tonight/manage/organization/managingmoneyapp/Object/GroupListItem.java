@@ -8,11 +8,10 @@ public class GroupListItem {
     String membernum;
     String groupcode;
     String groupname;
+    String balance;
+    String bubblecount;
     String bank;
     String account;
-    String balance;
-    String managerid;
-
 
     public GroupListItem setGroupname(String groupname) {
         this.groupname = groupname;
@@ -28,44 +27,31 @@ public class GroupListItem {
         return this;
     }
 
-    public GroupListItem setBank(String bank) {
-        this.bank = bank;
-        return this;
-    }
 
     public GroupListItem setBalance(String balance) {
         this.balance = balance;
         return this;
     }
 
+    public GroupListItem setBubblecount(String bubblecount) {
+        this.bubblecount = bubblecount;
+        return this;
+    }
+    public GroupListItem setBank(String bank) {
+        this.bank = bank;
+        return this;
+    }
     public GroupListItem setAccount(String account) {
         this.account = account;
         return this;
     }
 
-    public GroupListItem setManagerid(String managerid) {
-        this.managerid = managerid;
-        return this;
-    }
 
     public String getBalance() {
         return balance;
     }
-
     public String getGroupname() {
         return groupname;
-    }
-
-
-    public String getManagerid() {
-        return managerid;
-    }
-
-    public String getAccount() {
-        return account;
-    }
-    public String getBank() {
-        return bank;
     }
     public String getGroupcode() {
         return groupcode;
@@ -73,5 +59,15 @@ public class GroupListItem {
     public String getMembernum() {
         return membernum;
     }
+    public String getBubblecount() {
+        return bubblecount;
+    }
+    public String getBank() {
+        return bank;
+    }
+    public String getAccount() {
+        return account;
+    }
+
 
 }
