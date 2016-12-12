@@ -245,8 +245,6 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
             startActivity(new Intent(this, EditPasswordActivity.class));
         } else if (id == R.id.nav_edit_phoneNumber) {
             startActivity(new Intent(this, EditPhoneNumberActivity.class));
-        } else if (id == R.id.nav_alarm_list) {
-
         } else if (id == R.id.nav_logout) {
             SharedPreferences pref = getSharedPreferences("Login", MODE_PRIVATE);
             SharedPreferences.Editor editor = pref.edit();

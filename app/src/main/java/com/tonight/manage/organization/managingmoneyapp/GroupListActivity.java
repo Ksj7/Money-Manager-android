@@ -27,7 +27,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -207,9 +206,7 @@ public class GroupListActivity extends AppCompatActivity
             startActivity(new Intent(this, EditPasswordActivity.class));
         } else if (id == R.id.nav_edit_phoneNumber) {
             startActivity(new Intent(this, EditPhoneNumberActivity.class));
-        } else if (id == R.id.nav_alarm_list) {
-
-        } else if( id == R.id.nav_logout){
+        }else if( id == R.id.nav_logout){
             SharedPreferences pref = getSharedPreferences("Login", MODE_PRIVATE);
             SharedPreferences.Editor editor = pref.edit();
             editor.putBoolean("loginok", false);
@@ -359,22 +356,25 @@ public class GroupListActivity extends AppCompatActivity
 
             // RecyclerView Adapter Item 값 추가
             if (result == null) {
-                Toast.makeText(GroupListActivity.this, "그룹이 존재하지 않습니다.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            if (result.getResult() != null && result.getUserinfo() != null && result.getResult().size() > 0 && result.getUserinfo().size()>0) {
+            if (result.getUserinfo() != null && result.getUserinfo().size()>0) {
 
-                mGroupListAdapter.addAllItem(result.getResult());
-                mGroupListAdapter.notifyDataSetChanged();
-                userName.setText(result.getUserinfo().get(0).getUsername());
-                userPhone.setText(result.getUserinfo().get(0).getPhone());
-                Glide.with(getApplicationContext())
-                        .load(result.getUserinfo().get(0).getProfileimg())
-                        .override(150, 150)
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .skipMemoryCache(true)
-                        .into(profileImage);
+                if(result.getResult() != null && result.getResult().size() > 0 ) {
+                    mGroupListAdapter.addAllItem(result.getResult());
+                    mGroupListAdapter.notifyDataSetChanged();
+                }
+                else {
+                    userName.setText(result.getUserinfo().get(0).getUsername());
+                    userPhone.setText(result.getUserinfo().get(0).getPhone());
+                    Glide.with(getApplicationContext())
+                            .load(result.getUserinfo().get(0).getProfileimg())
+                            .override(150, 150)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
+                            .into(profileImage);
+                }
             }
         }
     }
