@@ -64,7 +64,9 @@ public class GroupJSONParser {
                             .setGroupcode(item.getString("groupcode"))
                             .setGroupname(item.getString("groupname"))
                             .setBubblecount(item.getString("bubblecount"))
-                            .setBalance(item.getString("balance"));
+                            .setBalance(item.getString("balance"))
+                            .setBank(item.getString("bank"))
+                            .setAccount(item.getString("account"));
 
                     groupListItemArrayList.add(valueObject);
                 }

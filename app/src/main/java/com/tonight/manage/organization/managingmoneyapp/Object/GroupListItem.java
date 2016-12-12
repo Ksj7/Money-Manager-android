@@ -10,7 +10,8 @@ public class GroupListItem {
     String groupname;
     String balance;
     String bubblecount;
-
+    String bank;
+    String account;
 
     public GroupListItem setGroupname(String groupname) {
         this.groupname = groupname;
@@ -36,6 +37,15 @@ public class GroupListItem {
         this.bubblecount = bubblecount;
         return this;
     }
+    public GroupListItem setBank(String bank) {
+        this.bank = bank;
+        return this;
+    }
+    public GroupListItem setAccount(String account) {
+        this.account = account;
+        return this;
+    }
+
 
     public String getBalance() {
         return balance;
@@ -52,5 +62,12 @@ public class GroupListItem {
     public String getBubblecount() {
         return bubblecount;
     }
+    public String getBank() {
+        return bank;
+    }
+    public String getAccount() {
+        return account;
+    }
+
 
 }

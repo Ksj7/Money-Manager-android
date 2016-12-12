@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomAddEventPopup;
+import com.tonight.manage.organization.managingmoneyapp.Custom.CustomInfoGroupPopup;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomRateTextCircularProgressBar;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomShowGroupCodePopup;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventListBundle;
@@ -59,6 +60,8 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
     private SwipeRefreshLayout mEventListSwipeRefreshLayout;
     private String mGroupCode;
     private String mGroupName;
+    private String mGroupBank;
+    private String mGroupAccount;
     private String mGroupBalance;
     TextView groupNameText;
     TextView balanceText;
@@ -79,6 +82,8 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
         if (i == null) return;
         mGroupCode = i.getStringExtra("groupcode");
         mGroupName = i.getStringExtra("groupName");
+        mGroupBank = i.getStringExtra("bank");
+        mGroupAccount = i.getStringExtra("account");
 
         SharedPreferences pref = getSharedPreferences("Login", MODE_PRIVATE);
         userid = pref.getString("id", "error");
@@ -218,7 +223,12 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
         } else if (id == R.id.action_group_code) {
             CustomShowGroupCodePopup showGroupCodePopup = CustomShowGroupCodePopup.newInstance(mGroupCode);
             showGroupCodePopup.show(getSupportFragmentManager(), "add_event");
-        } else {
+        } else if(id == R.id.action_info_group){
+            CustomInfoGroupPopup infoGroupPopup = CustomInfoGroupPopup.newInstance(mGroupName,mGroupAccount,mGroupBank);
+            infoGroupPopup.show(getSupportFragmentManager(),"info_group");
+        }
+
+        else {
             Toast.makeText(this, "오류 발생!", Toast.LENGTH_SHORT).show();
         }
 
