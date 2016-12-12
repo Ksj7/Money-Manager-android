@@ -384,7 +384,9 @@ public class CustomSelectEventForUsageSMSPupup extends DialogFragment{
             if (isSuccess) {
                 Toast.makeText(getContext(), "사용내역이 업로드되었습니다.", Toast.LENGTH_SHORT).show();
                 Log.e("사용내역이 업로드되었습니다.","isSuccess is true"+isSuccess);
-                EventInfoActivity.pagerInstance.notifyDataSetChanged();
+                if(EventInfoActivity.pagerInstance != null) {
+                    EventInfoActivity.pagerInstance.notifyDataSetChanged();
+                }
                 dismiss();
                 AddUsageByPasteActivity.activityInstance.finish();
             } else {

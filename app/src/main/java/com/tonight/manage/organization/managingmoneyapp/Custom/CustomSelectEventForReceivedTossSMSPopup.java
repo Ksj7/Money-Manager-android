@@ -458,7 +458,9 @@ public class CustomSelectEventForReceivedTossSMSPopup extends DialogFragment {
 
             if (isSuccess == 1) {
                 Toast.makeText(getActivity(), "지출확인", Toast.LENGTH_SHORT).show();
-                EventInfoActivity.pagerInstance.notifyDataSetChanged();
+                if(EventInfoActivity.pagerInstance != null) {
+                    EventInfoActivity.pagerInstance.notifyDataSetChanged();
+                }
                 //dismiss();
             } else if (isSuccess == 2) {
                 Toast.makeText(getActivity(), "목표금액이 0", Toast.LENGTH_SHORT).show();
