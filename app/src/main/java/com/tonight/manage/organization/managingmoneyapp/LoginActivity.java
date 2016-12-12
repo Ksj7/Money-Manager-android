@@ -3,6 +3,7 @@ package com.tonight.manage.organization.managingmoneyapp;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -14,6 +15,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.tonight.manage.organization.managingmoneyapp.Custom.CustomUsagePopup;
 import com.tonight.manage.organization.managingmoneyapp.Server.NetworkDefineConstant;
 import com.tonight.manage.organization.managingmoneyapp.Service.PasteService;
 
@@ -147,19 +149,20 @@ public class LoginActivity extends AppCompatActivity  {
                     Log.e("체크되어있지않음.","야호");
                     Toast.makeText(getApplicationContext(),"AMA앱의 알림접근을 허용해주시기 바랍니다.",Toast.LENGTH_LONG).show();
                     Intent intent=new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
-                    startActivity(intent);
+                    startActivityForResult(intent, 0);
                 }
                 else
                 {
                     Log.e("체크되어있음.","ㅎㅎㅎㅎ");
-                }
-                Intent serviceIntent = new Intent(LoginActivity.this, PasteService.class);//문자로 사용내역 추가 서비스
-                startService(serviceIntent);
 
-                Intent i = new Intent(LoginActivity.this, GroupListActivity.class);
-                i.putExtra("userId",idEditText.getText().toString());
-                startActivity(i);
-                finish();
+                    Intent serviceIntent = new Intent(LoginActivity.this, PasteService.class);//문자로 사용내역 추가 서비스
+                    startService(serviceIntent);
+                    Intent i = new Intent(LoginActivity.this, GroupListActivity.class);
+                    i.putExtra("userId",idEditText.getText().toString());
+                    startActivity(i);
+                    finish();
+                }
+
             }
             else {
                 if (loginSuccess == 1) {
@@ -175,4 +178,19 @@ public class LoginActivity extends AppCompatActivity  {
             }
         }
     }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    { //이미지를 받으면 서버에 보내줌
+        if (requestCode == 0) {
+
+            Intent serviceIntent = new Intent(LoginActivity.this, PasteService.class);//문자로 사용내역 추가 서비스
+            startService(serviceIntent);
+            Intent i = new Intent(LoginActivity.this, GroupListActivity.class);
+            i.putExtra("userId",idEditText.getText().toString());
+            startActivity(i);
+            finish();
+        }
+    }
+
+
 }
