@@ -553,6 +553,9 @@ public class PaymentFragment extends Fragment {
                     mManagerName.setText((eventInfoPaymentItemArrayList.get(0).getManagerName()));
                     if (eventInfoPaymentItemArrayList.get(0).getUserIspay().equals("1")) {
                         myStatus.setText("지출완료");//유저 상태
+                        myStatus.setBackgroundResource(R.color.colorDisableBackground);
+                        myStatus.setClickable(false);
+
                     }
                     Glide.with(getActivity().getApplicationContext())
                             .load(eventInfoPaymentItemArrayList.get(0).getUserprofileURL())
