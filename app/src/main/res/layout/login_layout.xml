@@ -13,6 +13,7 @@
         <EditText
                 android:id="@+id/idEdit"
                 android:hint="아이디"
+                android:inputType="text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
@@ -20,6 +21,7 @@
                 android:padding="@dimen/edit_text_margin"
                 android:textSize="15sp"
                 android:textIsSelectable="false"
+                android:nextFocusDown="@+id/passwordEdit"
                 android:maxLength="20"
                 android:background="#fff"/>
 

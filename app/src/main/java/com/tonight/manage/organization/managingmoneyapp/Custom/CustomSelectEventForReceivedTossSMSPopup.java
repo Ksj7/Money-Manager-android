@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tonight.manage.organization.managingmoneyapp.AddPayCheckByTossNotificationActivity;
+import com.tonight.manage.organization.managingmoneyapp.EventInfoActivity;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoMemberPaymentListItem;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoPaymentItem;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoPaymentTotalItem;
@@ -457,7 +458,7 @@ public class CustomSelectEventForReceivedTossSMSPopup extends DialogFragment {
 
             if (isSuccess == 1) {
                 Toast.makeText(getActivity(), "지출확인", Toast.LENGTH_SHORT).show();
-
+                EventInfoActivity.pagerInstance.notifyDataSetChanged();
                 //dismiss();
             } else if (isSuccess == 2) {
                 Toast.makeText(getActivity(), "목표금액이 0", Toast.LENGTH_SHORT).show();

@@ -5,6 +5,7 @@
     <color name="colorAccent">#E67E22</color>
     <color name="colorBackground">#EDEDED</color>
     <color name="colorPrimaryLight">#3498DB</color>
+    <color name="colorDarkRed">#C0392B</color>
     <color name="colorEditText">#405B79</color>
     <color name="white">#fff</color>
     <color name="colorDisableBackground">#5E5E5E</color>

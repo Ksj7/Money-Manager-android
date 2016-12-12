@@ -50,6 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_weight="0.7"
+            android:inputType="text"
             android:hint="Input Text Here"
             android:textColorHint="@color/colorEditText"
             android:textColor="#000"

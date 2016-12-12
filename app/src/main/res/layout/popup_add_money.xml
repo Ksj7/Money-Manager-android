@@ -180,6 +180,7 @@
                 android:layout_width="0dp"
                 android:layout_height="35dp"
                 android:layout_weight="0.5"
+                android:layout_marginRight="10dp"
                 android:background="@drawable/primary_color_round_button"
                 android:text="@string/cancel"
                 android:textColor="#fff" />
@@ -187,7 +188,6 @@
                 android:id="@+id/confirmBtn"
                 android:layout_width="0dp"
                 android:layout_height="35dp"
-                android:layout_marginRight="10dp"
                 android:layout_weight="0.5"
                 android:background="@drawable/primary_color_round_button"
                 android:text="@string/confirm"

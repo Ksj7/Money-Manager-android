@@ -1,15 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:htext="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:gravity="center"
-              android:background="@drawable/side_nav_bar">
+              android:background="@color/colorPrimary">
 
     <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:id="@+id/splash_logo"
-            android:background="@drawable/ic_menu_send"
+            android:layout_gravity="center"
+            android:background="@drawable/logo"
     />
+
+    <com.hanks.htextview.HTextView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:gravity="center"
+        android:background="@color/colorPrimary"
+        android:textColor="#fff"
+        android:textSize="35sp"
+        android:textStyle="bold"
+        htext:animateType="typer"
+        android:text="A   M   M"/>
 </LinearLayout>

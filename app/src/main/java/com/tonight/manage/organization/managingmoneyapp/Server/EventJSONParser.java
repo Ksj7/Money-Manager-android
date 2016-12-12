@@ -46,7 +46,8 @@ public class EventJSONParser {
                             .setUsername(item.getString("username"))
                             .setPhone(item.getString("phone"))
                             .setProfileimg(item.getString("profileimg"))
-                            .setManager(item.getString("manager"));
+                            .setManager(item.getString("manager"))
+                            .setBalance(item.getString("balance"));
 
                     userItemArrayList.add(valueObject);
                 }
@@ -65,7 +66,8 @@ public class EventJSONParser {
                             .setEventnum(item.getString("eventnum"))
                             .setEventname(item.getString("eventname"))
                             .setTargetm(item.getString("targetm"))
-                            .setSumm(item.getString("summ"));
+                            .setSumm(item.getString("summ"))
+                            .setBubblecount(item.getString("bubblecount"));
 
                     eventListItemArrayList.add(valueObject);
                 }

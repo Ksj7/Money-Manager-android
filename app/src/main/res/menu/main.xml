@@ -18,5 +18,9 @@
         android:orderInCategory="100"
         app:showAsAction="never"/>
 
+    <item android:id="@+id/action_info_group"
+        android:title="@string/info_group"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
 
 </menu>
