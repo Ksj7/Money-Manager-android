@@ -75,7 +75,7 @@ public class GroupListActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         Intent i = getIntent();
-        if(i==null) return;
+        if (i == null) return;
         userId = i.getStringExtra("userId");
 
 
@@ -113,7 +113,7 @@ public class GroupListActivity extends AppCompatActivity
 
         View headerView = navigationView.getHeaderView(0);
         profileImage = (CircleImageView) headerView.findViewById(R.id.profile_imageView);//프로필 이미지뷰
-        userName = (TextView) headerView.findViewById(R.id.userNameText) ;
+        userName = (TextView) headerView.findViewById(R.id.userNameText);
         userPhone = (TextView) headerView.findViewById(R.id.userPhoneNumberText);
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,8 +163,7 @@ public class GroupListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    { //이미지를 받으면 서버에 보내줌
+    public void onActivityResult(int requestCode, int resultCode, Intent data) { //이미지를 받으면 서버에 보내줌
         if (requestCode == PICK_IMAGE_REQUEST &&
                 resultCode == RESULT_OK && data != null && data.getData() != null) {
 
@@ -206,12 +205,12 @@ public class GroupListActivity extends AppCompatActivity
             startActivity(new Intent(this, EditPasswordActivity.class));
         } else if (id == R.id.nav_edit_phoneNumber) {
             startActivity(new Intent(this, EditPhoneNumberActivity.class));
-        }else if( id == R.id.nav_logout){
+        } else if (id == R.id.nav_logout) {
             SharedPreferences pref = getSharedPreferences("Login", MODE_PRIVATE);
             SharedPreferences.Editor editor = pref.edit();
             editor.putBoolean("loginok", false);
             editor.apply();
-            Intent intent = new Intent(GroupListActivity.this,LoginActivity.class);
+            Intent intent = new Intent(GroupListActivity.this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
@@ -221,11 +220,10 @@ public class GroupListActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    public boolean onKeyDown(int keyCode, KeyEvent event)
-    {
 
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0)
-        {
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
 
             this.moveTaskToBack(true);
             return true;
@@ -267,15 +265,15 @@ public class GroupListActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(GroupListActivity.this, EventListActivity.class);
-                    i.putExtra("groupName",groupDatas.get(position).getGroupname());
-                    i.putExtra("groupcode",groupDatas.get(position).getGroupcode());
-                    i.putExtra("account",groupDatas.get(position).getAccount());
-                    i.putExtra("bank",groupDatas.get(position).getBank());
+                    i.putExtra("groupName", groupDatas.get(position).getGroupname());
+                    i.putExtra("groupcode", groupDatas.get(position).getGroupcode());
+                    i.putExtra("account", groupDatas.get(position).getAccount());
+                    i.putExtra("bank", groupDatas.get(position).getBank());
                     startActivity(i);
                 }
             });
             String bubble = groupDatas.get(position).getBubblecount();
-            if(bubble.equals("0")) {
+            if (bubble.equals("0")) {
                 holder.badge.hide();
                 return;
             }
@@ -334,7 +332,7 @@ public class GroupListActivity extends AppCompatActivity
                 ResponseBody resBody = response.body();
 
                 if (flag) { //http req/res 성공
-                    if(resBody!=null) {
+                    if (resBody != null) {
                         return GroupJSONParser.parseGroupListItems(resBody.string());
                     }
                 } else { //실패시 정의
@@ -359,22 +357,21 @@ public class GroupListActivity extends AppCompatActivity
                 return;
             }
 
-            if (result.getUserinfo() != null && result.getUserinfo().size()>0) {
+            if (result.getUserinfo() != null && result.getUserinfo().size() > 0) {
 
-                if(result.getResult() != null && result.getResult().size() > 0 ) {
+                if (result.getResult() != null && result.getResult().size() > 0) {
                     mGroupListAdapter.addAllItem(result.getResult());
                     mGroupListAdapter.notifyDataSetChanged();
                 }
-                else {
-                    userName.setText(result.getUserinfo().get(0).getUsername());
-                    userPhone.setText(result.getUserinfo().get(0).getPhone());
-                    Glide.with(getApplicationContext())
-                            .load(result.getUserinfo().get(0).getProfileimg())
-                            .override(150, 150)
-                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                            .skipMemoryCache(true)
-                            .into(profileImage);
-                }
+                userName.setText(result.getUserinfo().get(0).getUsername());
+                userPhone.setText(result.getUserinfo().get(0).getPhone());
+                Glide.with(getApplicationContext())
+                        .load(result.getUserinfo().get(0).getProfileimg())
+                        .override(150, 150)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .into(profileImage);
+
             }
         }
     }
@@ -404,7 +401,7 @@ public class GroupListActivity extends AppCompatActivity
             String uploadImage = getStringImage(bitmap);
 
             SharedPreferences pref = getSharedPreferences("Login", MODE_PRIVATE);
-            userid = pref.getString("id","error");
+            userid = pref.getString("id", "error");
 
             HashMap<String, String> data = new HashMap<>();
 
