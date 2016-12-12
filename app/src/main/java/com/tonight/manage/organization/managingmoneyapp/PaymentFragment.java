@@ -270,7 +270,7 @@ public class PaymentFragment extends Fragment {
             } else {
                 Button personBtn = new ProductButton.ProductBuilder(holder.useName.getText().toString(),1).build();
                 buttonBundle.put(position, personBtn);
-                LinearLayout.LayoutParams plControl = new LinearLayout.LayoutParams(150, 90);
+                LinearLayout.LayoutParams plControl = new LinearLayout.LayoutParams(150, 100);
                 plControl.setMargins(18, 50, 0, 50);
                 finedPersonLinear.addView(personBtn, plControl);
                 finedPersonScroll.computeScroll();
@@ -559,6 +559,11 @@ public class PaymentFragment extends Fragment {
                     //Log.e("멤버포지션", memberPosition + "?");
                     if (memberPosition == 2) {//가입되어 있지 않은 회원이라면 자신의 정보 안보임
                         eventInfo_payment_userInfo.setVisibility(View.GONE);
+                        mAddButton.setClickable(false);
+                    }else if(memberPosition ==1){//이벤트에 추가되어있는 회원
+                        mAddButton.setClickable(false);
+                    }else{//manager
+
                     }
                 }
 
