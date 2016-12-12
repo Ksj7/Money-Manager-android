@@ -51,6 +51,7 @@
             android:layout_marginLeft="15dp"
             android:layout_weight="0.7"
             android:hint="Input Text Here"
+            android:inputType="text"
             android:textColorHint="@color/colorEditText"
             android:textColor="#000"
             android:textSize="15sp"

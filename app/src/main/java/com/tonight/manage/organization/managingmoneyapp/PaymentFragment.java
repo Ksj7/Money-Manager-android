@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,6 +27,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.tonight.manage.organization.managingmoneyapp.Builder.ProductButton;
 import com.tonight.manage.organization.managingmoneyapp.Builder.ProductExcel;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomAddMoneyPopup;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomCheckCashPopup;
@@ -52,6 +54,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import jxl.write.WriteException;
@@ -94,6 +97,10 @@ public class PaymentFragment extends Fragment {
     TextView myStatus;
     CircleImageView mManagerProfile;
     private ArrayList<EventInfoMemberPaymentListItem> eventInfoMemberItemArrayList;
+
+    private LinearLayout finedPersonLinear;
+    private HorizontalScrollView finedPersonScroll;
+    private HashMap<Integer, Button> buttonBundle;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -204,6 +211,9 @@ public class PaymentFragment extends Fragment {
         myMoney = (TextView) v.findViewById(R.id.eventInfo_userMoney);
         myStatus = (TextView) v.findViewById(R.id.eventInfo_userPayState);
 
+        finedPersonScroll = (HorizontalScrollView) v.findViewById(R.id.finedPersonScroll);
+        finedPersonLinear = (LinearLayout) v.findViewById(R.id.finedPersonList);
+        buttonBundle = new HashMap<>();
 
         new loadPaymentAsyncTask().execute();
         return v;
@@ -254,6 +264,16 @@ public class PaymentFragment extends Fragment {
             Log.e("여기 리스트", paymentArrayList.get(position).getSpendingstatus() + "?");
             if (paymentArrayList.get(position).getSpendingstatus().equals("1")) {
                 holder.payStatus.setText("지출완료");
+                Button removeButton = buttonBundle.get(position);
+                finedPersonLinear.removeView(removeButton);
+                buttonBundle.remove(position);
+            } else {
+                Button personBtn = new ProductButton.ProductBuilder(holder.useName.getText().toString(),1).build();
+                buttonBundle.put(position, personBtn);
+                LinearLayout.LayoutParams plControl = new LinearLayout.LayoutParams(150, 90);
+                plControl.setMargins(18, 50, 0, 50);
+                finedPersonLinear.addView(personBtn, plControl);
+                finedPersonScroll.computeScroll();
             }
             Glide.with(getActivity().getApplicationContext())
                     .load(paymentArrayList.get(position).getImgurl())
@@ -553,6 +573,9 @@ public class PaymentFragment extends Fragment {
                     mManagerName.setText((eventInfoPaymentItemArrayList.get(0).getManagerName()));
                     if (eventInfoPaymentItemArrayList.get(0).getUserIspay().equals("1")) {
                         myStatus.setText("지출완료");//유저 상태
+                        myStatus.setBackgroundResource(R.color.colorDisableBackground);
+                        myStatus.setClickable(false);
+
                     }
                     Glide.with(getActivity().getApplicationContext())
                             .load(eventInfoPaymentItemArrayList.get(0).getUserprofileURL())

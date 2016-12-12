@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomAddEventPopup;
+import com.tonight.manage.organization.managingmoneyapp.Custom.CustomInfoGroupPopup;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomRateTextCircularProgressBar;
 import com.tonight.manage.organization.managingmoneyapp.Custom.CustomShowGroupCodePopup;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventListBundle;
@@ -58,13 +59,16 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
     private EventListAdapter mEventListAdapter;
     private SwipeRefreshLayout mEventListSwipeRefreshLayout;
     private String mGroupCode;
+    private String mGroupName;
+    private String mGroupBank;
+    private String mGroupAccount;
+    private String mGroupBalance;
     TextView groupNameText;
     TextView balanceText;
 
     CircleImageView profileImage;
     private final int PICK_IMAGE_REQUEST = 1;
     public static final String UPLOAD_KEY = "image";
-    private String mGroupName;
     private TextView userName;
     private TextView userPhone;
     String userid;
@@ -77,8 +81,9 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
         Intent i = getIntent();
         if (i == null) return;
         mGroupCode = i.getStringExtra("groupcode");
-        String groupBalance = i.getStringExtra("balance");
         mGroupName = i.getStringExtra("groupName");
+        mGroupBank = i.getStringExtra("bank");
+        mGroupAccount = i.getStringExtra("account");
 
         SharedPreferences pref = getSharedPreferences("Login", MODE_PRIVATE);
         userid = pref.getString("id", "error");
@@ -89,8 +94,7 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
 
 
         balanceText = (TextView) findViewById(R.id.eventlist_balance);
-        String balanceFormat = String.format(getString(R.string.price), groupBalance);
-        balanceText.setText(balanceFormat);
+
 
         RecyclerView mEventListRecyclerView = (RecyclerView) findViewById(R.id.eventlist_recyclerView);
         mEventListRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
@@ -219,7 +223,12 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
         } else if (id == R.id.action_group_code) {
             CustomShowGroupCodePopup showGroupCodePopup = CustomShowGroupCodePopup.newInstance(mGroupCode);
             showGroupCodePopup.show(getSupportFragmentManager(), "add_event");
-        } else {
+        } else if(id == R.id.action_info_group){
+            CustomInfoGroupPopup infoGroupPopup = CustomInfoGroupPopup.newInstance(mGroupName,mGroupAccount,mGroupBank);
+            infoGroupPopup.show(getSupportFragmentManager(),"info_group");
+        }
+
+        else {
             Toast.makeText(this, "오류 발생!", Toast.LENGTH_SHORT).show();
         }
 
@@ -308,6 +317,13 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
                     startActivity(intent);
                 }
             });
+            /*String bubble = eventListItems.get(position).getBubblecount();
+            if(bubble.equals("0")) {
+                holder.badge.hide();
+                return;
+            }
+            holder.badge.setText(bubble);
+            holder.badge.show();*/
 
         }
 
@@ -318,11 +334,13 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
+            View view;
             TextView eventName;
             TextView eventNumber;
             TextView eventpercent;
             CustomRateTextCircularProgressBar mRateTextCircularProgressBar;
-            View view;
+            /*View bubble;
+            BadgeView badge;*/
 
             ViewHolder(View v) {
                 super(v);
@@ -330,6 +348,8 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
                 eventName = (TextView) v.findViewById(R.id.eventlist_title_textview);
                 eventNumber = (TextView) v.findViewById(R.id.eventlist_number_textview);
                 eventpercent = (TextView) v.findViewById(R.id.eventlist_percent_textview);
+                /*bubble = v.findViewById(R.id.bubble);
+                badge = new BadgeView(getApplicationContext(), bubble);*/
                 mRateTextCircularProgressBar = (CustomRateTextCircularProgressBar) v.findViewById(R.id.rate_progress_bar);
             }
         }
@@ -397,6 +417,10 @@ public class EventListActivity extends AppCompatActivity implements NavigationVi
                 }
                 userName.setText(result.getUserinfo().get(0).getUsername());
                 userPhone.setText(result.getUserinfo().get(0).getPhone());
+                mGroupBalance = result.getUserinfo().get(0).getBalance();
+                String balanceFormat = String.format(getString(R.string.price), mGroupBalance);
+                balanceText.setText(balanceFormat);
+
                 if((result.getUserinfo().get(0).getManager()).equals("1")){
                     isManager = true;
                 }

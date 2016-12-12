@@ -8,7 +8,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -34,7 +33,7 @@ public class EventInfoActivity extends AppCompatActivity implements TabLayout.On
 
         Intent i = getIntent();
         if(i==null) {
-            Toast.makeText(this,"데이터를 가져오는 중에 오류가 발생했습니다. 다시 실행해 주세요 ◕ˇoˇ◕",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"데이터를 가져오는 중에 오류가 발생했습니다. 다시 실행해 주세요",Toast.LENGTH_SHORT).show();
             return;
         }
         final String eventName = i.getStringExtra("eventName");

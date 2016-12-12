@@ -122,7 +122,23 @@ public class CustomUsagePopup extends DialogFragment {
                         display.getSize(size);
 
                         receivedbitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
-                        receivedbitmap = Bitmap.createScaledBitmap(receivedbitmap,size.x, size.y, false);
+                        int width = receivedbitmap.getWidth();
+                        int height = receivedbitmap.getHeight();
+                        Log.e("이미지크기", width + " , " + height);
+
+                        if(width<size.x) {//화면 크기보다 이미지 크기 작으면
+                            if (height < size.y) {
+                                receivedbitmap = Bitmap.createScaledBitmap(receivedbitmap, width, height, false);
+                            }else{
+                                receivedbitmap = Bitmap.createScaledBitmap(receivedbitmap, width, size.y, false);
+                            }
+                        }else{
+                            if (height < size.y) {
+                                receivedbitmap = Bitmap.createScaledBitmap(receivedbitmap, size.x, height, false);
+                            }else{
+                                receivedbitmap = Bitmap.createScaledBitmap(receivedbitmap,size.x, size.y, false);
+                            }
+                        }
 
                         UploadImage uploadImage = new UploadImage();
                         uploadImage.execute(receivedbitmap);

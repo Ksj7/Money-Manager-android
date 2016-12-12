@@ -86,6 +86,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:hint="Input Text Here"
+            android:inputType="text"
             android:textColorHint="@color/colorEditText"
             android:textColor="#000"
             android:textSize="20sp"
@@ -140,7 +141,7 @@
             android:background="@drawable/btn_selector"
             android:text="다음"
             android:layout_marginLeft="2.5dp"
-            android:textColor="#000"
+            android:textColor="#fff"
             android:textStyle="bold"/>
 
 

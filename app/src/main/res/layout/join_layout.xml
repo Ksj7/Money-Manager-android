@@ -1,123 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        tools:context="com.tonight.manage.organization.managingmoneyapp.GroupListActivity">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.tonight.manage.organization.managingmoneyapp.GroupListActivity">
+
     <android.support.design.widget.AppBarLayout
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:id="@+id/appbar"
-            android:theme="@style/AppTheme.AppBarOverlay">
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:popupTheme="@style/AppTheme.PopupOverlay"/>
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:paddingTop="20dp"
-                  android:gravity="center_horizontal"
-                  android:orientation="vertical"
-                  android:layout_below="@+id/appbar"
-                  android:background="#E0E0E0" android:weightSum="1">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/appbar"
+        android:background="#E0E0E0"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingTop="20dp"
+        android:weightSum="1">
 
         <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <EditText
-                    android:id="@+id/idEdit"
-                    android:hint="아이디"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginRight="30dp"
-                    android:textSize="15sp"
-                    android:textIsSelectable="false"
-                    android:maxLength="20"
-                    android:padding="@dimen/edit_text_margin"
-                    android:layout_marginTop="20dp"
-                    android:background="#fff"/>
-            <EditText
-                    android:id="@+id/passwordEdit"
-                    android:inputType="textPassword"
-                    android:hint="비밀번호"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginRight="30dp"
-                    android:textSize="15sp"
-                    android:textIsSelectable="false"
-                    android:maxLength="20"
-                    android:padding="@dimen/edit_text_margin"
-                    android:layout_marginTop="20dp"
-                    android:background="#fff"/>
-            <EditText
-                    android:id="@+id/passwordCheckEdit"
-                    android:hint="비밀번호 확인"
-                    android:inputType="textPassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginRight="30dp"
-                    android:textSize="15sp"
-                    android:textIsSelectable="false"
-                    android:maxLength="20"
-                    android:padding="@dimen/edit_text_margin"
-                    android:layout_marginTop="20dp"
-                    android:background="#fff"/>
-            <EditText
-                    android:id="@+id/nameEdit"
-                    android:hint="이름(실명)"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginRight="30dp"
-                    android:textSize="15sp"
-                    android:textIsSelectable="false"
-                    android:maxLength="20"
-                    android:padding="@dimen/edit_text_margin"
-                    android:layout_marginTop="20dp"
-                    android:background="#fff"/>
-            <EditText
-                    android:id="@+id/phoneNumberEdit"
-                    android:hint="전화번호"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginRight="30dp"
-                    android:inputType="phone"
-                    android:textSize="15sp"
-                    android:textIsSelectable="false"
-                    android:maxLength="20"
-                    android:padding="@dimen/edit_text_margin"
-                    android:layout_marginTop="20dp"
-                    android:background="#fff"/>
-        </LinearLayout>
-
-
-        <Button
-                android:id="@+id/joinBtn"
+                android:id="@+id/idEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
-                android:text="회원가입"
-                android:onClick="join"
-                android:textColor="#fff"
-                android:background="@color/colorAccent"
                 android:layout_marginTop="20dp"
-                android:layout_gravity="center"/>
+                android:background="#fff"
+                android:hint="아이디"
+                android:inputType="text"
+                android:maxLength="20"
+                android:nextFocusDown="@+id/passwordEdit"
+                android:padding="@dimen/edit_text_margin"
+                android:textIsSelectable="false"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/passwordEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="20dp"
+                android:background="#fff"
+                android:hint="비밀번호"
+                android:inputType="textPassword"
+                android:maxLength="20"
+                android:nextFocusDown="@+id/passwordCheckEdit"
+                android:padding="@dimen/edit_text_margin"
+                android:textIsSelectable="false"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/passwordCheckEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="20dp"
+                android:background="#fff"
+                android:hint="비밀번호 확인"
+                android:inputType="textPassword"
+                android:maxLength="20"
+                android:nextFocusDown="@+id/nameEdit"
+                android:padding="@dimen/edit_text_margin"
+                android:textIsSelectable="false"
+                android:textSize="15sp"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
+
+            <EditText
+                android:id="@+id/nameEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="20dp"
+                android:background="#fff"
+                android:hint="이름(실명)"
+                android:inputType="text"
+                android:maxLength="20"
+                android:nextFocusDown="@+id/phoneNumberEdit"
+                android:padding="@dimen/edit_text_margin"
+                android:textIsSelectable="false"
+                android:textSize="15sp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"/>
+
+            <EditText
+                android:id="@+id/phoneNumberEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="20dp"
+                android:background="#fff"
+                android:hint="전화번호"
+                android:inputType="phone"
+                android:maxLength="20"
+                android:padding="@dimen/edit_text_margin"
+                android:textIsSelectable="false"
+                android:textSize="15sp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"/>
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/joinBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/colorAccent"
+            android:onClick="join"
+            android:text="회원가입"
+            android:textColor="#fff" />
 
 
     </LinearLayout>

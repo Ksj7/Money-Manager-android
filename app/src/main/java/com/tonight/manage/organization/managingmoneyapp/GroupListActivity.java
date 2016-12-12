@@ -69,6 +69,7 @@ public class GroupListActivity extends AppCompatActivity
     TextView userPhone;
     private String userId;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -270,8 +271,9 @@ public class GroupListActivity extends AppCompatActivity
                 public void onClick(View v) {
                     Intent i = new Intent(GroupListActivity.this, EventListActivity.class);
                     i.putExtra("groupName",groupDatas.get(position).getGroupname());
-                    i.putExtra("balance",groupDatas.get(position).getBalance());
                     i.putExtra("groupcode",groupDatas.get(position).getGroupcode());
+                    i.putExtra("account",groupDatas.get(position).getAccount());
+                    i.putExtra("bank",groupDatas.get(position).getBank());
                     startActivity(i);
                 }
             });

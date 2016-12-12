@@ -143,7 +143,7 @@ public class InvitationActivity extends AppCompatActivity {
                     member.setEventnum(eventnum);
                     if (isChecked) {
                         newInvitationMemberList.add(member);
-                        Button personBtn = new ProductButton.ProductBuilder(holder.personName.getText().toString()).build();
+                        Button personBtn = new ProductButton.ProductBuilder(holder.personName.getText().toString(),0).build();
                         buttonBundle.put(position, personBtn);
                         LinearLayout.LayoutParams plControl = new LinearLayout.LayoutParams(150, 100);
                         plControl.setMargins(8, 5, 8, 5);

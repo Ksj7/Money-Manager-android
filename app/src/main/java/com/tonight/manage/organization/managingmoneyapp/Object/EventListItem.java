@@ -12,7 +12,7 @@ public class EventListItem {
     String summ;
     String eventdate;
     String personalm;
-
+    String bubblecount;
     public EventListItem setMembernum(String membernum) {
         this.membernum = membernum;
         return this;
@@ -41,6 +41,10 @@ public class EventListItem {
         this.personalm = personalm;
         return this;
     }
+    public EventListItem setBubblecount(String bubblecount) {
+        this.bubblecount = bubblecount;
+        return this;
+    }
 
     public String getEventnum() {
         return eventnum;
@@ -63,6 +67,11 @@ public class EventListItem {
     public String getPersonalm() {
         return personalm;
     }
+    public String getBubblecount() {
+        return bubblecount;
+    }
+
+
 
 
 
