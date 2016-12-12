@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tonight.manage.organization.managingmoneyapp.AddUsageByPasteActivity;
+import com.tonight.manage.organization.managingmoneyapp.EventInfoActivity;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoMemberPaymentListItem;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoPaymentItem;
 import com.tonight.manage.organization.managingmoneyapp.Object.EventInfoPaymentTotalItem;
@@ -383,6 +384,7 @@ public class CustomSelectEventForUsageSMSPupup extends DialogFragment{
             if (isSuccess) {
                 Toast.makeText(getContext(), "사용내역이 업로드되었습니다.", Toast.LENGTH_SHORT).show();
                 Log.e("사용내역이 업로드되었습니다.","isSuccess is true"+isSuccess);
+                EventInfoActivity.pagerInstance.notifyDataSetChanged();
                 dismiss();
                 AddUsageByPasteActivity.activityInstance.finish();
             } else {
