@@ -259,7 +259,7 @@ public class PaymentFragment extends Fragment {
             } else {
                 Button personBtn = new ProductButton.ProductBuilder(holder.useName.getText().toString(),1).build();
                 buttonBundle.put(position, personBtn);
-                LinearLayout.LayoutParams plControl = new LinearLayout.LayoutParams(150, 100);
+                LinearLayout.LayoutParams plControl = new LinearLayout.LayoutParams(200, 150);
                 plControl.setMargins(15, 0, 15, 0);
                 finedPersonLinear.addView(personBtn, plControl);
                 finedPersonScroll.computeScroll();

@@ -1,82 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="20dp"
     android:orientation="vertical">
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorBackground"
-        android:orientation="vertical">
-
-        <View
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="top|right"
-            android:id="@+id/bubble"/>
+        android:layout_height="wrap_content"
+        card:cardCornerRadius="3dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="10dp"
-            android:layout_weight="1">
+            android:layout_height="match_parent"
+            android:background="@color/colorBackground"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/eventlist_title_textview"
+            <View
+                android:id="@+id/bubble"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="top|right" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/eventlist_title_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="1학기 회비"
+                    android:textColor="#000"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:text="1학기 회비"
-                android:textColor="#000"
-                android:textSize="20sp" />
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginRight="5dp"
+                    android:src="@drawable/ic_people_outline_black_36dp" />
+
+                <TextView
+                    android:id="@+id/eventlist_number_textview"
+                    android:layout_width="30dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="82명" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="20dp"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <com.tonight.manage.organization.managingmoneyapp.Custom.CustomRateTextCircularProgressBar
+                    android:id="@+id/rate_progress_bar"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginRight="5dp" />
+
+                <TextView
+                    android:id="@+id/eventlist_percent_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="50%" />
+            </LinearLayout>
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="10dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_people_outline_black_36dp"
-                android:layout_marginRight="5dp" />
-
-            <TextView
-                android:id="@+id/eventlist_number_textview"
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="82명" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="20dp"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <com.tonight.manage.organization.managingmoneyapp.Custom.CustomRateTextCircularProgressBar
-                android:id="@+id/rate_progress_bar"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginRight="5dp"/>
-            <TextView
-                android:id="@+id/eventlist_percent_textview"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="50%" />
-        </LinearLayout>
-
-    </LinearLayout>
+    </android.support.v7.widget.CardView>
 
 </LinearLayout>
 

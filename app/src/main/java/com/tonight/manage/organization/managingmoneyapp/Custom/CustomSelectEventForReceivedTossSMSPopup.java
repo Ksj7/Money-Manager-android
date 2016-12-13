@@ -29,7 +29,6 @@ import com.tonight.manage.organization.managingmoneyapp.Object.EventListItem;
 import com.tonight.manage.organization.managingmoneyapp.Object.GroupListBundle;
 import com.tonight.manage.organization.managingmoneyapp.Object.GroupListItem;
 import com.tonight.manage.organization.managingmoneyapp.R;
-import com.tonight.manage.organization.managingmoneyapp.AddUsageByPasteActivity;
 import com.tonight.manage.organization.managingmoneyapp.RequestHandler;
 import com.tonight.manage.organization.managingmoneyapp.Server.EventInfoJSONParser;
 import com.tonight.manage.organization.managingmoneyapp.Server.EventJSONParser;
@@ -102,6 +101,8 @@ public class CustomSelectEventForReceivedTossSMSPopup extends DialogFragment {
         name = b.getString("name");
         money = b.getInt("money");
         ExpandableListView expListView = (ExpandableListView) view.findViewById(R.id.expandable_listview);
+        TextView textv = (TextView) view.findViewById(R.id.titleText);
+        textv.setText("'"+name+"'님께서 보낸 '"+money+"원");
         //prepareListData();
 
         listDataHeader = new ArrayList<GroupListItem>();

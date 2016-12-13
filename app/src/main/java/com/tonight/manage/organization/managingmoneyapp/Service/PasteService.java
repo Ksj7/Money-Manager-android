@@ -23,11 +23,9 @@ import android.widget.TextView;
 import com.tonight.manage.organization.managingmoneyapp.AddUsageByPasteActivity;
 import com.tonight.manage.organization.managingmoneyapp.R;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by Taek on 2016. 12. 2..
@@ -129,6 +127,7 @@ public class PasteService extends Service {
                                 String temp = splitString[i].replaceAll(",","");
                                 temp = temp.replace("원","");
                                 smsMoney = temp;
+                                break;
                             }
                         }
                         calendar.setTimeInMillis(Long.parseLong(smsDate));
