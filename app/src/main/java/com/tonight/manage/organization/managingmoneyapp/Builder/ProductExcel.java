@@ -37,6 +37,11 @@ public class ProductExcel implements Serializable {
             this.member = memberList;
         }
 
+        public ExcelBuilder addManagerInfo(EventInfoMemberPaymentListItem manager){
+            member.add(manager);
+            return this;
+        }
+
         public ProductExcel build() throws IOException, WriteException {
             return new ProductExcel(this);
         }

@@ -87,6 +87,7 @@ public class PaymentFragment extends Fragment {
     TextView myStatus;
     CircleImageView mManagerProfile;
     private ArrayList<EventInfoMemberPaymentListItem> eventInfoMemberItemArrayList;
+    EventInfoMemberPaymentListItem manager ;
 
     private LinearLayout finedPersonLinear;
     private HorizontalScrollView finedPersonScroll;
@@ -173,7 +174,11 @@ public class PaymentFragment extends Fragment {
                     //path 부분엔 파일 경로를 지정해주세요.
                     File excel = new File(filePath + "/" + fileName + ".xls");
                     //파일 유무를 확인합니다.
-                    new ProductExcel.ExcelBuilder(fileName, eventInfoMemberItemArrayList).build();
+                    if(manager==null){
+                        Toast.makeText(getActivity(),"에러발생 : 메니저 없음",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    new ProductExcel.ExcelBuilder(fileName, eventInfoMemberItemArrayList).addManagerInfo(manager).build();
                     Intent i = new Intent(Intent.ACTION_SEND);
                     i.setType("message/rfc822");
                     i.putExtra(Intent.EXTRA_SUBJECT, "AMM_EXPORT_EXCEL_FILE");
@@ -451,6 +456,8 @@ public class PaymentFragment extends Fragment {
                     if (memberPosition != 2) {
                         for (int i = 0; i < eventInfoMemberItemArrayList.size(); i++) {
                             if (eventInfoMemberItemArrayList.get(i).getUserId().equals(userid)) {//내 아이디 있으면
+                                manager = new EventInfoMemberPaymentListItem();
+                                manager = eventInfoMemberItemArrayList.get(i);
                                 eventInfoMemberItemArrayList.remove(i);
                                 break;
                             }
