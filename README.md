@@ -21,12 +21,12 @@ This app is auto money management apps for android
 <p align="center">  <img src ="./img/img3.png" width="700px" height="300px"> <p>
 <p align="center"> <b> Excel로 내보내기 </b>  <p>  
   
-## General Instructions
-1. Fork the project from Github.
-2. Apply your changes.
-3. Create a pull request. (If you are not yet familiar with GitHub, you'll find the "Fork" and "Pull Request" buttons on the top right of your project page.)
-
-## Quick Start
-* Clone the project 
-(`git clone "https://github.com/Ksj7/Money-Manager-android.git"`)
-* Download the .zip [here.](https://github.com/Ksj7/Money-Manager-android/archive/master.zip)
+## Usage
+* Toss API
+~~~
+public class PaymentFragment extends Fragment {
+    .,.
+    //Toss TEST API Key
+    private static final String API_KEY = "sk_test_apikey1234567890a";
+~~~
+현재 Toss API는 Test용을 사용하고 있으며, [이 곳](http://tossdev.github.io)을 통해 발급 받으실 수 있습니다.
