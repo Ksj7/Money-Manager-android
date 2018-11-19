@@ -31,4 +31,5 @@ public class PaymentFragment extends Fragment {
 ~~~
 현재 Toss API는 Test용을 사용하고 있으며, [이 곳](http://tossdev.github.io)을 통해 발급 받으실 수 있습니다.
 
-Icon made from www.flaticon.com 
+## ICON
+logo icon made by [author site](https://smashicons.com/) from www.flaticon.com 
