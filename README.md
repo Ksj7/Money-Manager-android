@@ -30,3 +30,5 @@ public class PaymentFragment extends Fragment {
     private static final String API_KEY = "sk_test_apikey1234567890a";
 ~~~
 현재 Toss API는 Test용을 사용하고 있으며, [이 곳](http://tossdev.github.io)을 통해 발급 받으실 수 있습니다.
+
+Icon made from www.flaticon.com 
